@@ -1,0 +1,32 @@
+{
+  "_about": "Corrections on top of docs/handoff/translations*.csv. Each one is also logged in docs/DECISIONS.md (23 Nov 2026). Re-run: node scripts/build-translations.mjs",
+
+  "strings": {
+    "_Flicks": "Italian tab said 'Flick' while 18 other Italian texts say 'Flicks'. Made consistent.",
+    "Flicks": { "it": "Flicks" }
+  },
+
+  "patternChanges": {
+    "_w10b": "French used 'votre' (founder rule: always 'tu').",
+    "w10b": { "re": "^10 min left · your (room) ends at (\\d\\d:\\d\\d)$", "fr": "Plus que 10 min · ton salon se termine à $2" },
+    "w2b": { "re": "^2 min left in your (room)$", "fr": "Plus que 2 min dans ton salon" },
+    "w10a": { "re": "^10 min left in this (room)$" },
+    "rtd": { "fr": "Mission réussie · récupère +$1 XP" },
+    "rlvup": { "fr": "Ton salon passe au niveau $1 🎉" },
+    "_bprof": "The Connect tab is 'Rencontrer' (fr) and 'つながる' (ja); this text used other words.",
+    "bprof": { "fr": "En tête de Rencontrer pendant 30 min · $1 pièces$2", "ja": "つながるで30分トップ表示 · $1コイン$2" },
+    "_lose": "Now only matches the version WITHOUT the cash-out warning; the version with it is 'loseCash' below.",
+    "lose": { "re": "^You’ll lose ([\\d.,\\s\\u202f\\u00a0]+) coins and ([\\d.,\\s\\u202f\\u00a0]+) Diamonds\\.$" }
+  },
+
+  "patternAdds": [
+    { "before": "w10a", "key": "w10aLive", "re": "^10 min left in this live$",
+      "fr": "Plus que 10 min dans ce live", "es": "Quedan 10 min en este directo", "pt": "Faltam 10 min nesta live", "de": "Noch 10 Min. in diesem Live", "it": "Mancano 10 min in questa live", "ja": "このライブは残り10分", "ar": "بقيت 10 دقائق في هذا البث" },
+    { "before": "w10b", "key": "w10bLive", "re": "^10 min left · your live ends at (\\d\\d:\\d\\d)$",
+      "fr": "Plus que 10 min · ton live se termine à $1", "es": "Quedan 10 min · tu directo termina a las $1", "pt": "Faltam 10 min · sua live termina às $1", "de": "Noch 10 Min. · dein Live endet um $1", "it": "Mancano 10 min · la tua live finisce alle $1", "ja": "残り10分・$1にライブが終了します", "ar": "بقيت 10 دقائق · ينتهي بثك الساعة $1" },
+    { "before": "w2b", "key": "w2bLive", "re": "^2 min left in your live$",
+      "fr": "Plus que 2 min dans ton live", "es": "Quedan 2 min en tu directo", "pt": "Faltam 2 min na sua live", "de": "Noch 2 Min. in deinem Live", "it": "Mancano 2 min nella tua live", "ja": "ライブは残り2分です", "ar": "بقيت دقيقتان في بثك" },
+    { "before": "lose", "key": "loseCash", "re": "^You’ll lose ([\\d.,\\s\\u202f\\u00a0]+) coins and ([\\d.,\\s\\u202f\\u00a0]+) Diamonds\\. Cash out first if you want the money\\.$",
+      "fr": "Tu perdras $1 pièces et $2 Diamants. Retire-les d’abord si tu veux l’argent.", "es": "Perderás $1 monedas y $2 Diamantes. Retíralos antes si quieres el dinero.", "pt": "Você perderá $1 moedas e $2 Diamantes. Saque antes se quiser o dinheiro.", "de": "Du verlierst $1 Münzen und $2 Diamanten. Zahl sie vorher aus, wenn du das Geld willst.", "it": "Perderai $1 monete e $2 Diamanti. Prelevali prima se vuoi i soldi.", "ja": "$1コインと$2ダイヤを失います。お金が必要なら先に出金してください。", "ar": "ستخسر $1 عملة و$2 ماسة. اسحبها أولًا إذا كنت تريد المال." }
+  ]
+}

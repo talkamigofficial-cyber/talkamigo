@@ -1,0 +1,2647 @@
+{
+ "people": {
+  "camille": {
+   "name": "Camille",
+   "cc": "FR",
+   "city": "Lyon",
+   "age": 27,
+   "native": "French",
+   "learning": "English",
+   "lvl": "B1",
+   "interests": [
+    "Cinema",
+    "Cooking",
+    "Travel"
+   ],
+   "color": "linear-gradient(135deg,#FF6B5B,#B3122A)",
+   "online": true,
+   "bio": "Cinema nerd and home cook. I’ll help with your French if you help me sound less like a textbook in English.",
+   "video": true,
+   "seen": 0,
+   "serious": true,
+   "tags": [
+    "Free to chat"
+   ],
+   "gender": "Woman"
+  },
+  "kenji": {
+   "name": "Kenji",
+   "cc": "JP",
+   "city": "Osaka",
+   "age": 24,
+   "native": "Japanese",
+   "learning": "French",
+   "lvl": "A2",
+   "interests": [
+    "Anime",
+    "Football",
+    "Jazz"
+   ],
+   "color": "linear-gradient(135deg,#A779FF,#5B2BB5)",
+   "online": true,
+   "bio": "Osaka boy learning French for a year in Paris. Ask me about Kansai slang!",
+   "video": true,
+   "gender": "Man",
+   "seen": 0,
+   "isNew": true,
+   "tags": [
+    "New",
+    "Similar age"
+   ]
+  },
+  "lucia": {
+   "name": "Lucía",
+   "cc": "ES",
+   "city": "Madrid",
+   "age": 29,
+   "native": "Spanish",
+   "learning": "English",
+   "lvl": "B2",
+   "interests": [
+    "Design",
+    "Hiking",
+    "Podcasts"
+   ],
+   "color": "linear-gradient(135deg,#FFB067,#C2410C)",
+   "online": false,
+   "bio": "Product designer. Let’s trade Spanish for English over voice notes.",
+   "gender": "Woman",
+   "seen": 9,
+   "serious": true,
+   "tags": [
+    "Serious learner"
+   ]
+  },
+  "elodie": {
+   "name": "Élodie",
+   "cc": "FR",
+   "city": "Bordeaux",
+   "age": 35,
+   "native": "French",
+   "learning": "English",
+   "lvl": "B2",
+   "interests": [
+    "Teaching",
+    "Food",
+    "Wine"
+   ],
+   "color": "linear-gradient(135deg,#FF8A65,#A3123A)",
+   "online": true,
+   "teacher": true,
+   "rating": 4.9,
+   "bio": "Verified French teacher. Real-life French for travel and food."
+  },
+  "pablo": {
+   "name": "Pablo",
+   "cc": "MX",
+   "city": "Mexico City",
+   "age": 30,
+   "native": "Spanish",
+   "learning": "English",
+   "lvl": "B2",
+   "interests": [
+    "Teaching",
+    "Music",
+    "Football"
+   ],
+   "color": "linear-gradient(135deg,#FFB547,#B3122A)",
+   "online": true,
+   "teacher": true,
+   "rating": 4.8,
+   "bio": "Verified Spanish teacher. Grammar without the headache."
+  },
+  "lea": {
+   "name": "Léa",
+   "cc": "BE",
+   "city": "Brussels",
+   "age": 29,
+   "native": "French",
+   "learning": "English",
+   "lvl": "B2",
+   "interests": [
+    "Teaching",
+    "Books",
+    "Cinema"
+   ],
+   "color": "linear-gradient(135deg,#FF7AA2,#9A1748)",
+   "online": false,
+   "teacher": true,
+   "rating": 4.8,
+   "bio": "Verified French teacher. Grammar that finally makes sense."
+  },
+  "diego": {
+   "name": "Diego",
+   "cc": "AR",
+   "city": "Buenos Aires",
+   "age": 34,
+   "native": "Spanish",
+   "learning": "English",
+   "lvl": "C1",
+   "interests": [
+    "Teaching",
+    "Tango",
+    "Football"
+   ],
+   "color": "linear-gradient(135deg,#7FB2FF,#1E3A8A)",
+   "online": true,
+   "teacher": true,
+   "rating": 4.7,
+   "bio": "Verified Spanish teacher. Latin American Spanish, real conversations."
+  },
+  "carmen": {
+   "name": "Carmen",
+   "cc": "ES",
+   "city": "Seville",
+   "age": 41,
+   "native": "Spanish",
+   "learning": "English",
+   "lvl": "B1",
+   "interests": [
+    "Teaching",
+    "Flamenco",
+    "Cooking"
+   ],
+   "color": "linear-gradient(135deg,#FFB067,#B4004E)",
+   "online": false,
+   "teacher": true,
+   "rating": 4.9,
+   "bio": "Verified Spanish teacher. 15 years teaching adults."
+  },
+  "marc": {
+   "name": "Marc",
+   "cc": "FR",
+   "city": "Paris",
+   "age": 33,
+   "native": "French",
+   "learning": "English",
+   "lvl": "A2",
+   "interests": [
+    "Football",
+    "Music"
+   ],
+   "color": "linear-gradient(135deg,#F06A8C,#7A1C2E)",
+   "online": true,
+   "teacher": true,
+   "bio": "Verified French teacher. Faux amis are my speciality.",
+   "gender": "Man",
+   "seen": 0,
+   "serious": true,
+   "tags": [
+    "Teacher"
+   ],
+   "rating": 4.8
+  },
+  "aiko": {
+   "name": "Aiko",
+   "cc": "JP",
+   "city": "Tokyo",
+   "age": 31,
+   "native": "Japanese",
+   "learning": "English",
+   "lvl": "C1",
+   "interests": [
+    "Teaching",
+    "Anime",
+    "Food"
+   ],
+   "color": "linear-gradient(135deg,#4FD1B5,#0F766E)",
+   "online": false,
+   "teacher": true,
+   "bio": "Japanese teacher, 6 years. Casual Japanese you actually hear.",
+   "video": true,
+   "gender": "Woman",
+   "seen": 42,
+   "serious": true,
+   "tags": [
+    "Teacher"
+   ],
+   "rating": 4.9
+  },
+  "rafael": {
+   "name": "Rafael",
+   "cc": "PT",
+   "city": "Lisbon",
+   "age": 26,
+   "native": "Portuguese",
+   "learning": "French",
+   "lvl": "B1",
+   "interests": [
+    "Travel",
+    "Surf",
+    "Food"
+   ],
+   "color": "linear-gradient(135deg,#FF8A65,#8E1B3A)",
+   "online": true,
+   "bio": "Lisbon local. I’ll show you the city, you correct my French.",
+   "gender": "Man",
+   "seen": 0,
+   "tags": [
+    "Free to chat",
+    "Similar age"
+   ]
+  },
+  "jade": {
+   "name": "Jade",
+   "cc": "CA",
+   "city": "Montréal",
+   "age": 22,
+   "native": "French",
+   "learning": "English",
+   "lvl": "B1",
+   "interests": [
+    "Music",
+    "Books"
+   ],
+   "color": "linear-gradient(135deg,#FFC46B,#C2410C)",
+   "online": false,
+   "bio": "Québécoise. Yes, our French is different, and that’s fun.",
+   "gender": "Woman",
+   "seen": 180,
+   "isNew": true,
+   "tags": [
+    "New"
+   ]
+  },
+  "tunde": {
+   "name": "Tunde",
+   "cc": "NG",
+   "city": "Lagos",
+   "age": 28,
+   "native": "Yoruba",
+   "learning": "French",
+   "lvl": "A1",
+   "interests": [
+    "Tech",
+    "Football"
+   ],
+   "color": "linear-gradient(135deg,#5EE6A8,#0F766E)",
+   "online": true,
+   "bio": "Software dev starting French from zero.",
+   "gender": "Man",
+   "seen": 0,
+   "tags": [
+    "Free to chat"
+   ]
+  },
+  "reem": {
+   "name": "Reem",
+   "cc": "MA",
+   "city": "Rabat",
+   "age": 25,
+   "native": "Arabic",
+   "learning": "English",
+   "lvl": "B1",
+   "interests": [
+    "Fashion",
+    "Films"
+   ],
+   "color": "linear-gradient(135deg,#FF7AA8,#B3122A)",
+   "online": true,
+   "bio": "Random talks are my favourite way to learn.",
+   "gender": "Woman",
+   "seen": 3,
+   "tags": [
+    "Similar age"
+   ]
+  },
+  "noah": {
+   "name": "Noah",
+   "cc": "GB",
+   "city": "Bristol",
+   "age": 31,
+   "native": "English",
+   "learning": "Spanish",
+   "lvl": "A2",
+   "interests": [
+    "Football",
+    "Podcasts"
+   ],
+   "color": "linear-gradient(135deg,#5EA8FF,#1E4FB5)",
+   "online": true,
+   "bio": "Bristol lad learning Spanish for a move to Valencia."
+  },
+  "ines": {
+   "name": "Inès",
+   "cc": "FR",
+   "city": "Marseille",
+   "age": 26,
+   "native": "French",
+   "learning": "Spanish",
+   "lvl": "B1",
+   "interests": [
+    "Dance",
+    "Sea"
+   ],
+   "color": "linear-gradient(135deg,#FF9EC4,#C2185B)",
+   "online": true,
+   "bio": "Salsa every Thursday, Spanish every day."
+  },
+  "mateo": {
+   "name": "Mateo",
+   "cc": "AR",
+   "city": "Buenos Aires",
+   "age": 28,
+   "native": "Spanish",
+   "learning": "French",
+   "lvl": "A2",
+   "interests": [
+    "Tango",
+    "Wine"
+   ],
+   "color": "linear-gradient(135deg,#7FD3FF,#1B7AB5)",
+   "online": true,
+   "bio": "Porteño, chef, learning French for culinary school."
+  },
+  "emma": {
+   "name": "Emma",
+   "cc": "US",
+   "city": "Chicago",
+   "age": 23,
+   "native": "English",
+   "learning": "French",
+   "lvl": "B1",
+   "interests": [
+    "Theatre",
+    "Books"
+   ],
+   "color": "linear-gradient(135deg,#FFB067,#E05A00)",
+   "online": true,
+   "bio": "Drama student. Paris in the spring, hopefully."
+  },
+  "sofia": {
+   "name": "Sofía",
+   "cc": "MX",
+   "city": "Guadalajara",
+   "age": 33,
+   "native": "Spanish",
+   "learning": "English",
+   "lvl": "B2",
+   "interests": [
+    "Design",
+    "Running"
+   ],
+   "color": "linear-gradient(135deg,#5EE6A8,#0F766E)",
+   "online": true,
+   "bio": "UX designer, trail runner, English for work."
+  },
+  "hugo": {
+   "name": "Hugo",
+   "cc": "BE",
+   "city": "Brussels",
+   "age": 35,
+   "native": "French",
+   "learning": "English",
+   "lvl": "C1",
+   "interests": [
+    "Comics",
+    "Beer"
+   ],
+   "color": "linear-gradient(135deg,#C9A7FF,#6A3BD1)",
+   "online": true,
+   "bio": "Brussels comic-book nerd. Corrections welcome."
+  },
+  "olivia": {
+   "name": "Olivia",
+   "cc": "AU",
+   "city": "Sydney",
+   "age": 29,
+   "native": "English",
+   "learning": "Spanish",
+   "lvl": "A1",
+   "interests": [
+    "Surf",
+    "Coffee"
+   ],
+   "color": "linear-gradient(135deg,#FFD66B,#C2410C)",
+   "online": true,
+   "bio": "Just started Spanish. Be gentle!"
+  },
+  "pierre": {
+   "name": "Pierre",
+   "cc": "CA",
+   "city": "Montréal",
+   "age": 40,
+   "native": "French",
+   "learning": "Spanish",
+   "lvl": "A2",
+   "interests": [
+    "Hockey",
+    "Cooking"
+   ],
+   "color": "linear-gradient(135deg,#FF7B7B,#A30D1C)",
+   "online": true,
+   "bio": "Québécois, ask me about our expressions."
+  },
+  "valentina": {
+   "name": "Valentina",
+   "cc": "CO",
+   "city": "Medellín",
+   "age": 25,
+   "native": "Spanish",
+   "learning": "English",
+   "lvl": "B1",
+   "interests": [
+    "Music",
+    "Photography"
+   ],
+   "color": "linear-gradient(135deg,#FF8A5B,#B4004E)",
+   "online": true,
+   "bio": "Photographer from Medellín, English for my portfolio."
+  },
+  "james": {
+   "name": "James",
+   "cc": "IE",
+   "city": "Dublin",
+   "age": 37,
+   "native": "English",
+   "learning": "French",
+   "lvl": "A2",
+   "interests": [
+    "History",
+    "Rugby"
+   ],
+   "color": "linear-gradient(135deg,#7BE0B5,#137A52)",
+   "online": true,
+   "bio": "Dublin teacher brushing up his school French."
+  },
+  "chloe": {
+   "name": "Chloé",
+   "cc": "CH",
+   "city": "Geneva",
+   "age": 30,
+   "native": "French",
+   "learning": "English",
+   "lvl": "B2",
+   "interests": [
+    "Skiing",
+    "Finance"
+   ],
+   "color": "linear-gradient(135deg,#A0C4FF,#3A5BA9)",
+   "online": true,
+   "bio": "Geneva banker by day, ski bum by weekend."
+  },
+  "diegoR": {
+   "name": "Rodrigo",
+   "cc": "CL",
+   "city": "Santiago",
+   "age": 27,
+   "native": "Spanish",
+   "learning": "French",
+   "lvl": "B1",
+   "interests": [
+    "Climbing",
+    "Poetry"
+   ],
+   "color": "linear-gradient(135deg,#FFC2A1,#D9480F)",
+   "online": true,
+   "bio": "Climber and poet from Santiago."
+  }
+ },
+ "me": {
+  "name": "Sam",
+  "cc": "GB",
+  "city": "London",
+  "native": "English",
+  "natives": [
+   "English"
+  ],
+  "learning": "French",
+  "langs": [
+   "French",
+   "Spanish"
+  ],
+  "level": "B1",
+  "mins": {
+   "French": 130,
+   "Spanish": 62
+  },
+  "levels": {
+   "French": "B1",
+   "Spanish": "A2"
+  },
+  "handle": "sam_ldn",
+  "interests": [
+   "Music",
+   "Travel",
+   "Food"
+  ],
+  "places": "",
+  "cover": 0
+ },
+ "wallet": {
+  "coins": 600,
+  "diamonds": 1240,
+  "pending": 320
+ },
+ "stats": {
+  "views": 1284,
+  "followersN": 1284,
+  "streak": 27,
+  "newFollowers": 1,
+  "newViews": 12,
+  "week": {
+   "mins": 192,
+   "fixes": 14,
+   "days": [
+    1,
+    1,
+    1,
+    0,
+    1,
+    1,
+    0
+   ]
+  },
+  "today": 12
+ },
+ "follows": {
+  "camille": true
+ },
+ "followsMe": [
+  "camille",
+  "kenji",
+  "lucia",
+  "marc",
+  "elodie"
+ ],
+ "chats": {
+  "camille": {
+   "unread": 2,
+   "msgs": [
+    {
+     "f": "them",
+     "t": "Salut ! Tu fais quoi ce dimanche ?",
+     "tr": "Hi! What are you doing this Sunday?"
+    },
+    {
+     "f": "me",
+     "t": "Je vais aller au parc avec mon chien et après je cuisine."
+    },
+    {
+     "f": "fix",
+     "wrong": "et après je cuisine",
+     "right": "et après, je vais cuisiner",
+     "note": "Keep the same tense as “je vais aller”.",
+     "by": "camille"
+    },
+    {
+     "f": "them",
+     "t": "Ton français est vraiment bien !",
+     "tr": "Your French is really good!"
+    },
+    {
+     "f": "them",
+     "room": "r1"
+    }
+   ]
+  },
+  "kenji": {
+   "unread": 0,
+   "msgs": [
+    {
+     "f": "them",
+     "t": "Voice note · 0:21",
+     "voice": true
+    },
+    {
+     "f": "them",
+     "t": "Can you check my French? « Je suis allé au café hier. »",
+     "tr": ""
+    }
+   ]
+  },
+  "lucia": {
+   "unread": 0,
+   "msgs": [
+    {
+     "f": "them",
+     "t": "¡Claro! ¿Hablamos mañana a las 7?",
+     "tr": "Sure! Shall we talk tomorrow at 7?"
+    }
+   ]
+  },
+  "aiko": {
+   "unread": 1,
+   "msgs": [
+    {
+     "f": "them",
+     "t": "来週の授業、楽しみにしています！",
+     "tr": "Looking forward to next week’s class!",
+     "rom": "Raishū no jugyō, tanoshimi ni shite imasu!"
+    },
+    {
+     "f": "them",
+     "t": "Reminder: class Tuesday 19:00. Book your seat if you want to join 🙂",
+     "tr": ""
+    }
+   ]
+  }
+ },
+ "chatOrder": [
+  "camille",
+  "kenji",
+  "lucia",
+  "aiko"
+ ],
+ "groups": {
+  "g1": {
+   "name": "French practice crew",
+   "members": [
+    "camille",
+    "marc",
+    "kenji"
+   ],
+   "unread": 2,
+   "msgs": [
+    {
+     "by": "camille",
+     "t": "Bonjour à tous ! On fait un appel ce soir ?"
+    },
+    {
+     "by": "kenji",
+     "t": "Oui ! 20h ?"
+    },
+    {
+     "by": "marc",
+     "t": "Parfait, je serai là 👍"
+    }
+   ]
+  }
+ },
+ "offUnread": {
+  "lounge": 4,
+  "team": 2
+ },
+ "rooms": [
+  {
+   "id": "t1",
+   "l": "French",
+   "ls": [
+    "French"
+   ],
+   "lang": "FR",
+   "topic": "Faux amis",
+   "teacher": true,
+   "price": 120,
+   "level": "B1–B2",
+   "goal": "Conversation & corrections",
+   "mins": 45,
+   "seats": 10,
+   "booked": 7,
+   "title": "Les faux amis : stop the mistakes",
+   "host": "marc",
+   "speakers": [],
+   "count": 9
+  },
+  {
+   "id": "t2",
+   "l": "Spanish",
+   "ls": [
+    "Spanish"
+   ],
+   "lang": "ES",
+   "topic": "Comida",
+   "teacher": true,
+   "price": 0.99,
+   "level": "A2–B1",
+   "goal": "Speaking practice",
+   "mins": 45,
+   "seats": 10,
+   "booked": 6,
+   "title": "Tapas talk: order like a local",
+   "host": "carmen",
+   "speakers": [
+    "lucia"
+   ],
+   "count": 7
+  },
+  {
+   "id": "r1",
+   "l": "French",
+   "lang": "FR ⇄ EN",
+   "topic": "Café chat",
+   "official": true,
+   "title": "Café français: weekend plans",
+   "host": "camille",
+   "speakers": [
+    "marc",
+    "jade",
+    "kenji",
+    "tunde"
+   ],
+   "count": 48,
+   "ls": [
+    "French",
+    "English"
+   ],
+   "onFlicks": true
+  },
+  {
+   "id": "r2",
+   "l": "English",
+   "lang": "EN",
+   "topic": "No pressure",
+   "title": "Random talks, all levels",
+   "host": "reem",
+   "speakers": [
+    "lucia",
+    "tunde"
+   ],
+   "count": 24,
+   "ls": [
+    "English"
+   ]
+  },
+  {
+   "id": "r3",
+   "l": "Spanish",
+   "lang": "ES ⇄ EN",
+   "topic": "Music",
+   "vip": true,
+   "title": "Latin music & lyrics debate",
+   "host": "lucia",
+   "speakers": [
+    "rafael",
+    "camille",
+    "reem"
+   ],
+   "count": 91,
+   "ls": [
+    "Spanish",
+    "English"
+   ]
+  },
+  {
+   "id": "r4",
+   "l": "Japanese",
+   "lang": "JA",
+   "topic": "Anime & slang",
+   "teacher": true,
+   "price": 150,
+   "level": "A2–B1",
+   "goal": "Speaking practice",
+   "mins": 45,
+   "seats": 12,
+   "booked": 8,
+   "title": "ほんま？ Osaka dialect hour",
+   "host": "aiko",
+   "speakers": [
+    "kenji"
+   ],
+   "count": 18,
+   "ls": [
+    "Japanese"
+   ]
+  },
+  {
+   "id": "r6",
+   "l": "Spanish",
+   "lang": "ES ⇄ FR",
+   "topic": "Intercambio",
+   "title": "Intercambio: español ⇄ français",
+   "host": "lucia",
+   "speakers": [
+    "camille",
+    "marc"
+   ],
+   "count": 33,
+   "ls": [
+    "Spanish",
+    "French"
+   ]
+  },
+  {
+   "id": "r5",
+   "l": "Portuguese",
+   "lang": "PT ⇄ FR",
+   "topic": "Travel",
+   "title": "Lisbon tips for first-timers",
+   "host": "rafael",
+   "speakers": [
+    "jade"
+   ],
+   "count": 9,
+   "ls": [
+    "Portuguese",
+    "French"
+   ],
+   "boosted": true
+  },
+  {
+   "id": "x1",
+   "l": "English",
+   "ls": [
+    "English"
+   ],
+   "lang": "EN",
+   "topic": "Small talk",
+   "mode": "chat",
+   "title": "Coffee break chat ☕",
+   "host": "noah",
+   "speakers": [
+    "emma",
+    "olivia"
+   ],
+   "count": 37,
+   "vip": false,
+   "boosted": false,
+   "extra": true
+  },
+  {
+   "id": "x2",
+   "l": "English",
+   "ls": [
+    "English"
+   ],
+   "lang": "EN",
+   "topic": "Work & careers",
+   "mode": "chat",
+   "title": "Job interview practice: tell me about yourself",
+   "host": "james",
+   "speakers": [
+    "sofia"
+   ],
+   "count": 52,
+   "vip": false,
+   "boosted": false,
+   "extra": true
+  },
+  {
+   "id": "x3",
+   "l": "English",
+   "ls": [
+    "English"
+   ],
+   "lang": "EN",
+   "topic": "Guess the word",
+   "mode": "game",
+   "title": "Guess the word: food & cooking",
+   "host": "emma",
+   "speakers": [
+    "valentina",
+    "noah"
+   ],
+   "count": 19,
+   "vip": false,
+   "boosted": true,
+   "extra": true
+  },
+  {
+   "id": "x4",
+   "l": "English",
+   "ls": [
+    "English"
+   ],
+   "lang": "EN",
+   "topic": "Music",
+   "mode": "music",
+   "title": "Lo-fi study room, talk if you want",
+   "host": "olivia",
+   "speakers": [],
+   "count": 8,
+   "vip": false,
+   "boosted": false,
+   "extra": true
+  },
+  {
+   "id": "x5",
+   "l": "English",
+   "ls": [
+    "English"
+   ],
+   "lang": "EN",
+   "topic": "Grammar help",
+   "mode": "board",
+   "title": "Phrasal verbs on the whiteboard",
+   "host": "james",
+   "speakers": [],
+   "count": 27,
+   "vip": true,
+   "boosted": false,
+   "extra": true
+  },
+  {
+   "id": "x6",
+   "l": "English",
+   "ls": [
+    "English"
+   ],
+   "lang": "EN",
+   "topic": "Films & series",
+   "mode": "chat",
+   "title": "What are you watching this week? 🎬",
+   "host": "sofia",
+   "speakers": [
+    "hugo",
+    "chloe"
+   ],
+   "count": 64,
+   "vip": false,
+   "boosted": false,
+   "extra": true
+  },
+  {
+   "id": "x7",
+   "l": "English",
+   "ls": [
+    "English"
+   ],
+   "lang": "EN",
+   "topic": "Exam prep",
+   "mode": "chat",
+   "title": "IELTS speaking part 2: one-minute answers",
+   "host": "valentina",
+   "speakers": [
+    "sofia",
+    "chloe",
+    "emma",
+    "noah",
+    "james",
+    "hugo",
+    "ines",
+    "olivia",
+    "mateo"
+   ],
+   "count": 140,
+   "vip": true,
+   "boosted": false,
+   "extra": true
+  },
+  {
+   "id": "x8",
+   "l": "English",
+   "ls": [
+    "English"
+   ],
+   "lang": "EN",
+   "topic": "Small talk",
+   "mode": "chat",
+   "title": "Shy people welcome, no pressure at all, just say hi when you feel ready and we’ll take it slowly together 🙂",
+   "host": "emma",
+   "speakers": [],
+   "count": 3,
+   "vip": false,
+   "boosted": false,
+   "extra": true
+  },
+  {
+   "id": "x9",
+   "l": "French",
+   "ls": [
+    "French"
+   ],
+   "lang": "FR",
+   "topic": "Small talk",
+   "mode": "chat",
+   "title": "Apéro du soir 🍷",
+   "host": "ines",
+   "speakers": [
+    "hugo",
+    "pierre"
+   ],
+   "count": 45,
+   "vip": false,
+   "boosted": false,
+   "extra": true
+  },
+  {
+   "id": "x10",
+   "l": "French",
+   "ls": [
+    "French"
+   ],
+   "lang": "FR",
+   "topic": "Guess the word",
+   "mode": "game",
+   "title": "Devine le mot : les métiers",
+   "host": "chloe",
+   "speakers": [
+    "ines"
+   ],
+   "count": 22,
+   "vip": false,
+   "boosted": false,
+   "extra": true
+  },
+  {
+   "id": "x11",
+   "l": "French",
+   "ls": [
+    "French"
+   ],
+   "lang": "FR",
+   "topic": "Grammar help",
+   "mode": "board",
+   "title": "Le subjonctif sans larmes",
+   "host": "hugo",
+   "speakers": [],
+   "count": 31,
+   "vip": false,
+   "boosted": false,
+   "extra": true
+  },
+  {
+   "id": "x12",
+   "l": "French",
+   "ls": [
+    "French"
+   ],
+   "lang": "FR",
+   "topic": "Culture",
+   "mode": "chat",
+   "title": "Expressions québécoises 🇨🇦",
+   "host": "pierre",
+   "speakers": [
+    "chloe"
+   ],
+   "count": 58,
+   "vip": false,
+   "boosted": false,
+   "extra": true
+  },
+  {
+   "id": "x13",
+   "l": "French",
+   "ls": [
+    "French"
+   ],
+   "lang": "FR",
+   "topic": "Music",
+   "mode": "music",
+   "title": "Chanson française et café",
+   "host": "ines",
+   "speakers": [],
+   "count": 12,
+   "vip": false,
+   "boosted": false,
+   "extra": true
+  },
+  {
+   "id": "x14",
+   "l": "French",
+   "ls": [
+    "French"
+   ],
+   "lang": "FR",
+   "topic": "Travel",
+   "mode": "chat",
+   "title": "Préparer un voyage à Paris",
+   "host": "camille",
+   "speakers": [
+    "hugo"
+   ],
+   "count": 76,
+   "vip": true,
+   "boosted": false,
+   "extra": true
+  },
+  {
+   "id": "x15",
+   "l": "French",
+   "ls": [
+    "French"
+   ],
+   "lang": "FR",
+   "topic": "Small talk",
+   "mode": "chat",
+   "title": "Débutants : on parle lentement",
+   "host": "camille",
+   "speakers": [],
+   "count": 1,
+   "vip": false,
+   "boosted": false,
+   "extra": true
+  },
+  {
+   "id": "x16",
+   "l": "Spanish",
+   "ls": [
+    "Spanish"
+   ],
+   "lang": "ES",
+   "topic": "Small talk",
+   "mode": "chat",
+   "title": "Charla tranquila para principiantes",
+   "host": "mateo",
+   "speakers": [
+    "sofia"
+   ],
+   "count": 29,
+   "vip": false,
+   "boosted": false,
+   "extra": true
+  },
+  {
+   "id": "x17",
+   "l": "Spanish",
+   "ls": [
+    "Spanish"
+   ],
+   "lang": "ES",
+   "topic": "Food & cooking",
+   "mode": "chat",
+   "title": "Recetas de la abuela 🥘",
+   "host": "valentina",
+   "speakers": [
+    "diegoR",
+    "mateo"
+   ],
+   "count": 41,
+   "vip": false,
+   "boosted": false,
+   "extra": true
+  },
+  {
+   "id": "x18",
+   "l": "Spanish",
+   "ls": [
+    "Spanish"
+   ],
+   "lang": "ES",
+   "topic": "Guess the word",
+   "mode": "game",
+   "title": "Adivina la palabra: viajes",
+   "host": "diegoR",
+   "speakers": [
+    "sofia"
+   ],
+   "count": 17,
+   "vip": false,
+   "boosted": true,
+   "extra": true
+  },
+  {
+   "id": "x19",
+   "l": "Spanish",
+   "ls": [
+    "Spanish"
+   ],
+   "lang": "ES",
+   "topic": "Music",
+   "mode": "music",
+   "title": "Reguetón vs. salsa: debate musical 🎶",
+   "host": "valentina",
+   "speakers": [
+    "lucia"
+   ],
+   "count": 88,
+   "vip": false,
+   "boosted": false,
+   "extra": true
+  },
+  {
+   "id": "x20",
+   "l": "Spanish",
+   "ls": [
+    "Spanish"
+   ],
+   "lang": "ES",
+   "topic": "Grammar help",
+   "mode": "board",
+   "title": "Ser y estar, de una vez",
+   "host": "sofia",
+   "speakers": [],
+   "count": 24,
+   "vip": false,
+   "boosted": false,
+   "extra": true
+  },
+  {
+   "id": "x21",
+   "l": "Spanish",
+   "ls": [
+    "Spanish"
+   ],
+   "lang": "ES",
+   "topic": "Culture",
+   "mode": "chat",
+   "title": "Argentina, Chile, México: ¿cómo lo dices tú?",
+   "host": "mateo",
+   "speakers": [
+    "diegoR",
+    "valentina"
+   ],
+   "count": 4800,
+   "vip": false,
+   "boosted": false,
+   "extra": true
+  },
+  {
+   "id": "x22",
+   "l": "French",
+   "ls": [
+    "French",
+    "English"
+   ],
+   "lang": "FR ⇄ EN",
+   "topic": "Language practice",
+   "mode": "chat",
+   "title": "Half French, half English: swap every 10 min",
+   "host": "emma",
+   "speakers": [
+    "ines"
+   ],
+   "count": 63,
+   "vip": false,
+   "boosted": false,
+   "extra": true
+  },
+  {
+   "id": "x23",
+   "l": "French",
+   "ls": [
+    "French",
+    "English"
+   ],
+   "lang": "FR ⇄ EN",
+   "topic": "Work & careers",
+   "mode": "chat",
+   "title": "Anglais pro / Business French",
+   "host": "chloe",
+   "speakers": [
+    "james"
+   ],
+   "count": 34,
+   "vip": true,
+   "boosted": false,
+   "extra": true
+  },
+  {
+   "id": "x24",
+   "l": "French",
+   "ls": [
+    "French",
+    "English"
+   ],
+   "lang": "FR ⇄ EN",
+   "topic": "Guess the word",
+   "mode": "game",
+   "title": "Guess the word · FR & EN 🇫🇷🇬🇧",
+   "host": "hugo",
+   "speakers": [
+    "noah"
+   ],
+   "count": 26,
+   "vip": false,
+   "boosted": false,
+   "extra": true
+  },
+  {
+   "id": "x25",
+   "l": "French",
+   "ls": [
+    "French",
+    "English"
+   ],
+   "lang": "FR ⇄ EN",
+   "topic": "Films & series",
+   "mode": "chat",
+   "title": "Films with subtitles: what helped you most?",
+   "host": "emma",
+   "speakers": [
+    "camille"
+   ],
+   "count": 49,
+   "vip": false,
+   "boosted": false,
+   "extra": true
+  },
+  {
+   "id": "x26",
+   "l": "French",
+   "ls": [
+    "French",
+    "English"
+   ],
+   "lang": "FR ⇄ EN",
+   "topic": "Grammar help",
+   "mode": "board",
+   "title": "False friends whiteboard: actuellement ≠ actually",
+   "host": "james",
+   "speakers": [
+    "pierre"
+   ],
+   "count": 38,
+   "vip": false,
+   "boosted": false,
+   "extra": true
+  },
+  {
+   "id": "x27",
+   "l": "French",
+   "ls": [
+    "French",
+    "English"
+   ],
+   "lang": "FR ⇄ EN",
+   "topic": "Small talk",
+   "mode": "chat",
+   "title": "Late-night tandem 🌙",
+   "host": "hugo",
+   "speakers": [],
+   "count": 6,
+   "vip": false,
+   "boosted": false,
+   "extra": true
+  },
+  {
+   "id": "x28",
+   "l": "Spanish",
+   "ls": [
+    "Spanish",
+    "English"
+   ],
+   "lang": "ES ⇄ EN",
+   "topic": "Language practice",
+   "mode": "chat",
+   "title": "Intercambio: Spanish ⇄ English",
+   "host": "noah",
+   "speakers": [
+    "sofia",
+    "valentina"
+   ],
+   "count": 72,
+   "vip": false,
+   "boosted": false,
+   "extra": true
+  },
+  {
+   "id": "x29",
+   "l": "Spanish",
+   "ls": [
+    "Spanish",
+    "English"
+   ],
+   "lang": "ES ⇄ EN",
+   "topic": "Travel",
+   "mode": "chat",
+   "title": "Backpacking South America tips 🎒",
+   "host": "olivia",
+   "speakers": [
+    "mateo"
+   ],
+   "count": 55,
+   "vip": false,
+   "boosted": false,
+   "extra": true
+  },
+  {
+   "id": "x30",
+   "l": "Spanish",
+   "ls": [
+    "Spanish",
+    "English"
+   ],
+   "lang": "ES ⇄ EN",
+   "topic": "Guess the word",
+   "mode": "game",
+   "title": "Guess the word / Adivina la palabra",
+   "host": "valentina",
+   "speakers": [
+    "noah"
+   ],
+   "count": 21,
+   "vip": false,
+   "boosted": false,
+   "extra": true
+  },
+  {
+   "id": "x31",
+   "l": "Spanish",
+   "ls": [
+    "Spanish",
+    "English"
+   ],
+   "lang": "ES ⇄ EN",
+   "topic": "Music",
+   "mode": "music",
+   "title": "Translate the song lyrics together",
+   "host": "sofia",
+   "speakers": [],
+   "count": 33,
+   "vip": false,
+   "boosted": false,
+   "extra": true
+  },
+  {
+   "id": "x32",
+   "l": "Spanish",
+   "ls": [
+    "Spanish",
+    "English"
+   ],
+   "lang": "ES ⇄ EN",
+   "topic": "Exam prep",
+   "mode": "board",
+   "title": "DELE B1 speaking prep",
+   "host": "olivia",
+   "speakers": [
+    "diegoR"
+   ],
+   "count": 46,
+   "vip": true,
+   "boosted": false,
+   "extra": true
+  },
+  {
+   "id": "x33",
+   "l": "Spanish",
+   "ls": [
+    "Spanish",
+    "French"
+   ],
+   "lang": "ES ⇄ FR",
+   "topic": "Language practice",
+   "mode": "chat",
+   "title": "Tándem español ⇄ français",
+   "host": "ines",
+   "speakers": [
+    "mateo"
+   ],
+   "count": 27,
+   "vip": false,
+   "boosted": false,
+   "extra": true
+  },
+  {
+   "id": "x34",
+   "l": "Spanish",
+   "ls": [
+    "Spanish",
+    "French"
+   ],
+   "lang": "ES ⇄ FR",
+   "topic": "Food & cooking",
+   "mode": "chat",
+   "title": "Cuisine et cocina 🧀🌮",
+   "host": "pierre",
+   "speakers": [
+    "valentina"
+   ],
+   "count": 18,
+   "vip": false,
+   "boosted": false,
+   "extra": true
+  },
+  {
+   "id": "x35",
+   "l": "Spanish",
+   "ls": [
+    "Spanish",
+    "French"
+   ],
+   "lang": "ES ⇄ FR",
+   "topic": "Guess the word",
+   "mode": "game",
+   "title": "Mots et palabras",
+   "host": "diegoR",
+   "speakers": [
+    "chloe"
+   ],
+   "count": 14,
+   "vip": false,
+   "boosted": false,
+   "extra": true
+  },
+  {
+   "id": "x36",
+   "l": "Spanish",
+   "ls": [
+    "Spanish",
+    "French"
+   ],
+   "lang": "ES ⇄ FR",
+   "topic": "Culture",
+   "mode": "board",
+   "title": "Les accents du monde hispanophone",
+   "host": "mateo",
+   "speakers": [],
+   "count": 9,
+   "vip": false,
+   "boosted": false,
+   "extra": true
+  },
+  {
+   "id": "x37",
+   "l": "Japanese",
+   "ls": [
+    "Japanese"
+   ],
+   "lang": "JA",
+   "topic": "Small talk",
+   "mode": "chat",
+   "title": "日本語でおしゃべり",
+   "host": "kenji",
+   "speakers": [
+    "aiko"
+   ],
+   "count": 44,
+   "vip": false,
+   "boosted": false,
+   "extra": true
+  },
+  {
+   "id": "x38",
+   "l": "Portuguese",
+   "ls": [
+    "Portuguese"
+   ],
+   "lang": "PT",
+   "topic": "Music",
+   "mode": "music",
+   "title": "Bossa nova e conversa",
+   "host": "rafael",
+   "speakers": [],
+   "count": 15,
+   "vip": false,
+   "boosted": false,
+   "extra": true
+  },
+  {
+   "id": "x39",
+   "l": "German",
+   "ls": [
+    "German",
+    "English"
+   ],
+   "lang": "DE ⇄ EN",
+   "topic": "Language practice",
+   "mode": "chat",
+   "title": "Deutsch ⇄ English Stammtisch",
+   "host": "jade",
+   "speakers": [],
+   "count": 11,
+   "vip": false,
+   "boosted": false,
+   "extra": true
+  },
+  {
+   "id": "x40",
+   "l": "French",
+   "ls": [
+    "French",
+    "English"
+   ],
+   "lang": "FR ⇄ EN",
+   "topic": "Small talk",
+   "mode": "chat",
+   "title": "😂🔥 Memes & slang 🔥😂",
+   "host": "emma",
+   "speakers": [
+    "hugo",
+    "ines"
+   ],
+   "count": 230,
+   "vip": false,
+   "boosted": false,
+   "extra": true
+  }
+ ],
+ "lives": [
+  {
+   "id": "l1",
+   "host": "aiko",
+   "l": "English",
+   "lang": "EN",
+   "title": "IELTS speaking: band 7 phrases",
+   "viewers": 415,
+   "bg": "radial-gradient(90% 60% at 30% 25%,#4FD1B5,transparent 60%),radial-gradient(90% 70% at 90% 90%,#5B2BB5,transparent 60%),#0F3B3A",
+   "price": 0.99,
+   "level": "B2",
+   "goal": "Exam prep",
+   "mins": 60,
+   "seats": 30,
+   "booked": 18,
+   "ls": [
+    "English"
+   ],
+   "onFlicks": true
+  },
+  {
+   "id": "l2",
+   "host": "camille",
+   "l": "French",
+   "lang": "FR",
+   "title": "Ratatouille en français 🍆",
+   "viewers": 268,
+   "bg": "radial-gradient(90% 60% at 70% 20%,#FF8A5B,transparent 60%),radial-gradient(90% 70% at 10% 90%,#B4004E,transparent 60%),#5A0A1A"
+  },
+  {
+   "id": "l3",
+   "host": "rafael",
+   "l": "Portuguese",
+   "lang": "PT",
+   "title": "Sunset walk in Lisbon",
+   "viewers": 132,
+   "bg": "radial-gradient(90% 60% at 50% 15%,#FFC46B,transparent 60%),radial-gradient(90% 70% at 90% 90%,#8B3BFF,transparent 60%),#4A1030",
+   "boosted": true
+  },
+  {
+   "id": "l4",
+   "host": "kenji",
+   "l": "Japanese",
+   "lang": "JA",
+   "title": "Osaka street food tour",
+   "viewers": 89,
+   "bg": "radial-gradient(90% 60% at 30% 20%,#A779FF,transparent 60%),radial-gradient(90% 70% at 90% 90%,#FF4A6E,transparent 60%),#22104A"
+  },
+  {
+   "id": "xl1",
+   "host": "noah",
+   "l": "English",
+   "lang": "EN",
+   "ls": [
+    "English"
+   ],
+   "title": "Morning walk by the harbour",
+   "viewers": 61,
+   "bg": "radial-gradient(90% 60% at 30% 25%,#4FD1B5,transparent 60%),radial-gradient(90% 70% at 90% 90%,#5B2BB5,transparent 60%),#0F3B3A",
+   "extra": true
+  },
+  {
+   "id": "xl2",
+   "host": "emma",
+   "l": "English",
+   "lang": "EN",
+   "ls": [
+    "English"
+   ],
+   "title": "Reading Shakespeare out loud (badly)",
+   "viewers": 23,
+   "bg": "radial-gradient(90% 60% at 70% 20%,#FF8A5B,transparent 60%),radial-gradient(90% 70% at 10% 90%,#B4004E,transparent 60%),#5A0A1A",
+   "extra": true
+  },
+  {
+   "id": "xl3",
+   "host": "olivia",
+   "l": "English",
+   "lang": "EN",
+   "ls": [
+    "English"
+   ],
+   "title": "Surf report + Aussie slang 🏄",
+   "viewers": 540,
+   "bg": "radial-gradient(90% 60% at 50% 15%,#FFC46B,transparent 60%),radial-gradient(90% 70% at 90% 90%,#8B3BFF,transparent 60%),#4A1030",
+   "extra": true
+  },
+  {
+   "id": "xl4",
+   "host": "hugo",
+   "l": "French",
+   "lang": "FR",
+   "ls": [
+    "French"
+   ],
+   "title": "Une BD en direct : on dessine et on parle",
+   "viewers": 88,
+   "bg": "radial-gradient(90% 60% at 30% 25%,#4FD1B5,transparent 60%),radial-gradient(90% 70% at 90% 90%,#5B2BB5,transparent 60%),#0F3B3A",
+   "extra": true
+  },
+  {
+   "id": "xl5",
+   "host": "ines",
+   "l": "French",
+   "lang": "FR",
+   "ls": [
+    "French"
+   ],
+   "title": "Danse et vocabulaire 💃",
+   "viewers": 12000,
+   "bg": "radial-gradient(90% 60% at 70% 20%,#FF8A5B,transparent 60%),radial-gradient(90% 70% at 10% 90%,#B4004E,transparent 60%),#5A0A1A",
+   "extra": true
+  },
+  {
+   "id": "xl6",
+   "host": "pierre",
+   "l": "French",
+   "lang": "FR",
+   "ls": [
+    "French"
+   ],
+   "title": "Cuisine québécoise : la poutine",
+   "viewers": 37,
+   "bg": "radial-gradient(90% 60% at 50% 15%,#FFC46B,transparent 60%),radial-gradient(90% 70% at 90% 90%,#8B3BFF,transparent 60%),#4A1030",
+   "extra": true
+  },
+  {
+   "id": "xl7",
+   "host": "mateo",
+   "l": "Spanish",
+   "lang": "ES",
+   "ls": [
+    "Spanish"
+   ],
+   "title": "Empanadas paso a paso",
+   "viewers": 204,
+   "bg": "radial-gradient(90% 60% at 30% 25%,#4FD1B5,transparent 60%),radial-gradient(90% 70% at 90% 90%,#5B2BB5,transparent 60%),#0F3B3A",
+   "extra": true
+  },
+  {
+   "id": "xl8",
+   "host": "valentina",
+   "l": "Spanish",
+   "lang": "ES",
+   "ls": [
+    "Spanish"
+   ],
+   "title": "Fotografía en Medellín 📸",
+   "viewers": 73,
+   "bg": "radial-gradient(90% 60% at 70% 20%,#FF8A5B,transparent 60%),radial-gradient(90% 70% at 10% 90%,#B4004E,transparent 60%),#5A0A1A",
+   "extra": true
+  },
+  {
+   "id": "xl9",
+   "host": "sofia",
+   "l": "Spanish",
+   "lang": "ES",
+   "ls": [
+    "Spanish"
+   ],
+   "title": "Running y charla",
+   "viewers": 3,
+   "bg": "radial-gradient(90% 60% at 50% 15%,#FFC46B,transparent 60%),radial-gradient(90% 70% at 90% 90%,#8B3BFF,transparent 60%),#4A1030",
+   "extra": true
+  },
+  {
+   "id": "xl10",
+   "host": "chloe",
+   "l": "French",
+   "lang": "FR",
+   "ls": [
+    "French"
+   ],
+   "title": "Genève sous la neige ❄️ — une très longue balade au bord du lac en parlant de tout et de rien",
+   "viewers": 156,
+   "bg": "radial-gradient(90% 60% at 30% 25%,#4FD1B5,transparent 60%),radial-gradient(90% 70% at 90% 90%,#5B2BB5,transparent 60%),#0F3B3A",
+   "extra": true
+  },
+  {
+   "id": "xl11",
+   "host": "james",
+   "l": "English",
+   "lang": "EN",
+   "ls": [
+    "English"
+   ],
+   "title": "Dublin pubs history tour",
+   "viewers": 95,
+   "bg": "radial-gradient(90% 60% at 70% 20%,#FF8A5B,transparent 60%),radial-gradient(90% 70% at 10% 90%,#B4004E,transparent 60%),#5A0A1A",
+   "extra": true
+  },
+  {
+   "id": "xl12",
+   "host": "diegoR",
+   "l": "Spanish",
+   "lang": "ES",
+   "ls": [
+    "Spanish"
+   ],
+   "title": "Escalada en los Andes",
+   "viewers": 48,
+   "bg": "radial-gradient(90% 60% at 50% 15%,#FFC46B,transparent 60%),radial-gradient(90% 70% at 90% 90%,#8B3BFF,transparent 60%),#4A1030",
+   "extra": true
+  },
+  {
+   "id": "l5",
+   "host": "elodie",
+   "l": "French",
+   "lang": "FR",
+   "ls": [
+    "French"
+   ],
+   "title": "French in the kitchen: crêpes",
+   "viewers": 96,
+   "price": 0.99,
+   "level": "A2–B1",
+   "goal": "Listening",
+   "mins": 45,
+   "seats": 30,
+   "booked": 21,
+   "bg": "radial-gradient(90% 60% at 70% 20%,#FF8A5B,transparent 60%),radial-gradient(90% 70% at 10% 90%,#B4004E,transparent 60%),#3A0A1A"
+  }
+ ],
+ "lessonsPlan": [
+  {
+   "id": "p1",
+   "mode": "talk",
+   "host": "marc",
+   "l": "French",
+   "lang": "FR",
+   "title": "Order like a local: café French",
+   "level": "A2–B1",
+   "goal": "Speaking practice",
+   "mins": 45,
+   "seats": 10,
+   "booked": 6,
+   "day": "Tue",
+   "time": "19:00"
+  },
+  {
+   "id": "p2",
+   "mode": "talk",
+   "host": "aiko",
+   "l": "Japanese",
+   "lang": "JA",
+   "title": "Polite Japanese without the fear",
+   "level": "A2",
+   "goal": "Conversation & corrections",
+   "mins": 45,
+   "seats": 8,
+   "booked": 5,
+   "day": "Wed",
+   "time": "18:30"
+  },
+  {
+   "id": "p3",
+   "mode": "live",
+   "host": "aiko",
+   "l": "English",
+   "lang": "EN",
+   "title": "IELTS Part 2: live mock test",
+   "level": "B2",
+   "goal": "Exam prep",
+   "mins": 60,
+   "seats": 30,
+   "booked": 21,
+   "day": "Thu",
+   "time": "20:00"
+  },
+  {
+   "id": "p4",
+   "mode": "live",
+   "host": "marc",
+   "l": "French",
+   "lang": "FR",
+   "title": "French news, slowly",
+   "level": "B1",
+   "goal": "Listening",
+   "mins": 30,
+   "seats": 30,
+   "booked": 12,
+   "day": "Sat",
+   "time": "11:00"
+  },
+  {
+   "id": "p5",
+   "mode": "talk",
+   "host": "marc",
+   "l": "French",
+   "lang": "FR",
+   "title": "The subjunctive, made easy",
+   "level": "B2",
+   "goal": "Grammar in conversation",
+   "mins": 45,
+   "seats": 10,
+   "booked": 3,
+   "day": "Sun",
+   "time": "17:00"
+  },
+  {
+   "id": "p6",
+   "mode": "talk",
+   "host": "pablo",
+   "l": "Spanish",
+   "lang": "ES",
+   "title": "Ser vs estar, sin dolor",
+   "level": "A2–B1",
+   "goal": "Grammar in conversation",
+   "mins": 45,
+   "seats": 10,
+   "booked": 4,
+   "day": "Thu",
+   "time": "18:00"
+  },
+  {
+   "id": "p7",
+   "mode": "talk",
+   "host": "elodie",
+   "l": "French",
+   "lang": "FR",
+   "title": "Ordering food without panic",
+   "level": "A1–A2",
+   "goal": "Speaking practice",
+   "mins": 30,
+   "seats": 8,
+   "booked": 3,
+   "day": "Fri",
+   "time": "19:30"
+  },
+  {
+   "id": "p8",
+   "mode": "talk",
+   "host": "lea",
+   "l": "French",
+   "lang": "FR",
+   "title": "Passé composé or imparfait?",
+   "level": "B1",
+   "goal": "Grammar in conversation",
+   "mins": 45,
+   "seats": 10,
+   "booked": 7,
+   "day": "Mon",
+   "time": "18:30"
+  },
+  {
+   "id": "p9",
+   "mode": "talk",
+   "host": "diego",
+   "l": "Spanish",
+   "lang": "ES",
+   "title": "Small talk like a porteño",
+   "level": "A2–B1",
+   "goal": "Speaking practice",
+   "mins": 30,
+   "seats": 8,
+   "booked": 2,
+   "day": "Mon",
+   "time": "20:00"
+  },
+  {
+   "id": "p10",
+   "mode": "live",
+   "host": "carmen",
+   "l": "Spanish",
+   "lang": "ES",
+   "title": "Spanish for the restaurant",
+   "level": "A1–A2",
+   "goal": "Speaking practice",
+   "mins": 45,
+   "seats": 30,
+   "booked": 11,
+   "day": "Mon",
+   "time": "12:30"
+  },
+  {
+   "id": "p11",
+   "mode": "talk",
+   "host": "elodie",
+   "l": "French",
+   "lang": "FR",
+   "title": "Café croissant: morning French",
+   "level": "A1–A2",
+   "goal": "Speaking practice",
+   "mins": 30,
+   "seats": 8,
+   "booked": 5,
+   "day": "Tue",
+   "time": "08:30"
+  },
+  {
+   "id": "p12",
+   "mode": "talk",
+   "host": "carmen",
+   "l": "Spanish",
+   "lang": "ES",
+   "title": "Subjuntivo sin miedo",
+   "level": "B2",
+   "goal": "Grammar in conversation",
+   "mins": 45,
+   "seats": 10,
+   "booked": 4,
+   "day": "Tue",
+   "time": "17:30"
+  },
+  {
+   "id": "p13",
+   "mode": "live",
+   "host": "lea",
+   "l": "French",
+   "lang": "FR",
+   "title": "Watch & discuss: French short film",
+   "level": "B2",
+   "goal": "Listening",
+   "mins": 60,
+   "seats": 30,
+   "booked": 14,
+   "day": "Wed",
+   "time": "19:00"
+  },
+  {
+   "id": "p14",
+   "mode": "talk",
+   "host": "pablo",
+   "l": "Spanish",
+   "lang": "ES",
+   "title": "Mexican slang 101",
+   "level": "B1",
+   "goal": "Conversation & corrections",
+   "mins": 30,
+   "seats": 10,
+   "booked": 6,
+   "day": "Wed",
+   "time": "21:00"
+  },
+  {
+   "id": "p15",
+   "mode": "talk",
+   "host": "marc",
+   "l": "French",
+   "lang": "FR",
+   "title": "Faux amis: 20 French traps",
+   "level": "B1",
+   "goal": "Conversation & corrections",
+   "mins": 45,
+   "seats": 10,
+   "booked": 8,
+   "day": "Wed",
+   "time": "13:00"
+  },
+  {
+   "id": "p16",
+   "mode": "talk",
+   "host": "diego",
+   "l": "Spanish",
+   "lang": "ES",
+   "title": "Debate night: city or countryside?",
+   "level": "B2–C1",
+   "goal": "Speaking practice",
+   "mins": 60,
+   "seats": 10,
+   "booked": 3,
+   "day": "Thu",
+   "time": "20:30"
+  },
+  {
+   "id": "p17",
+   "mode": "talk",
+   "host": "lea",
+   "l": "French",
+   "lang": "FR",
+   "title": "Pronunciation clinic: the French R",
+   "level": "A2–B1",
+   "goal": "Pronunciation",
+   "mins": 30,
+   "seats": 8,
+   "booked": 6,
+   "day": "Thu",
+   "time": "10:00"
+  },
+  {
+   "id": "p18",
+   "mode": "live",
+   "host": "pablo",
+   "l": "Spanish",
+   "lang": "ES",
+   "title": "Spanish news in 30 minutes",
+   "level": "B1",
+   "goal": "Listening",
+   "mins": 30,
+   "seats": 30,
+   "booked": 9,
+   "day": "Fri",
+   "time": "12:00"
+  },
+  {
+   "id": "p19",
+   "mode": "talk",
+   "host": "carmen",
+   "l": "Spanish",
+   "lang": "ES",
+   "title": "Tapas talk: order and chat",
+   "level": "A2",
+   "goal": "Speaking practice",
+   "mins": 45,
+   "seats": 10,
+   "booked": 5,
+   "day": "Fri",
+   "time": "18:00"
+  },
+  {
+   "id": "p20",
+   "mode": "talk",
+   "host": "marc",
+   "l": "French",
+   "lang": "FR",
+   "title": "Weekend plans en français",
+   "level": "A2",
+   "goal": "Speaking practice",
+   "mins": 30,
+   "seats": 8,
+   "booked": 2,
+   "day": "Sat",
+   "time": "10:30"
+  },
+  {
+   "id": "p21",
+   "mode": "talk",
+   "host": "diego",
+   "l": "Spanish",
+   "lang": "ES",
+   "title": "Spanish for travellers",
+   "level": "A1–A2",
+   "goal": "Speaking practice",
+   "mins": 45,
+   "seats": 10,
+   "booked": 4,
+   "day": "Sat",
+   "time": "16:00"
+  },
+  {
+   "id": "p22",
+   "mode": "live",
+   "host": "elodie",
+   "l": "French",
+   "lang": "FR",
+   "title": "Cook along: quiche lorraine",
+   "level": "A2–B1",
+   "goal": "Listening",
+   "mins": 60,
+   "seats": 30,
+   "booked": 17,
+   "day": "Sun",
+   "time": "11:00"
+  },
+  {
+   "id": "p23",
+   "mode": "talk",
+   "host": "aiko",
+   "l": "Japanese",
+   "lang": "JA",
+   "title": "Keigo basics",
+   "level": "A2–B1",
+   "goal": "Grammar in conversation",
+   "mins": 45,
+   "seats": 8,
+   "booked": 3,
+   "day": "Sat",
+   "time": "09:00"
+  },
+  {
+   "id": "p24",
+   "mode": "talk",
+   "host": "carmen",
+   "l": "Spanish",
+   "lang": "ES",
+   "title": "Sunday chat: ¿qué tal la semana?",
+   "level": "B1–B2",
+   "goal": "Conversation & corrections",
+   "mins": 45,
+   "seats": 10,
+   "booked": 6,
+   "day": "Sun",
+   "time": "19:00"
+  }
+ ],
+ "paidRooms": [
+  {
+   "id": "t1",
+   "l": "French",
+   "ls": [
+    "French"
+   ],
+   "lang": "FR",
+   "topic": "Faux amis",
+   "teacher": true,
+   "price": 120,
+   "level": "B1–B2",
+   "goal": "Conversation & corrections",
+   "mins": 45,
+   "seats": 10,
+   "booked": 7,
+   "title": "Les faux amis : stop the mistakes",
+   "host": "marc",
+   "speakers": [],
+   "count": 9
+  }
+ ],
+ "flicks": [
+  {
+   "id": "mm1",
+   "by": "me",
+   "old": true,
+   "pinned": true,
+   "photo": "🥐",
+   "bg": "radial-gradient(100% 80% at 30% 20%,#FFC46B,transparent 60%),#C2410C",
+   "kind": "Photo",
+   "text": "Mon premier croissant à Paris !",
+   "tr": "My first croissant in Paris!",
+   "cap": "Learning French B1",
+   "likes": 212,
+   "comments": [],
+   "snd": "s2"
+  },
+  {
+   "id": "mm2",
+   "by": "me",
+   "old": true,
+   "photo": "🎤",
+   "bg": "radial-gradient(100% 80% at 70% 20%,#A779FF,transparent 60%),#5B2BB5",
+   "kind": "Photo",
+   "text": "Karaoke night: chanté en français !",
+   "tr": "Karaoke night: sang in French!",
+   "cap": "",
+   "likes": 98,
+   "comments": []
+  },
+  {
+   "id": "mm3",
+   "by": "me",
+   "old": true,
+   "bg": "radial-gradient(100% 80% at 30% 80%,#FF8A5B,transparent 60%),#B4004E",
+   "kind": "Today I learned",
+   "text": "“Avoir le cafard” = to feel down 🪳",
+   "tr": "",
+   "cap": "",
+   "likes": 154,
+   "comments": []
+  },
+  {
+   "id": "mm4",
+   "by": "me",
+   "old": true,
+   "photo": "📚",
+   "bg": "radial-gradient(100% 80% at 50% 20%,#4FD1B5,transparent 60%),#0F766E",
+   "kind": "Photo",
+   "text": "Study session",
+   "tr": "",
+   "cap": "",
+   "likes": 61,
+   "comments": []
+  },
+  {
+   "id": "m1",
+   "by": "kenji",
+   "bg": "radial-gradient(120% 80% at 0% 0%,#A779FF 0%,transparent 60%),radial-gradient(100% 70% at 100% 100%,#FF4A6E 0%,transparent 55%),#3B1A8F",
+   "kind": "Milestone",
+   "text": "Aujourd’hui, j’ai commandé un café en français pour la première fois !",
+   "tr": "Today I ordered a coffee in French for the first time!",
+   "cap": "Small win in a Paris café. Merci Camille for the practice!",
+   "likes": 1284,
+   "comments": [
+    [
+     "camille",
+     "Bravo Kenji ! Ton français progresse vite.",
+     ""
+    ],
+    [
+     "marc",
+     "Super ! Small tip:",
+     "Add “s’il vous plaît” next time 😉"
+    ]
+   ],
+   "snd": "s1",
+   "lang": "French",
+   "lvl": "Beginner",
+   "photo": "☕"
+  },
+  {
+   "id": "m2",
+   "by": "camille",
+   "bg": "radial-gradient(120% 80% at 100% 0%,#FF8A5B 0%,transparent 60%),radial-gradient(100% 70% at 0% 100%,#B4004E 0%,transparent 60%),#C20E1B",
+   "kind": "Proud moment",
+   "text": "Finally watched a whole film in English without subtitles.",
+   "tr": "J’ai enfin regardé un film entier en anglais sans sous-titres.",
+   "cap": "Any film recommendations for my next challenge?",
+   "likes": 932,
+   "comments": [
+    [
+     "lucia",
+     "Try Paddington 2, the English is clear and it’s funny.",
+     ""
+    ]
+   ],
+   "snd": "s2",
+   "lang": "English",
+   "lvl": "Advanced"
+  },
+  {
+   "id": "m3",
+   "by": "lucia",
+   "bg": "radial-gradient(120% 80% at 0% 100%,#FFC46B 0%,transparent 55%),radial-gradient(100% 80% at 100% 0%,#E0101F 0%,transparent 60%),#9A3412",
+   "kind": "Question",
+   "text": "¿Cuál es la palabra más bonita en tu idioma?",
+   "tr": "What is the most beautiful word in your language?",
+   "cap": "Mine is “madrugada”, the hours after midnight before sunrise.",
+   "likes": 2410,
+   "comments": [
+    [
+     "kenji",
+     "木漏れ日 (komorebi): sunlight through the leaves.",
+     ""
+    ],
+    [
+     "rafael",
+     "Saudade, sem dúvida.",
+     ""
+    ]
+   ],
+   "snd": "s4",
+   "lang": "Spanish",
+   "lvl": "Intermediate"
+  },
+  {
+   "id": "m4",
+   "by": "aiko",
+   "bg": "radial-gradient(120% 80% at 100% 100%,#4FD1B5 0%,transparent 55%),radial-gradient(100% 70% at 0% 0%,#5B2BB5 0%,transparent 60%),#0F5F5A",
+   "kind": "Video",
+   "text": "ほんま？ is the Osaka way to say “really?”",
+   "tr": "“Honma?” is Kansai dialect for “hontō?” (really?).",
+   "cap": "Three more Osaka phrases in my class on Tuesday.",
+   "likes": 3105,
+   "comments": [],
+   "snd": "s3",
+   "lang": "Japanese",
+   "lvl": "Beginner",
+   "photo": "🏯",
+   "video": "0:42"
+  },
+  {
+   "id": "m5",
+   "by": "rafael",
+   "bg": "radial-gradient(120% 80% at 50% 0%,#FF8A65 0%,transparent 55%),radial-gradient(100% 70% at 0% 100%,#8B3BFF 0%,transparent 60%),#6A0013",
+   "kind": "Slideshow",
+   "text": "Le coucher de soleil à Lisbonne, c’est quelque chose.",
+   "tr": "Sunset in Lisbon is really something.",
+   "cap": "Who wants to practise Portuguese ⇄ French this week?",
+   "likes": 640,
+   "comments": [
+    [
+     "jade",
+     "Moi ! Je suis libre jeudi.",
+     ""
+    ]
+   ],
+   "snd": "s2",
+   "lang": "French",
+   "lvl": "Intermediate",
+   "photo": "🌅",
+   "photos": [
+    "🌅",
+    "🚋",
+    "🍷",
+    "🏰"
+   ]
+  }
+ ],
+ "myFlicks": [
+  {
+   "id": "mm1",
+   "by": "me",
+   "old": true,
+   "pinned": true,
+   "photo": "🥐",
+   "bg": "radial-gradient(100% 80% at 30% 20%,#FFC46B,transparent 60%),#C2410C",
+   "kind": "Photo",
+   "text": "Mon premier croissant à Paris !",
+   "tr": "My first croissant in Paris!",
+   "cap": "Learning French B1",
+   "likes": 212,
+   "comments": [],
+   "snd": "s2"
+  },
+  {
+   "id": "mm2",
+   "by": "me",
+   "old": true,
+   "photo": "🎤",
+   "bg": "radial-gradient(100% 80% at 70% 20%,#A779FF,transparent 60%),#5B2BB5",
+   "kind": "Photo",
+   "text": "Karaoke night: chanté en français !",
+   "tr": "Karaoke night: sang in French!",
+   "cap": "",
+   "likes": 98,
+   "comments": []
+  },
+  {
+   "id": "mm3",
+   "by": "me",
+   "old": true,
+   "bg": "radial-gradient(100% 80% at 30% 80%,#FF8A5B,transparent 60%),#B4004E",
+   "kind": "Today I learned",
+   "text": "“Avoir le cafard” = to feel down 🪳",
+   "tr": "",
+   "cap": "",
+   "likes": 154,
+   "comments": []
+  },
+  {
+   "id": "mm4",
+   "by": "me",
+   "old": true,
+   "photo": "📚",
+   "bg": "radial-gradient(100% 80% at 50% 20%,#4FD1B5,transparent 60%),#0F766E",
+   "kind": "Photo",
+   "text": "Study session",
+   "tr": "",
+   "cap": "",
+   "likes": 61,
+   "comments": []
+  }
+ ],
+ "roomAlerts": [
+  [
+   "aiko",
+   "is live: “IELTS speaking: band 7 phrases”",
+   "live:l1",
+   "now"
+  ],
+  [
+   "camille",
+   "started a talk room: “Café français”",
+   "room:r1",
+   "5 min"
+  ],
+  [
+   "lucia",
+   "is hosting “Intercambio: español ⇄ français”",
+   "room:r6",
+   "20 min"
+  ],
+  [
+   "kenji",
+   "is live: “Osaka street food tour”",
+   "live:l4",
+   "1 h"
+  ]
+ ],
+ "team": [
+  {
+   "t": "🚀 Boost coupon: 50% off",
+   "b": "Your next profile boost costs 150 coins instead of 300. Valid 7 days.",
+   "cta": "Use my coupon",
+   "a": "boost",
+   "v": "profile:me",
+   "bg": "linear-gradient(135deg,#EE1626,#8A0016)",
+   "e": "🎟️",
+   "ad": 1
+  },
+  {
+   "t": "🪙 2× coins until Sunday",
+   "b": "Top up 630 coins and get 630 extra to send gifts in rooms and Lives. Ends Sun 29 Nov.",
+   "cta": "Top up",
+   "a": "go",
+   "v": "wallet",
+   "bg": "linear-gradient(135deg,#FFB000,#E05A00)",
+   "e": "🪙",
+   "ad": 1
+  },
+  {
+   "t": "👋 Welcome to TalkAmigo",
+   "b": "Be kind and patient. If anything feels wrong, tap ••• on a profile, Flick, room or Live, or press and hold a message, to hide, block or report. We review every report.",
+   "cta": "Safety tips",
+   "a": "go",
+   "v": "set:help",
+   "bg": "linear-gradient(135deg,#1B1B21,#3A0A18)",
+   "e": "🛡️"
+  }
+ ],
+ "requests": [
+  [
+   "tunde",
+   "Salut ! Tu veux pratiquer ce soir ?"
+  ],
+  [
+   "reem",
+   "Hi! I saw your Flick about Paddington 2"
+  ],
+  [
+   "rafael",
+   "Olá! Duo partners?"
+  ]
+ ],
+ "activity": [
+  {
+   "id": "a1",
+   "k": "like",
+   "who": "kenji",
+   "txt": "and 40 others liked your Flick",
+   "a": "go",
+   "v": "flick:mm1",
+   "fl": "mm1",
+   "ago": 4
+  },
+  {
+   "id": "a2",
+   "k": "fix",
+   "who": "camille",
+   "txt": "corrected your Flick: “et après, je vais cuisiner”",
+   "a": "go",
+   "v": "flick:mm1",
+   "fl": "mm1",
+   "ago": 15
+  },
+  {
+   "id": "a3",
+   "k": "gift",
+   "who": "tunde",
+   "txt": "sent you a Rose 🌹 on your Flick · +5 Diamonds",
+   "a": "go",
+   "v": "wallet",
+   "fl": "mm2",
+   "ago": 42
+  },
+  {
+   "id": "a4",
+   "k": "follow",
+   "who": "lucia",
+   "txt": "started following you",
+   "a": "go",
+   "v": "user:lucia",
+   "ago": 120
+  },
+  {
+   "id": "a5",
+   "k": "room",
+   "who": "camille",
+   "txt": "opened a talk room: “Café français: weekend plans”",
+   "a": "go",
+   "v": "room:r1",
+   "btn": [
+    "go",
+    "room:r1",
+    "Join"
+   ],
+   "ago": 180
+  },
+  {
+   "id": "a6",
+   "k": "lesson",
+   "who": "marc",
+   "txt": "planned a lesson: “Order like a local: café French” · Tue 19:00",
+   "a": "sheet",
+   "v": "lres:p1",
+   "btn": [
+    "sheet",
+    "lres:p1",
+    "See lesson"
+   ],
+   "ago": 300
+  },
+  {
+   "id": "a7",
+   "k": "follow",
+   "who": "kenji",
+   "txt": "followed you back · you’ll see each other in Following",
+   "a": "go",
+   "v": "user:kenji",
+   "ago": 1500
+  },
+  {
+   "id": "a8",
+   "k": "comment",
+   "who": "reem",
+   "txt": "commented on your Flick: “So useful, thanks!”",
+   "a": "go",
+   "v": "flick:mm2",
+   "fl": "mm2",
+   "ago": 1700
+  },
+  {
+   "id": "a9",
+   "k": "live",
+   "who": "aiko",
+   "txt": "started a live: “IELTS speaking: band 7 phrases”",
+   "a": "go",
+   "v": "live:l1",
+   "btn": [
+    "go",
+    "live:l1",
+    "Join"
+   ],
+   "ago": 1800
+  },
+  {
+   "id": "a10",
+   "k": "safety",
+   "who": "",
+   "txt": "Your report was reviewed · action taken",
+   "a": "go",
+   "v": "set:status",
+   "ago": 3000
+  }
+ ],
+ "prefs": {
+  "nMsg": true,
+  "nCalls": true,
+  "nLive": true,
+  "nComments": true,
+  "nGifts": true,
+  "nClasses": true,
+  "nLikes": false,
+  "nSound": true,
+  "nVibe": true,
+  "quiet": "off",
+  "whoMsg": "everyone",
+  "whoGift": "everyone",
+  "showAge": true,
+  "showCity": true,
+  "showOnline": true,
+  "nearby": true,
+  "autoTr": false,
+  "receipts": true,
+  "roman": true,
+  "font": "M",
+  "wall": "Glow",
+  "goal": "20",
+  "subLang": "both",
+  "appLang": "Phone default",
+  "nOffers": false,
+  "liveWho": "all",
+  "ghost": false,
+  "privateAcc": false,
+  "cache": 128,
+  "backup": false,
+  "trMode": "tap",
+  "filterWords": true
+ }
+}

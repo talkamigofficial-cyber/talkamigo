@@ -1,0 +1,159 @@
+{
+ "gifts": [
+  {
+   "id": "wave",
+   "name": "Wave",
+   "e": "👋",
+   "cost": 4
+  },
+  {
+   "id": "rose",
+   "name": "Rose",
+   "e": "🌹",
+   "cost": 20
+  },
+  {
+   "id": "coffee",
+   "name": "Café",
+   "e": "☕",
+   "cost": 40
+  },
+  {
+   "id": "ghost",
+   "name": "Ghost",
+   "e": "👻",
+   "cost": 100,
+   "tag": "Seasonal"
+  },
+  {
+   "id": "heart",
+   "name": "Big heart",
+   "e": "💖",
+   "cost": 200
+  },
+  {
+   "id": "mic",
+   "name": "Mic drop",
+   "e": "🎤",
+   "cost": 500
+  },
+  {
+   "id": "rocket",
+   "name": "Rocket",
+   "e": "🚀",
+   "cost": 1000
+  },
+  {
+   "id": "crown",
+   "name": "Crown",
+   "e": "👑",
+   "cost": 3000
+  }
+ ],
+ "coinPacks": [
+  {
+   "coins": 60,
+   "usd": 0.99,
+   "bonus": ""
+  },
+  {
+   "coins": 310,
+   "usd": 4.99,
+   "bonus": "+2%"
+  },
+  {
+   "coins": 630,
+   "usd": 9.99,
+   "bonus": "+4%"
+  },
+  {
+   "coins": 3200,
+   "usd": 49.99,
+   "bonus": "+6%"
+  },
+  {
+   "coins": 6500,
+   "usd": 99.99,
+   "bonus": "+7%"
+  }
+ ],
+ "boosts": {
+  "profile": {
+   "name": "Profile boost",
+   "mins": 30,
+   "cost": 300,
+   "desc": "Show up first in Connect for people who match your languages."
+  },
+  "room": {
+   "name": "Room boost",
+   "mins": 15,
+   "cost": 100,
+   "desc": "Pin your talk room to the top of the Rooms list, for people in your room’s languages."
+  },
+  "live": {
+   "name": "Live boost",
+   "mins": 15,
+   "cost": 200,
+   "desc": "Pin your live room to the top of Live rooms, for people in its language."
+  },
+  "flick": {
+   "name": "Flick boost",
+   "mins": 60,
+   "cost": 150,
+   "desc": "Show your latest Flick to more people in “For you” for 1 hour."
+  }
+ },
+ "frames": [
+  [
+   "ember",
+   "Ember ring",
+   300,
+   "conic-gradient(#FF4A2E,#FFB067,#FF4A2E)"
+  ],
+  [
+   "gold",
+   "Gold ring",
+   500,
+   "conic-gradient(#FFE08A,#E0A000,#FFE08A)"
+  ],
+  [
+   "sakura",
+   "Sakura",
+   800,
+   "conic-gradient(#FF9EC4,#FFE4F0,#FF9EC4)"
+  ],
+  [
+   "spooky",
+   "Halloween",
+   400,
+   "conic-gradient(#FF8A1F,#5B2BB5,#FF8A1F)"
+  ]
+ ],
+ "cashoutTiers": [
+  [
+   1000,
+   18
+  ],
+  [
+   5000,
+   95
+  ],
+  [
+   10000,
+   200
+  ],
+  [
+   25000,
+   510
+  ]
+ ],
+ "plans": {
+  "plusWeek": 2.99,
+  "plusMonth": 9.99,
+  "plusYear": 79.99,
+  "infinity": 199.99,
+  "lesson": 0.99
+ },
+ "diamondRate": 0.25,
+ "giftDayLimit": 20000
+}

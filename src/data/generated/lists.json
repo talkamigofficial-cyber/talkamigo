@@ -1,0 +1,1567 @@
+{
+ "countries": [
+  {
+   "code": "AF",
+   "name": "Afghanistan"
+  },
+  {
+   "code": "AL",
+   "name": "Albania"
+  },
+  {
+   "code": "DZ",
+   "name": "Algeria"
+  },
+  {
+   "code": "AD",
+   "name": "Andorra"
+  },
+  {
+   "code": "AO",
+   "name": "Angola"
+  },
+  {
+   "code": "AG",
+   "name": "Antigua and Barbuda"
+  },
+  {
+   "code": "AR",
+   "name": "Argentina"
+  },
+  {
+   "code": "AM",
+   "name": "Armenia"
+  },
+  {
+   "code": "AU",
+   "name": "Australia"
+  },
+  {
+   "code": "AT",
+   "name": "Austria"
+  },
+  {
+   "code": "AZ",
+   "name": "Azerbaijan"
+  },
+  {
+   "code": "BS",
+   "name": "Bahamas"
+  },
+  {
+   "code": "BH",
+   "name": "Bahrain"
+  },
+  {
+   "code": "BD",
+   "name": "Bangladesh"
+  },
+  {
+   "code": "BB",
+   "name": "Barbados"
+  },
+  {
+   "code": "BY",
+   "name": "Belarus"
+  },
+  {
+   "code": "BE",
+   "name": "Belgium"
+  },
+  {
+   "code": "BZ",
+   "name": "Belize"
+  },
+  {
+   "code": "BJ",
+   "name": "Benin"
+  },
+  {
+   "code": "BT",
+   "name": "Bhutan"
+  },
+  {
+   "code": "BO",
+   "name": "Bolivia"
+  },
+  {
+   "code": "BA",
+   "name": "Bosnia and Herzegovina"
+  },
+  {
+   "code": "BW",
+   "name": "Botswana"
+  },
+  {
+   "code": "BR",
+   "name": "Brazil"
+  },
+  {
+   "code": "BN",
+   "name": "Brunei"
+  },
+  {
+   "code": "BG",
+   "name": "Bulgaria"
+  },
+  {
+   "code": "BF",
+   "name": "Burkina Faso"
+  },
+  {
+   "code": "BI",
+   "name": "Burundi"
+  },
+  {
+   "code": "CV",
+   "name": "Cape Verde"
+  },
+  {
+   "code": "KH",
+   "name": "Cambodia"
+  },
+  {
+   "code": "CM",
+   "name": "Cameroon"
+  },
+  {
+   "code": "CA",
+   "name": "Canada"
+  },
+  {
+   "code": "CF",
+   "name": "Central African Republic"
+  },
+  {
+   "code": "TD",
+   "name": "Chad"
+  },
+  {
+   "code": "CL",
+   "name": "Chile"
+  },
+  {
+   "code": "CN",
+   "name": "China"
+  },
+  {
+   "code": "CO",
+   "name": "Colombia"
+  },
+  {
+   "code": "KM",
+   "name": "Comoros"
+  },
+  {
+   "code": "CG",
+   "name": "Congo"
+  },
+  {
+   "code": "CD",
+   "name": "Congo (DRC)"
+  },
+  {
+   "code": "CR",
+   "name": "Costa Rica"
+  },
+  {
+   "code": "CI",
+   "name": "Côte d’Ivoire"
+  },
+  {
+   "code": "HR",
+   "name": "Croatia"
+  },
+  {
+   "code": "CU",
+   "name": "Cuba"
+  },
+  {
+   "code": "CY",
+   "name": "Cyprus"
+  },
+  {
+   "code": "CZ",
+   "name": "Czechia"
+  },
+  {
+   "code": "DK",
+   "name": "Denmark"
+  },
+  {
+   "code": "DJ",
+   "name": "Djibouti"
+  },
+  {
+   "code": "DM",
+   "name": "Dominica"
+  },
+  {
+   "code": "DO",
+   "name": "Dominican Republic"
+  },
+  {
+   "code": "EC",
+   "name": "Ecuador"
+  },
+  {
+   "code": "EG",
+   "name": "Egypt"
+  },
+  {
+   "code": "SV",
+   "name": "El Salvador"
+  },
+  {
+   "code": "GQ",
+   "name": "Equatorial Guinea"
+  },
+  {
+   "code": "ER",
+   "name": "Eritrea"
+  },
+  {
+   "code": "EE",
+   "name": "Estonia"
+  },
+  {
+   "code": "SZ",
+   "name": "Eswatini"
+  },
+  {
+   "code": "ET",
+   "name": "Ethiopia"
+  },
+  {
+   "code": "FJ",
+   "name": "Fiji"
+  },
+  {
+   "code": "FI",
+   "name": "Finland"
+  },
+  {
+   "code": "FR",
+   "name": "France"
+  },
+  {
+   "code": "GA",
+   "name": "Gabon"
+  },
+  {
+   "code": "GM",
+   "name": "Gambia"
+  },
+  {
+   "code": "GE",
+   "name": "Georgia"
+  },
+  {
+   "code": "DE",
+   "name": "Germany"
+  },
+  {
+   "code": "GH",
+   "name": "Ghana"
+  },
+  {
+   "code": "GR",
+   "name": "Greece"
+  },
+  {
+   "code": "GD",
+   "name": "Grenada"
+  },
+  {
+   "code": "GT",
+   "name": "Guatemala"
+  },
+  {
+   "code": "GN",
+   "name": "Guinea"
+  },
+  {
+   "code": "GW",
+   "name": "Guinea-Bissau"
+  },
+  {
+   "code": "GY",
+   "name": "Guyana"
+  },
+  {
+   "code": "HT",
+   "name": "Haiti"
+  },
+  {
+   "code": "HN",
+   "name": "Honduras"
+  },
+  {
+   "code": "HK",
+   "name": "Hong Kong"
+  },
+  {
+   "code": "HU",
+   "name": "Hungary"
+  },
+  {
+   "code": "IS",
+   "name": "Iceland"
+  },
+  {
+   "code": "IN",
+   "name": "India"
+  },
+  {
+   "code": "ID",
+   "name": "Indonesia"
+  },
+  {
+   "code": "IR",
+   "name": "Iran"
+  },
+  {
+   "code": "IQ",
+   "name": "Iraq"
+  },
+  {
+   "code": "IE",
+   "name": "Ireland"
+  },
+  {
+   "code": "IL",
+   "name": "Israel"
+  },
+  {
+   "code": "IT",
+   "name": "Italy"
+  },
+  {
+   "code": "JM",
+   "name": "Jamaica"
+  },
+  {
+   "code": "JP",
+   "name": "Japan"
+  },
+  {
+   "code": "JO",
+   "name": "Jordan"
+  },
+  {
+   "code": "KZ",
+   "name": "Kazakhstan"
+  },
+  {
+   "code": "KE",
+   "name": "Kenya"
+  },
+  {
+   "code": "KI",
+   "name": "Kiribati"
+  },
+  {
+   "code": "XK",
+   "name": "Kosovo"
+  },
+  {
+   "code": "KW",
+   "name": "Kuwait"
+  },
+  {
+   "code": "KG",
+   "name": "Kyrgyzstan"
+  },
+  {
+   "code": "LA",
+   "name": "Laos"
+  },
+  {
+   "code": "LV",
+   "name": "Latvia"
+  },
+  {
+   "code": "LB",
+   "name": "Lebanon"
+  },
+  {
+   "code": "LS",
+   "name": "Lesotho"
+  },
+  {
+   "code": "LR",
+   "name": "Liberia"
+  },
+  {
+   "code": "LY",
+   "name": "Libya"
+  },
+  {
+   "code": "LI",
+   "name": "Liechtenstein"
+  },
+  {
+   "code": "LT",
+   "name": "Lithuania"
+  },
+  {
+   "code": "LU",
+   "name": "Luxembourg"
+  },
+  {
+   "code": "MO",
+   "name": "Macao"
+  },
+  {
+   "code": "MG",
+   "name": "Madagascar"
+  },
+  {
+   "code": "MW",
+   "name": "Malawi"
+  },
+  {
+   "code": "MY",
+   "name": "Malaysia"
+  },
+  {
+   "code": "MV",
+   "name": "Maldives"
+  },
+  {
+   "code": "ML",
+   "name": "Mali"
+  },
+  {
+   "code": "MT",
+   "name": "Malta"
+  },
+  {
+   "code": "MH",
+   "name": "Marshall Islands"
+  },
+  {
+   "code": "MR",
+   "name": "Mauritania"
+  },
+  {
+   "code": "MU",
+   "name": "Mauritius"
+  },
+  {
+   "code": "MX",
+   "name": "Mexico"
+  },
+  {
+   "code": "FM",
+   "name": "Micronesia"
+  },
+  {
+   "code": "MD",
+   "name": "Moldova"
+  },
+  {
+   "code": "MC",
+   "name": "Monaco"
+  },
+  {
+   "code": "MN",
+   "name": "Mongolia"
+  },
+  {
+   "code": "ME",
+   "name": "Montenegro"
+  },
+  {
+   "code": "MA",
+   "name": "Morocco"
+  },
+  {
+   "code": "MZ",
+   "name": "Mozambique"
+  },
+  {
+   "code": "MM",
+   "name": "Myanmar"
+  },
+  {
+   "code": "NA",
+   "name": "Namibia"
+  },
+  {
+   "code": "NR",
+   "name": "Nauru"
+  },
+  {
+   "code": "NP",
+   "name": "Nepal"
+  },
+  {
+   "code": "NL",
+   "name": "Netherlands"
+  },
+  {
+   "code": "NZ",
+   "name": "New Zealand"
+  },
+  {
+   "code": "NI",
+   "name": "Nicaragua"
+  },
+  {
+   "code": "NE",
+   "name": "Niger"
+  },
+  {
+   "code": "NG",
+   "name": "Nigeria"
+  },
+  {
+   "code": "KP",
+   "name": "North Korea"
+  },
+  {
+   "code": "MK",
+   "name": "North Macedonia"
+  },
+  {
+   "code": "NO",
+   "name": "Norway"
+  },
+  {
+   "code": "OM",
+   "name": "Oman"
+  },
+  {
+   "code": "PK",
+   "name": "Pakistan"
+  },
+  {
+   "code": "PW",
+   "name": "Palau"
+  },
+  {
+   "code": "PS",
+   "name": "Palestine"
+  },
+  {
+   "code": "PA",
+   "name": "Panama"
+  },
+  {
+   "code": "PG",
+   "name": "Papua New Guinea"
+  },
+  {
+   "code": "PY",
+   "name": "Paraguay"
+  },
+  {
+   "code": "PE",
+   "name": "Peru"
+  },
+  {
+   "code": "PH",
+   "name": "Philippines"
+  },
+  {
+   "code": "PL",
+   "name": "Poland"
+  },
+  {
+   "code": "PT",
+   "name": "Portugal"
+  },
+  {
+   "code": "PR",
+   "name": "Puerto Rico"
+  },
+  {
+   "code": "QA",
+   "name": "Qatar"
+  },
+  {
+   "code": "RO",
+   "name": "Romania"
+  },
+  {
+   "code": "RU",
+   "name": "Russia"
+  },
+  {
+   "code": "RW",
+   "name": "Rwanda"
+  },
+  {
+   "code": "KN",
+   "name": "Saint Kitts and Nevis"
+  },
+  {
+   "code": "LC",
+   "name": "Saint Lucia"
+  },
+  {
+   "code": "VC",
+   "name": "Saint Vincent and the Grenadines"
+  },
+  {
+   "code": "WS",
+   "name": "Samoa"
+  },
+  {
+   "code": "SM",
+   "name": "San Marino"
+  },
+  {
+   "code": "ST",
+   "name": "São Tomé and Príncipe"
+  },
+  {
+   "code": "SA",
+   "name": "Saudi Arabia"
+  },
+  {
+   "code": "SN",
+   "name": "Senegal"
+  },
+  {
+   "code": "RS",
+   "name": "Serbia"
+  },
+  {
+   "code": "SC",
+   "name": "Seychelles"
+  },
+  {
+   "code": "SL",
+   "name": "Sierra Leone"
+  },
+  {
+   "code": "SG",
+   "name": "Singapore"
+  },
+  {
+   "code": "SK",
+   "name": "Slovakia"
+  },
+  {
+   "code": "SI",
+   "name": "Slovenia"
+  },
+  {
+   "code": "SB",
+   "name": "Solomon Islands"
+  },
+  {
+   "code": "SO",
+   "name": "Somalia"
+  },
+  {
+   "code": "ZA",
+   "name": "South Africa"
+  },
+  {
+   "code": "KR",
+   "name": "South Korea"
+  },
+  {
+   "code": "SS",
+   "name": "South Sudan"
+  },
+  {
+   "code": "ES",
+   "name": "Spain"
+  },
+  {
+   "code": "LK",
+   "name": "Sri Lanka"
+  },
+  {
+   "code": "SD",
+   "name": "Sudan"
+  },
+  {
+   "code": "SR",
+   "name": "Suriname"
+  },
+  {
+   "code": "SE",
+   "name": "Sweden"
+  },
+  {
+   "code": "CH",
+   "name": "Switzerland"
+  },
+  {
+   "code": "SY",
+   "name": "Syria"
+  },
+  {
+   "code": "TW",
+   "name": "Taiwan"
+  },
+  {
+   "code": "TJ",
+   "name": "Tajikistan"
+  },
+  {
+   "code": "TZ",
+   "name": "Tanzania"
+  },
+  {
+   "code": "TH",
+   "name": "Thailand"
+  },
+  {
+   "code": "TL",
+   "name": "Timor-Leste"
+  },
+  {
+   "code": "TG",
+   "name": "Togo"
+  },
+  {
+   "code": "TO",
+   "name": "Tonga"
+  },
+  {
+   "code": "TT",
+   "name": "Trinidad and Tobago"
+  },
+  {
+   "code": "TN",
+   "name": "Tunisia"
+  },
+  {
+   "code": "TR",
+   "name": "Türkiye"
+  },
+  {
+   "code": "TM",
+   "name": "Turkmenistan"
+  },
+  {
+   "code": "TV",
+   "name": "Tuvalu"
+  },
+  {
+   "code": "UG",
+   "name": "Uganda"
+  },
+  {
+   "code": "UA",
+   "name": "Ukraine"
+  },
+  {
+   "code": "AE",
+   "name": "United Arab Emirates"
+  },
+  {
+   "code": "GB",
+   "name": "United Kingdom"
+  },
+  {
+   "code": "US",
+   "name": "United States"
+  },
+  {
+   "code": "UY",
+   "name": "Uruguay"
+  },
+  {
+   "code": "UZ",
+   "name": "Uzbekistan"
+  },
+  {
+   "code": "VU",
+   "name": "Vanuatu"
+  },
+  {
+   "code": "VA",
+   "name": "Vatican City"
+  },
+  {
+   "code": "VE",
+   "name": "Venezuela"
+  },
+  {
+   "code": "VN",
+   "name": "Vietnam"
+  },
+  {
+   "code": "YE",
+   "name": "Yemen"
+  },
+  {
+   "code": "ZM",
+   "name": "Zambia"
+  },
+  {
+   "code": "ZW",
+   "name": "Zimbabwe"
+  }
+ ],
+ "popularCountries": [
+  "GB",
+  "US",
+  "FR",
+  "ES",
+  "DE",
+  "IT",
+  "BR",
+  "NG",
+  "JP",
+  "KR",
+  "MA",
+  "IN"
+ ],
+ "capitals": {
+  "AF": "Kabul",
+  "AL": "Tirana",
+  "DZ": "Algiers",
+  "AD": "Andorra la Vella",
+  "AO": "Luanda",
+  "AG": "Saint John's",
+  "AR": "Buenos Aires",
+  "AM": "Yerevan",
+  "AU": "Canberra",
+  "AT": "Vienna",
+  "AZ": "Baku",
+  "BS": "Nassau",
+  "BH": "Manama",
+  "BD": "Dhaka",
+  "BB": "Bridgetown",
+  "BY": "Minsk",
+  "BE": "Brussels",
+  "BZ": "Belmopan",
+  "BJ": "Porto-Novo",
+  "BT": "Thimphu",
+  "BO": "La Paz",
+  "BA": "Sarajevo",
+  "BW": "Gaborone",
+  "BR": "Brasília",
+  "BN": "Bandar Seri Begawan",
+  "BG": "Sofia",
+  "BF": "Ouagadougou",
+  "BI": "Gitega",
+  "CV": "Praia",
+  "KH": "Phnom Penh",
+  "CM": "Yaoundé",
+  "CA": "Ottawa",
+  "CF": "Bangui",
+  "TD": "N'Djamena",
+  "CL": "Santiago",
+  "CN": "Beijing",
+  "CO": "Bogotá",
+  "KM": "Moroni",
+  "CG": "Brazzaville",
+  "CD": "Kinshasa",
+  "CR": "San José",
+  "CI": "Abidjan",
+  "HR": "Zagreb",
+  "CU": "Havana",
+  "CY": "Nicosia",
+  "CZ": "Prague",
+  "DK": "Copenhagen",
+  "DJ": "Djibouti",
+  "DM": "Roseau",
+  "DO": "Santo Domingo",
+  "EC": "Quito",
+  "EG": "Cairo",
+  "SV": "San Salvador",
+  "GQ": "Malabo",
+  "ER": "Asmara",
+  "EE": "Tallinn",
+  "SZ": "Mbabane",
+  "ET": "Addis Ababa",
+  "FJ": "Suva",
+  "FI": "Helsinki",
+  "FR": "Paris",
+  "GA": "Libreville",
+  "GM": "Banjul",
+  "GE": "Tbilisi",
+  "DE": "Berlin",
+  "GH": "Accra",
+  "GR": "Athens",
+  "GD": "St. George's",
+  "GT": "Guatemala City",
+  "GN": "Conakry",
+  "GW": "Bissau",
+  "GY": "Georgetown",
+  "HT": "Port-au-Prince",
+  "HN": "Tegucigalpa",
+  "HK": "Hong Kong",
+  "HU": "Budapest",
+  "IS": "Reykjavík",
+  "IN": "New Delhi",
+  "ID": "Jakarta",
+  "IR": "Tehran",
+  "IQ": "Baghdad",
+  "IE": "Dublin",
+  "IL": "Jerusalem",
+  "IT": "Rome",
+  "JM": "Kingston",
+  "JP": "Tokyo",
+  "JO": "Amman",
+  "KZ": "Astana",
+  "KE": "Nairobi",
+  "KI": "Tarawa",
+  "XK": "Pristina",
+  "KW": "Kuwait City",
+  "KG": "Bishkek",
+  "LA": "Vientiane",
+  "LV": "Riga",
+  "LB": "Beirut",
+  "LS": "Maseru",
+  "LR": "Monrovia",
+  "LY": "Tripoli",
+  "LI": "Vaduz",
+  "LT": "Vilnius",
+  "LU": "Luxembourg",
+  "MO": "Macau",
+  "MG": "Antananarivo",
+  "MW": "Lilongwe",
+  "MY": "Kuala Lumpur",
+  "MV": "Malé",
+  "ML": "Bamako",
+  "MT": "Valletta",
+  "MH": "Majuro",
+  "MR": "Nouakchott",
+  "MU": "Port Louis",
+  "MX": "Mexico City",
+  "FM": "Palikir",
+  "MD": "Chișinău",
+  "MC": "Monaco",
+  "MN": "Ulaanbaatar",
+  "ME": "Podgorica",
+  "MA": "Rabat",
+  "MZ": "Maputo",
+  "MM": "Naypyidaw",
+  "NA": "Windhoek",
+  "NR": "Yaren",
+  "NP": "Kathmandu",
+  "NL": "Amsterdam",
+  "NZ": "Wellington",
+  "NI": "Managua",
+  "NE": "Niamey",
+  "NG": "Abuja",
+  "KP": "Pyongyang",
+  "MK": "Skopje",
+  "NO": "Oslo",
+  "OM": "Muscat",
+  "PK": "Islamabad",
+  "PW": "Ngerulmud",
+  "PS": "Ramallah",
+  "PA": "Panama City",
+  "PG": "Port Moresby",
+  "PY": "Asunción",
+  "PE": "Lima",
+  "PH": "Manila",
+  "PL": "Warsaw",
+  "PT": "Lisbon",
+  "PR": "San Juan",
+  "QA": "Doha",
+  "RO": "Bucharest",
+  "RU": "Moscow",
+  "RW": "Kigali",
+  "KN": "Basseterre",
+  "LC": "Castries",
+  "VC": "Kingstown",
+  "WS": "Apia",
+  "SM": "San Marino",
+  "ST": "São Tomé",
+  "SA": "Riyadh",
+  "SN": "Dakar",
+  "RS": "Belgrade",
+  "SC": "Victoria",
+  "SL": "Freetown",
+  "SG": "Singapore",
+  "SK": "Bratislava",
+  "SI": "Ljubljana",
+  "SB": "Honiara",
+  "SO": "Mogadishu",
+  "ZA": "Pretoria",
+  "KR": "Seoul",
+  "SS": "Juba",
+  "ES": "Madrid",
+  "LK": "Colombo",
+  "SD": "Khartoum",
+  "SR": "Paramaribo",
+  "SE": "Stockholm",
+  "CH": "Bern",
+  "SY": "Damascus",
+  "TW": "Taipei",
+  "TJ": "Dushanbe",
+  "TZ": "Dodoma",
+  "TH": "Bangkok",
+  "TL": "Dili",
+  "TG": "Lomé",
+  "TO": "Nuku'alofa",
+  "TT": "Port of Spain",
+  "TN": "Tunis",
+  "TR": "Ankara",
+  "TM": "Ashgabat",
+  "TV": "Funafuti",
+  "UG": "Kampala",
+  "UA": "Kyiv",
+  "AE": "Abu Dhabi",
+  "GB": "London",
+  "US": "Washington, D.C.",
+  "UY": "Montevideo",
+  "UZ": "Tashkent",
+  "VU": "Port Vila",
+  "VA": "Vatican City",
+  "VE": "Caracas",
+  "VN": "Hanoi",
+  "YE": "Sana'a",
+  "ZM": "Lusaka",
+  "ZW": "Harare"
+ },
+ "countryLanguage": {
+  "AF": "Persian",
+  "AL": "Albanian",
+  "DZ": "Arabic",
+  "AD": "Catalan",
+  "AO": "Portuguese",
+  "AG": "English",
+  "AR": "Spanish",
+  "AU": "English",
+  "AT": "German",
+  "BS": "English",
+  "BH": "Arabic",
+  "BD": "Bengali",
+  "BB": "English",
+  "BY": "Russian",
+  "BE": "Dutch",
+  "BZ": "English",
+  "BJ": "French",
+  "BO": "Spanish",
+  "BW": "English",
+  "BR": "Portuguese",
+  "BN": "Malay",
+  "BG": "Bulgarian",
+  "BF": "French",
+  "BI": "French",
+  "CV": "Portuguese",
+  "CM": "French",
+  "CA": "English",
+  "CF": "French",
+  "TD": "French",
+  "CL": "Spanish",
+  "CN": "Chinese (Mandarin)",
+  "CO": "Spanish",
+  "KM": "French",
+  "CG": "French",
+  "CD": "French",
+  "CR": "Spanish",
+  "CI": "French",
+  "HR": "Croatian",
+  "CU": "Spanish",
+  "CY": "Greek",
+  "CZ": "Czech",
+  "DK": "Danish",
+  "DJ": "French",
+  "DM": "English",
+  "DO": "Spanish",
+  "EC": "Spanish",
+  "EG": "Arabic",
+  "SV": "Spanish",
+  "GQ": "Spanish",
+  "SZ": "English",
+  "ET": "Amharic",
+  "FJ": "English",
+  "FI": "Finnish",
+  "FR": "French",
+  "GA": "French",
+  "GM": "English",
+  "DE": "German",
+  "GH": "English",
+  "GR": "Greek",
+  "GD": "English",
+  "GT": "Spanish",
+  "GN": "French",
+  "GW": "Portuguese",
+  "GY": "English",
+  "HT": "Haitian Creole",
+  "HN": "Spanish",
+  "HK": "Cantonese",
+  "HU": "Hungarian",
+  "IN": "Hindi",
+  "ID": "Indonesian",
+  "IR": "Persian",
+  "IQ": "Arabic",
+  "IE": "English",
+  "IL": "Hebrew",
+  "IT": "Italian",
+  "JM": "English",
+  "JP": "Japanese",
+  "JO": "Arabic",
+  "KZ": "Russian",
+  "KE": "Swahili",
+  "KI": "English",
+  "XK": "Albanian",
+  "KW": "Arabic",
+  "KG": "Russian",
+  "LB": "Arabic",
+  "LS": "English",
+  "LR": "English",
+  "LY": "Arabic",
+  "LI": "German",
+  "LU": "French",
+  "MO": "Cantonese",
+  "MG": "French",
+  "MW": "English",
+  "MY": "Malay",
+  "ML": "French",
+  "MT": "English",
+  "MH": "English",
+  "MR": "Arabic",
+  "MU": "English",
+  "MX": "Spanish",
+  "FM": "English",
+  "MD": "Romanian",
+  "MC": "French",
+  "ME": "Serbian",
+  "MA": "Arabic",
+  "MZ": "Portuguese",
+  "NA": "English",
+  "NR": "English",
+  "NL": "Dutch",
+  "NZ": "English",
+  "NI": "Spanish",
+  "NE": "French",
+  "NG": "English",
+  "KP": "Korean",
+  "NO": "Norwegian",
+  "OM": "Arabic",
+  "PK": "Urdu",
+  "PW": "English",
+  "PS": "Arabic",
+  "PA": "Spanish",
+  "PG": "English",
+  "PY": "Spanish",
+  "PE": "Spanish",
+  "PH": "Filipino (Tagalog)",
+  "PL": "Polish",
+  "PT": "Portuguese",
+  "PR": "Spanish",
+  "QA": "Arabic",
+  "RO": "Romanian",
+  "RU": "Russian",
+  "RW": "English",
+  "KN": "English",
+  "LC": "English",
+  "VC": "English",
+  "WS": "English",
+  "SM": "Italian",
+  "ST": "Portuguese",
+  "SA": "Arabic",
+  "SN": "French",
+  "RS": "Serbian",
+  "SC": "English",
+  "SL": "English",
+  "SG": "English",
+  "SB": "English",
+  "SO": "Somali",
+  "ZA": "English",
+  "KR": "Korean",
+  "SS": "English",
+  "ES": "Spanish",
+  "SD": "Arabic",
+  "SR": "Dutch",
+  "SE": "Swedish",
+  "CH": "German",
+  "SY": "Arabic",
+  "TW": "Chinese (Mandarin)",
+  "TZ": "Swahili",
+  "TH": "Thai",
+  "TL": "Portuguese",
+  "TG": "French",
+  "TO": "English",
+  "TT": "English",
+  "TN": "Arabic",
+  "TR": "Turkish",
+  "TV": "English",
+  "UG": "English",
+  "UA": "Ukrainian",
+  "AE": "Arabic",
+  "GB": "English",
+  "US": "English",
+  "UY": "Spanish",
+  "VU": "English",
+  "VA": "Italian",
+  "VE": "Spanish",
+  "VN": "Vietnamese",
+  "YE": "Arabic",
+  "ZM": "English",
+  "ZW": "English"
+ },
+ "languages": [
+  "English",
+  "Spanish",
+  "French",
+  "German",
+  "Italian",
+  "Portuguese",
+  "Japanese",
+  "Korean",
+  "Chinese (Mandarin)",
+  "Cantonese",
+  "Arabic",
+  "Russian",
+  "Turkish",
+  "Hindi",
+  "Urdu",
+  "Bengali",
+  "Punjabi",
+  "Tamil",
+  "Dutch",
+  "Polish",
+  "Swedish",
+  "Norwegian",
+  "Danish",
+  "Finnish",
+  "Greek",
+  "Hebrew",
+  "Persian",
+  "Ukrainian",
+  "Romanian",
+  "Czech",
+  "Hungarian",
+  "Catalan",
+  "Vietnamese",
+  "Thai",
+  "Indonesian",
+  "Malay",
+  "Filipino (Tagalog)",
+  "Swahili",
+  "Yoruba",
+  "Igbo",
+  "Hausa",
+  "Amharic",
+  "Somali",
+  "Zulu",
+  "Afrikaans",
+  "Albanian",
+  "Serbian",
+  "Croatian",
+  "Bulgarian",
+  "Haitian Creole"
+ ],
+ "popularLanguages": [
+  "English",
+  "Spanish",
+  "French",
+  "German",
+  "Italian",
+  "Portuguese",
+  "Japanese",
+  "Korean",
+  "Chinese (Mandarin)",
+  "Arabic",
+  "Russian",
+  "Turkish"
+ ],
+ "interests": [
+  "Music",
+  "Travel",
+  "Food & cooking",
+  "Films & series",
+  "Football",
+  "Gaming",
+  "Fitness & gym",
+  "Anime & manga",
+  "Reading",
+  "Fashion",
+  "Photography",
+  "Art & drawing",
+  "Tech",
+  "Dancing",
+  "K-pop",
+  "Hip-hop",
+  "Nature & hiking",
+  "Pets",
+  "Coffee",
+  "Podcasts",
+  "Startups & business",
+  "Science",
+  "History",
+  "Cars",
+  "Basketball",
+  "Tennis",
+  "Running",
+  "Yoga",
+  "Meditation",
+  "Writing",
+  "Poetry",
+  "Theatre",
+  "Comedy",
+  "Memes",
+  "Board games",
+  "Chess",
+  "Cycling",
+  "Surfing",
+  "Skiing",
+  "Swimming",
+  "Boxing & MMA",
+  "Formula 1",
+  "Volunteering",
+  "Languages",
+  "Linguistics",
+  "Philosophy",
+  "Psychology",
+  "Politics & news",
+  "Economics",
+  "Investing",
+  "Crypto",
+  "Coding",
+  "Design",
+  "Architecture",
+  "Interior design",
+  "Gardening",
+  "Baking",
+  "Wine",
+  "Street food",
+  "Vegan food",
+  "Beauty & make-up",
+  "Skincare",
+  "Sneakers",
+  "Streetwear",
+  "Vintage",
+  "Concerts",
+  "Festivals",
+  "Jazz",
+  "Classical music",
+  "Rock",
+  "Afrobeats",
+  "Reggaeton",
+  "Latin music",
+  "R&B",
+  "Electronic music",
+  "Singing",
+  "Guitar",
+  "Piano",
+  "DJing",
+  "Content creation",
+  "Vlogging",
+  "TikTok",
+  "Spirituality",
+  "Astrology",
+  "Parenting",
+  "Teaching",
+  "Medicine",
+  "Law",
+  "Engineering",
+  "Space",
+  "Football fan (club)",
+  "Rugby",
+  "Cricket",
+  "Esports",
+  "Cosplay",
+  "Collecting"
+ ],
+ "popularInterests": [
+  "Music",
+  "Travel",
+  "Food & cooking",
+  "Films & series",
+  "Football",
+  "Gaming",
+  "Fitness & gym",
+  "Anime & manga",
+  "Reading",
+  "Fashion",
+  "Photography",
+  "Art & drawing",
+  "Tech",
+  "Dancing",
+  "K-pop",
+  "Hip-hop",
+  "Nature & hiking",
+  "Pets",
+  "Coffee",
+  "Podcasts",
+  "Startups & business",
+  "Science",
+  "History",
+  "Cars"
+ ],
+ "dialCodes": {
+  "GB": "44",
+  "IE": "353",
+  "FR": "33",
+  "ES": "34",
+  "PT": "351",
+  "DE": "49",
+  "IT": "39",
+  "NL": "31",
+  "BE": "32",
+  "LU": "352",
+  "CH": "41",
+  "AT": "43",
+  "DK": "45",
+  "SE": "46",
+  "NO": "47",
+  "FI": "358",
+  "IS": "354",
+  "PL": "48",
+  "CZ": "420",
+  "SK": "421",
+  "HU": "36",
+  "RO": "40",
+  "BG": "359",
+  "GR": "30",
+  "CY": "357",
+  "MT": "356",
+  "HR": "385",
+  "SI": "386",
+  "EE": "372",
+  "LV": "371",
+  "LT": "370",
+  "RS": "381",
+  "BA": "387",
+  "AL": "355",
+  "MK": "389",
+  "ME": "382",
+  "UA": "380",
+  "MD": "373",
+  "TR": "90",
+  "GE": "995",
+  "AM": "374",
+  "AZ": "994",
+  "US": "1",
+  "CA": "1",
+  "MX": "52",
+  "BR": "55",
+  "AR": "54",
+  "CO": "57",
+  "CL": "56",
+  "PE": "51",
+  "VE": "58",
+  "EC": "593",
+  "UY": "598",
+  "JP": "81",
+  "KR": "82",
+  "CN": "86",
+  "HK": "852",
+  "TW": "886",
+  "IN": "91",
+  "PK": "92",
+  "BD": "880",
+  "LK": "94",
+  "NP": "977",
+  "PH": "63",
+  "VN": "84",
+  "TH": "66",
+  "ID": "62",
+  "MY": "60",
+  "SG": "65",
+  "AU": "61",
+  "NZ": "64",
+  "IL": "972",
+  "AE": "971",
+  "SA": "966",
+  "QA": "974",
+  "KW": "965",
+  "BH": "973",
+  "OM": "968",
+  "JO": "962",
+  "LB": "961",
+  "IQ": "964",
+  "EG": "20",
+  "MA": "212",
+  "DZ": "213",
+  "TN": "216",
+  "NG": "234",
+  "GH": "233",
+  "KE": "254",
+  "ZA": "27",
+  "SN": "221",
+  "CI": "225",
+  "CM": "237",
+  "ET": "251",
+  "UG": "256",
+  "TZ": "255",
+  "RW": "250",
+  "CD": "243",
+  "AO": "244",
+  "ZW": "263",
+  "ZM": "260"
+ },
+ "demoPhotos": [
+  [
+   "🙂",
+   "linear-gradient(135deg,#FFB067,#E05A00)"
+  ],
+  [
+   "😎",
+   "linear-gradient(135deg,#7FB2FF,#4B5BFF)"
+  ],
+  [
+   "🌸",
+   "linear-gradient(135deg,#FF9EC4,#C2185B)"
+  ],
+  [
+   "🎧",
+   "linear-gradient(135deg,#A779FF,#5B2BB5)"
+  ],
+  [
+   "⚽",
+   "linear-gradient(135deg,#5EE6A8,#0F766E)"
+  ],
+  [
+   "📚",
+   "linear-gradient(135deg,#FFD66B,#C2410C)"
+  ]
+ ],
+ "flagDrawings": {
+  "FR": [
+   "France",
+   "linear-gradient(to right,#0055A4 33.3%,#fff 33.3% 66.6%,#EF4135 66.6%)"
+  ],
+  "JP": [
+   "Japan",
+   "radial-gradient(circle,#BC002D 0 30%,#fff 32%)"
+  ],
+  "ES": [
+   "Spain",
+   "linear-gradient(to bottom,#AA151B 25%,#F1BF00 25% 75%,#AA151B 75%)"
+  ],
+  "PT": [
+   "Portugal",
+   "linear-gradient(to right,#046A38 40%,#DA291C 40%)"
+  ],
+  "GB": [
+   "United Kingdom",
+   "linear-gradient(to right,transparent 42%,#C8102E 42% 58%,transparent 58%),linear-gradient(to bottom,transparent 42%,#C8102E 42% 58%,transparent 58%),linear-gradient(to right,transparent 34%,#fff 34% 66%,transparent 66%),linear-gradient(to bottom,transparent 34%,#fff 34% 66%,transparent 66%),#012169"
+  ],
+  "CA": [
+   "Canada",
+   "radial-gradient(circle,#D52B1E 0 16%,transparent 18%),linear-gradient(to right,#D52B1E 26%,#fff 26% 74%,#D52B1E 74%)"
+  ],
+  "NG": [
+   "Nigeria",
+   "linear-gradient(to right,#008751 33.3%,#fff 33.3% 66.6%,#008751 66.6%)"
+  ],
+  "BR": [
+   "Brazil",
+   "radial-gradient(circle,#002776 0 22%,#FFDF00 24% 44%,#009739 46%)"
+  ],
+  "DE": [
+   "Germany",
+   "linear-gradient(to bottom,#000 33.3%,#DD0000 33.3% 66.6%,#FFCE00 66.6%)"
+  ],
+  "IT": [
+   "Italy",
+   "linear-gradient(to right,#009246 33.3%,#fff 33.3% 66.6%,#CE2B37 66.6%)"
+  ],
+  "MA": [
+   "Morocco",
+   "radial-gradient(circle,#006233 0 18%,#C1272D 20%)"
+  ],
+  "KR": [
+   "South Korea",
+   "radial-gradient(circle,#CD2E3A 0 22%,#0047A0 22% 30%,#fff 32%)"
+  ]
+ }
+}
