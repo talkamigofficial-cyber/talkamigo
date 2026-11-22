@@ -14,6 +14,154 @@
       "it": "Arriva con il prossimo aggiornamento",
       "ja": "次のアップデートで使えます",
       "ar": "متاح في التحديث القادم"
+    },
+    "_signup": "Sign-up texts that had no translation anywhere (helper B, slice 1).",
+    "No language found": {
+      "fr": "Aucune langue trouvée",
+      "es": "No se encontró ningún idioma",
+      "pt": "Nenhum idioma encontrado",
+      "de": "Keine Sprache gefunden",
+      "it": "Nessuna lingua trovata",
+      "ja": "言語が見つかりません",
+      "ar": "لم يتم العثور على لغة"
+    },
+    "At least 3 characters": {
+      "fr": "Au moins 3 caractères",
+      "es": "Al menos 3 caracteres",
+      "pt": "Pelo menos 3 caracteres",
+      "de": "Mindestens 3 Zeichen",
+      "it": "Almeno 3 caratteri",
+      "ja": "3文字以上",
+      "ar": "3 أحرف على الأقل"
+    },
+    "Only lowercase letters, numbers, _ and .": {
+      "fr": "Seulement des minuscules, des chiffres, _ et .",
+      "es": "Solo minúsculas, números, _ y .",
+      "pt": "Só letras minúsculas, números, _ e .",
+      "de": "Nur Kleinbuchstaben, Zahlen, _ und .",
+      "it": "Solo lettere minuscole, numeri, _ e .",
+      "ja": "小文字・数字・_ と . のみ",
+      "ar": "أحرف صغيرة وأرقام و_ و. فقط"
+    },
+    "Can’t start or end with _ or .": {
+      "fr": "Ne peut pas commencer ni finir par _ ou .",
+      "es": "No puede empezar ni terminar con _ o .",
+      "pt": "Não pode começar nem terminar com _ ou .",
+      "de": "Darf nicht mit _ oder . beginnen oder enden",
+      "it": "Non può iniziare o finire con _ o .",
+      "ja": "_ や . で始めたり終えたりできません",
+      "ar": "لا يمكن أن يبدأ أو ينتهي بـ _ أو ."
+    },
+    "Photo added · we check every photo": {
+      "fr": "Photo ajoutée · nous vérifions chaque photo",
+      "es": "Foto añadida · revisamos todas las fotos",
+      "pt": "Foto adicionada · verificamos todas as fotos",
+      "de": "Foto hinzugefügt · wir prüfen jedes Foto",
+      "it": "Foto aggiunta · controlliamo ogni foto",
+      "ja": "写真を追加しました・すべての写真を確認しています",
+      "ar": "تمت إضافة الصورة · نراجع كل صورة"
+    },
+    "+50 coins · enjoy TalkAmigo!": {
+      "fr": "+50 pièces · profite bien de TalkAmigo !",
+      "es": "+50 monedas · ¡disfruta de TalkAmigo!",
+      "pt": "+50 moedas · aproveite a TalkAmigo!",
+      "de": "+50 Münzen · viel Spaß mit TalkAmigo!",
+      "it": "+50 monete · goditi TalkAmigo!",
+      "ja": "+50コイン・TalkAmigoを楽しんでね！",
+      "ar": "+50 عملة · استمتع بـTalkAmigo!"
+    },
+    "_goal": "Me → This week card (helper E): no translation in the handoff.",
+    "goal reached 🎉": {
+      "fr": "objectif atteint 🎉",
+      "es": "objetivo cumplido 🎉",
+      "pt": "meta alcançada 🎉",
+      "de": "Ziel erreicht 🎉",
+      "it": "obiettivo raggiunto 🎉",
+      "ja": "目標達成 🎉",
+      "ar": "تم بلوغ الهدف 🎉"
+    },
+    "_chatsConnect": "Chats / Connect / profile texts with no translation in the handoff (helper C, slice 1).",
+    "Say hi 👋": {
+      "fr": "Dis bonjour 👋",
+      "es": "Saluda 👋",
+      "pt": "Diga oi 👋",
+      "de": "Sag Hallo 👋",
+      "it": "Saluta 👋",
+      "ja": "あいさつしよう 👋",
+      "ar": "قل مرحبًا 👋"
+    },
+    "Create a group": {
+      "fr": "Créer un groupe",
+      "es": "Crear un grupo",
+      "pt": "Criar um grupo",
+      "de": "Gruppe erstellen",
+      "it": "Crea un gruppo",
+      "ja": "グループを作成",
+      "ar": "إنشاء مجموعة"
+    },
+    "Online partners": {
+      "fr": "Partenaires en ligne",
+      "es": "Compañeros en línea",
+      "pt": "Parceiros online",
+      "de": "Partner online",
+      "it": "Partner online",
+      "ja": "オンラインのパートナー",
+      "ar": "شركاء متصلون"
+    },
+    "No requests right now.": {
+      "fr": "Aucune demande pour le moment.",
+      "es": "No hay solicitudes ahora.",
+      "pt": "Nenhum pedido agora.",
+      "de": "Gerade keine Anfragen.",
+      "it": "Nessuna richiesta al momento.",
+      "ja": "今はリクエストはありません。",
+      "ar": "لا توجد طلبات الآن."
+    },
+    "You’re all caught up.": {
+      "fr": "Tu es à jour.",
+      "es": "Estás al día.",
+      "pt": "Você está em dia.",
+      "de": "Du bist auf dem neuesten Stand.",
+      "it": "Sei in pari.",
+      "ja": "すべて確認済みです。",
+      "ar": "أنت مطّلع على كل شيء."
+    },
+    "Invite to Duo": {
+      "fr": "Inviter en Duo",
+      "es": "Invitar a Dúo",
+      "pt": "Convidar para Duo",
+      "de": "Zum Duo einladen",
+      "it": "Invita al Duo",
+      "ja": "デュオに招待",
+      "ar": "ادعُ إلى ثنائي"
+    },
+    "_rooms": "Rooms empty state (helper D, slice 1): no translation in the handoff.",
+    "It’s quiet in here… for now": {
+      "fr": "C’est calme ici… pour l’instant",
+      "es": "Está tranquilo por aquí… de momento",
+      "pt": "Está calmo por aqui… por enquanto",
+      "de": "Hier ist es gerade ruhig…",
+      "it": "Qui è tutto tranquillo… per ora",
+      "ja": "今は静かです…",
+      "ar": "المكان هادئ… حاليًا"
+    },
+    "Be the first to start a talk room.": {
+      "fr": "Sois le premier à ouvrir un salon de parole.",
+      "es": "Sé el primero en abrir una sala de charla.",
+      "pt": "Seja o primeiro a abrir uma sala de conversa.",
+      "de": "Öffne als Erstes einen Talk-Raum.",
+      "it": "Apri tu la prima stanza di conversazione.",
+      "ja": "最初にトークルームを開こう。",
+      "ar": "كن أول من يفتح غرفة حديث."
+    },
+    "Be the first to start a live room.": {
+      "fr": "Sois le premier à ouvrir un salon live.",
+      "es": "Sé el primero en abrir una sala en directo.",
+      "pt": "Seja o primeiro a abrir uma sala ao vivo.",
+      "de": "Öffne als Erstes einen Live-Raum.",
+      "it": "Apri tu la prima stanza live.",
+      "ja": "最初にライブルームを開こう。",
+      "ar": "كن أول من يفتح غرفة بث."
     }
   },
   "patternChanges": {
@@ -93,6 +241,30 @@
       "it": "Perderai $1 monete e $2 Diamanti. Prelevali prima se vuoi i soldi.",
       "ja": "$1コインと$2ダイヤを失います。お金が必要なら先に出金してください。",
       "ar": "ستخسر $1 عملة و$2 ماسة. اسحبها أولًا إذا كنت تريد المال."
+    },
+    {
+      "before": "",
+      "key": "addInterest",
+      "re": "^Add “(.+)”$",
+      "fr": "Ajouter « $1 »",
+      "es": "Añadir «$1»",
+      "pt": "Adicionar “$1”",
+      "de": "„$1“ hinzufügen",
+      "it": "Aggiungi “$1”",
+      "ja": "「$1」を追加",
+      "ar": "إضافة «$1»"
+    },
+    {
+      "before": "",
+      "key": "chatGift",
+      "re": "^Gift: (.+)$",
+      "fr": "Cadeau : $1",
+      "es": "Regalo: $1",
+      "pt": "Presente: $1",
+      "de": "Geschenk: $1",
+      "it": "Regalo: $1",
+      "ja": "ギフト：$1",
+      "ar": "هدية: $1"
     }
   ]
 }

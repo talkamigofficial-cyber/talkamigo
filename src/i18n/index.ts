@@ -145,7 +145,8 @@ function withPattern(x0: string, lang: Lang): string | null {
     if (typeof done === 'string') return done; // the fixer built the whole sentence
     let s = template;
     slots.forEach((v, i) => (s = s.split('$' + (i + 1)).join(v)));
-    return s;
+    // a few rows (spoken labels like "Profil de $") use a lone $ for the name
+    return s.replace(/\$(?!\d)/g, slots[0]);
   }
   return null;
 }

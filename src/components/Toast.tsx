@@ -13,6 +13,7 @@ import { Animated, Platform, StyleSheet, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { create } from 'zustand';
 import { useT } from '../i18n';
+import { useApp } from '../state/store';
 import { Icon, type IconName } from './Icon';
 
 type ToastState = { text: string; sub?: string; icon?: IconName; at: number; top?: boolean };
@@ -27,6 +28,8 @@ export function ToastHost() {
   const t = useT();
   const insets = useSafeAreaInsets();
   const cur = useToast((s) => s.current);
+  // on the welcome and sign-up pages messages sit at the top (v53); in the app, above the bottom bar
+  const inSignup = !useApp((s) => s.onboarded);
   const fade = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
@@ -40,7 +43,7 @@ export function ToastHost() {
   }, [cur, fade]);
 
   if (!cur) return null;
-  const place = cur.top ? { top: insets.top + 12 } : { bottom: insets.bottom + 96 };
+  const place = cur.top ?? inSignup ? { top: insets.top + 12 } : { bottom: insets.bottom + 96 };
   return (
     <Animated.View pointerEvents="none" style={[styles.wrap, place, { opacity: fade, transform: [{ scale: fade.interpolate({ inputRange: [0, 1], outputRange: [0.92, 1] }) }] }]}>
       <View style={styles.pill} accessibilityLiveRegion="polite" accessibilityRole="alert">

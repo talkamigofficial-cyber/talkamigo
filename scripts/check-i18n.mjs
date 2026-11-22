@@ -22,14 +22,14 @@ const known = (s) => {
   return patterns.some((re) => re.test(s));
 };
 
-const root = process.argv[2] || 'src';
+const roots = process.argv.slice(2).length ? process.argv.slice(2) : ['src'];
 const files = [];
 const walk = (d) => fs.readdirSync(d, { withFileTypes: true }).forEach((e) => {
   const p = path.join(d, e.name);
   if (e.isDirectory() && e.name !== 'generated') walk(p);
   else if (/\.tsx?$/.test(e.name)) files.push(p);
 });
-walk(root);
+for (const r of roots) (fs.statSync(r).isDirectory() ? walk(r) : files.push(r));
 
 const RX = [
   /<T(?:\s[^>]*)?>([^<{]+)<\/T>/g,
@@ -51,8 +51,10 @@ for (const f of files) {
       rx.lastIndex = 0;
       let m;
       while ((m = rx.exec(line))) {
-        const text = m[1].replace(/\\'/g, "'").replace(/\$\{[^}]+\}/g, 'Sam');
-        if (!known(text)) { misses++; console.log(`${f}:${i + 1}  "${m[1]}"`); }
+        // try the changing parts as a name and as a number ("Step ${n} of 9")
+        const raw = m[1].replace(/\\'/g, "'");
+        const asName = raw.replace(/\$\{[^}]+\}/g, 'Sam'), asNumber = raw.replace(/\$\{[^}]+\}/g, '3');
+        if (!known(asName) && !known(asNumber)) { misses++; console.log(`${f}:${i + 1}  "${m[1]}"`); }
       }
     }
   });

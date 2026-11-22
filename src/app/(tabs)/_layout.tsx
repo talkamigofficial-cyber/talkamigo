@@ -12,20 +12,26 @@ import { useT } from '../../i18n';
 import { useColors, useScheme } from '../../theme/colors';
 import { Icon, type IconName } from '../../components/Icon';
 import { Pressy } from '../../components/Pressy';
+import { Tour } from '../../components/tour/Tour';
+import { TourTarget, type TourTargetId } from '../../components/tour/TourTarget';
 
-const TABS: { route: string; tab: Tab; label: string; icon: IconName }[] = [
-  { route: 'chats', tab: 'chats', label: 'Chats', icon: 'chat' },
-  { route: 'connect', tab: 'connect', label: 'Connect', icon: 'people' },
-  { route: 'flicks', tab: 'flicks', label: 'Flicks', icon: 'mom' },
-  { route: 'rooms', tab: 'rooms', label: 'Rooms', icon: 'micvid' },
-  { route: 'me', tab: 'me', label: 'Me', icon: 'user' },
+const TABS: { route: string; tab: Tab; label: string; icon: IconName; target: TourTargetId }[] = [
+  { route: 'chats', tab: 'chats', label: 'Chats', icon: 'chat', target: 'tab-chats' },
+  { route: 'connect', tab: 'connect', label: 'Connect', icon: 'people', target: 'tab-connect' },
+  { route: 'flicks', tab: 'flicks', label: 'Flicks', icon: 'mom', target: 'tab-flicks' },
+  { route: 'rooms', tab: 'rooms', label: 'Rooms', icon: 'micvid', target: 'tab-rooms' },
+  { route: 'me', tab: 'me', label: 'Me', icon: 'user', target: 'tab-me' },
 ];
 
 export default function TabsLayout() {
   return (
-    <Tabs screenOptions={{ headerShown: false }} tabBar={(props) => <TabBar {...props} />}>
-      {TABS.map((t) => <Tabs.Screen key={t.route} name={t.route} />)}
-    </Tabs>
+    <View style={{ flex: 1 }}>
+      <Tabs screenOptions={{ headerShown: false }} tabBar={(props) => <TabBar {...props} />}>
+        {TABS.map((t) => <Tabs.Screen key={t.route} name={t.route} />)}
+      </Tabs>
+      {/* the welcome tour runs once, right after sign-up, on top of the tabs */}
+      <Tour />
+    </View>
   );
 }
 
@@ -50,8 +56,8 @@ function TabBar({ state, emitter, navigateToTab }: BottomTabBarProps) {
         const on = current === tab.route;
         const badge = tab.tab === 'chats' && unread > 0 && !on ? unread : 0;
         return (
+          <TourTarget key={tab.route} id={tab.target} style={{ flex: 1 }}>
           <Pressy
-            key={tab.route}
             scale={0.9}
             style={styles.tab}
             accessibilityRole="tab"
@@ -74,6 +80,7 @@ function TabBar({ state, emitter, navigateToTab }: BottomTabBarProps) {
               </View>
             ) : null}
           </Pressy>
+          </TourTarget>
         );
       })}
     </View>

@@ -53,6 +53,7 @@ const emptyMe = (): Me => ({
 type State = {
   // ---- who is using the app ----
   account: 'demo' | 'new' | null; // null = nobody logged in (Welcome screen)
+  savedAccount: 'demo' | 'new' | null; // the account kept on this phone after logging out ("Continue as…")
   onboarded: boolean; // finished sign-up
   signupStep: SignupStep | null; // where to resume an unfinished sign-up
   lastAuth: AuthMethod | null; // for "Continue as…" and the "Last used" tag
@@ -106,6 +107,7 @@ type State = {
   setLookChosen: () => void;
   setAiOK: (ok: boolean) => void;
   finishTour: (reward: boolean) => void;
+  logBackIn: () => void;
   tryDemo: () => void;
   logOut: () => void;
   setTab: (tab: Tab) => void;
@@ -136,7 +138,7 @@ const demoAccount = () => ({
 export const useApp = create<State>()(
   persist(
     (set, get) => ({
-      account: null, onboarded: false, signupStep: null, lastAuth: null, authPhone: '',
+      account: null, savedAccount: null, onboarded: false, signupStep: null, lastAuth: null, authPhone: '',
       theme: 'system', appLangChoice: 'Phone default', welcomeLangChoice: null,
       ...freshAccount(),
       tab: 'flicks', roomMode: 'talk',
@@ -159,8 +161,13 @@ export const useApp = create<State>()(
       setAiOK: (aiOK) => set({ aiOK }),
       finishTour: (reward) => set({ toured: true, coins: get().coins + (reward ? 50 : 0) }),
 
+      // "Continue as…" or a log-in that matches the account saved on this phone (no server yet).
+      logBackIn: () => {
+        const choice = get().welcomeLangChoice;
+        set({ account: get().account ?? get().savedAccount ?? 'new', onboarded: true, toured: true, tab: 'flicks', ...(choice ? { appLangChoice: choice } : {}) });
+      },
       tryDemo: () => set({ ...demoAccount(), account: 'demo', onboarded: true, signupStep: null, tab: 'flicks' }),
-      logOut: () => set({ account: null, onboarded: false, signupStep: null }),
+      logOut: () => set({ savedAccount: get().account, account: null, onboarded: false, signupStep: null }),
 
       setTab: (tab) => set({ tab }),
       setRoomMode: (roomMode) => set({ roomMode }),

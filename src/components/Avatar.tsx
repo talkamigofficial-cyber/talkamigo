@@ -16,6 +16,8 @@ import { Icon } from './Icon';
 import { useColors } from '../theme/colors';
 
 const FLAGS = lists.flagDrawings as unknown as Record<string, [string, string]>;
+// The UK flag is drawn with see-through stripe layers that phones don't paint; use the emoji flag for it.
+delete FLAGS.GB;
 
 /** Emoji flag for a 2-letter country code ('FR' → 🇫🇷). */
 export const emojiFlag = (cc: string) => cc.toUpperCase().replace(/./g, (ch) => String.fromCodePoint(127397 + ch.charCodeAt(0)));
@@ -87,6 +89,7 @@ export const Avatar = memo(function Avatar({ id, size = 48, ring, noFlag, online
 const styles = StyleSheet.create({
   face: { alignItems: 'center', justifyContent: 'center', overflow: 'hidden', boxShadow: 'inset 0 -6px 14px rgba(0,0,0,0.18)' },
   initial: { color: '#fff', fontWeight: '800' },
-  flag: { position: 'absolute', start: -2, bottom: -2, borderWidth: 2, overflow: 'hidden' },
+  flag: { position: 'absolute', left: -2, // bottom-left in every language, like the prototype
+    bottom: -2, borderWidth: 2, overflow: 'hidden' },
   dot: { position: 'absolute', end: 0, bottom: 0, width: 13, height: 13, borderRadius: 7, backgroundColor: '#22C55E', borderWidth: 2 },
 });
