@@ -1,5 +1,7 @@
 # TalkAmigo — Project Brief for Claude Code
 
+> **Update 23 Nov 2026 (read first):** the real app is built with **React Native + Expo (SDK 58) + Expo Router**, one codebase for iPhone and Android, tested on the founder's iPhone with **Expo Go** (not Xcode / the Simulator). Wherever this brief says Swift, SwiftUI, Xcode, Simulator, Kotlin or `ios/`, read it as the React Native equivalent. Developer guide: `docs/ARCHITECTURE.md`. The reference for screens and behaviour is the prototype in `docs/handoff/` (v106); when it and this brief disagree, the prototype wins. Decisions: `docs/DECISIONS.md`.
+
 > Put this file in the root folder of the TalkAmigo project on the Mac. Claude Code reads `CLAUDE.md` automatically at the start of every session, so this is the single source of truth. When a decision changes, update this file first.
 
 ---

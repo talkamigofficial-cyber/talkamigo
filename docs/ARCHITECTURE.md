@@ -1,0 +1,73 @@
+# How the TalkAmigo app is built (guide for developers)
+
+The iPhone and Android app, made with **React Native + Expo (SDK 58)** and **Expo Router**.
+The reference for every screen, text and behaviour is the prototype: `docs/handoff/talkamigo-beta.html`
+(open it in a browser). The founder's decisions are in `CLAUDE.md`; the handoff summary is `docs/handoff/HANDOFF.md`.
+
+## Run it
+
+```bash
+npm install
+npx expo start          # scan the QR code with Expo Go on a phone
+npx expo start --web    # quick preview in a browser
+```
+
+Checks to run before every commit:
+
+```bash
+npx tsc --noEmit                 # types
+node scripts/check-i18n.mjs      # every text on screen has its 7 translations
+```
+
+## Folders
+
+| Folder | What's inside |
+|---|---|
+| `src/app/` | **One file per page.** The file path is the page address: `src/app/settings/appearance.tsx` → `/settings/appearance`. `_layout.tsx` files wrap the pages below them. |
+| `src/app/(tabs)/` | The 5 tabs: `chats`, `connect`, `flicks`, `rooms`, `me`, and the tab bar (`_layout.tsx`). |
+| `src/app/auth/`, `src/app/signup/` | Log-in and the sign-up steps. |
+| `src/components/` | Pieces used on many pages (buttons, avatars, sheets…). Sub-folders hold pieces of one area (`components/chats/`, `components/signup/`…). |
+| `src/state/store.ts` | **Everything the app remembers** (account, profile, settings, demo content), saved on the phone. |
+| `src/i18n/` | Translations. `generated/` is built by a script — don't edit it. |
+| `src/theme/colors.ts` | Light and dark colours. |
+| `src/data/` | Demo people/rooms/chats and the lists (countries, languages, interests). `generated/` is built by a script. |
+| `scripts/` | Scripts that build the generated files, and the translation checker. |
+| `docs/` | This guide, the decisions log, the handoff pack. |
+
+## The 6 things to know
+
+1. **Texts are written in English in the code and translated on screen.**
+   `<T>Create account</T>` or `const t = useT(); t('Create account')`.
+   The English must be **exactly** the prototype's wording, otherwise the translation isn't found
+   (`node scripts/check-i18n.mjs` lists misses). What people write (bios, messages, room titles) is shown with
+   `<T raw>` and never translated automatically.
+   To fix a translation: change `docs/handoff/translations*.csv` or `scripts/translation-fixes.json`, then
+   `node scripts/build-translations.mjs`. Each fix is logged in `docs/DECISIONS.md`.
+
+2. **Sign-up always follows the phone's language; the app follows Settings → App language.**
+   See `appLang()` in `src/state/store.ts`.
+
+3. **Arabic is right-to-left.** The whole app is wrapped in `<Direction rtl>` (root `_layout.tsx`).
+   In styles use `start`/`end`, `marginStart`, `paddingEnd`… — never `left`/`right` for layout —
+   so pages flip by themselves. Icons that point (back, chevron) flip in `Icon.tsx`.
+
+4. **Colours come from `useColors()`** (light/dark follow Settings → Appearance, default "Match phone").
+   The red welcome/sign-up pages use `<Screen red>` and the `onRed` colours.
+
+5. **Everything tappable uses `<Pressy>`** (or `<Button>`, which uses it) so the whole app reacts to the finger the same way
+   (slight shrink + light vibration, prototype v47–v48).
+
+6. **State lives in one store** (`useApp`). Read: `useApp((s) => s.coins)`. Change: `useApp.getState().setTheme('dark')`.
+   It's saved on the phone automatically. In slice 2 most of it moves to the server (Supabase); screens won't need to change much.
+
+## What is fake in this version (slice 1)
+
+- **No server.** Sign-up with Apple/Google/phone always succeeds; any 6-digit code works. Data is only on the phone.
+- **Demo content** ("Try the demo") is the prototype's: 26 people, 48 talk rooms, 17 lives, chats, Flicks.
+- Buttons for features of later slices show "Coming in the next update" (`comingSoon()` in `components/Toast.tsx`).
+
+## Adding a page
+
+1. Create `src/app/<name>.tsx` with a header comment: what it is, where it is in the prototype.
+2. Wrap it in `<Screen>` and use `<TopBar title="…" />` for the back button.
+3. Open it with `router.push('/<name>')`.
