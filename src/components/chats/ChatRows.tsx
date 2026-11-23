@@ -161,7 +161,11 @@ export const GroupRow = memo(function GroupRow({ group, onOpen }: { group: Group
 });
 
 // ---------------------------------------------------------------- official rows
-export const OfficialRow = memo(function OfficialRow({ kind, preview, unread, muted, onOpen }: { kind: 'lounge' | 'team'; preview: string; unread: number; muted: boolean; onOpen: () => void }) {
+/**
+ * Room alerts / TalkAmigo Team rows (always in the list, NEXT_STEPS §3).
+ * `preview` is the newest alert or message; with none yet the row says "Nothing yet" and shows no time.
+ */
+export const OfficialRow = memo(function OfficialRow({ kind, preview, time, unread, muted, onOpen }: { kind: 'lounge' | 'team'; preview?: string; time?: string; unread: number; muted: boolean; onOpen: () => void }) {
   const c = useColors();
   const t = useT();
   const u = muted ? 0 : unread;
@@ -174,13 +178,13 @@ export const OfficialRow = memo(function OfficialRow({ kind, preview, unread, mu
           <Image source={LOGO} style={s.offAv} />
         )}
         <View style={s.body}>
-          <NameLine name={t(kind === 'lounge' ? 'Room alerts' : 'TalkAmigo Team')} time={kind === 'lounge' ? 'now' : 'today'}>
+          <NameLine name={t(kind === 'lounge' ? 'Room alerts' : 'TalkAmigo Team')} time={time ?? ''}>
             <View style={[s.offb, { backgroundColor: c.tint }]}>
               <Icon name="check" size={10} color={c.tintText} strokeWidth={4} />
               <T style={[s.offbText, { color: c.tintText }]}>Official</T>
             </View>
           </NameLine>
-          <PreviewLine text={t(preview)} unread={u > 0} badge={u} mutedIcon={muted} />
+          <PreviewLine text={t(preview ?? 'Nothing yet')} unread={u > 0} badge={u} mutedIcon={muted} />
         </View>
       </Pressy>
       <RowLine />

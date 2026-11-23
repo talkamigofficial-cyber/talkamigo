@@ -1,0 +1,104 @@
+{
+  "_about": "Chats, Connect, profiles, Room alerts, TalkAmigo Team — empty-app texts (round 2, 23 Nov 2026). French uses tu.",
+  "strings": {
+    "No chats yet": {
+      "fr": "Pas encore de discussions",
+      "es": "Aún no hay chats",
+      "pt": "Ainda não há conversas",
+      "de": "Noch keine Chats",
+      "it": "Ancora nessuna chat",
+      "ja": "まだチャットはありません",
+      "ar": "لا توجد دردشات بعد"
+    },
+    "Find someone who speaks the language you’re learning and say hi.": {
+      "fr": "Trouve quelqu’un qui parle la langue que tu apprends et dis bonjour.",
+      "es": "Encuentra a alguien que hable el idioma que aprendes y salúdalo.",
+      "pt": "Encontre alguém que fale o idioma que você está aprendendo e diga oi.",
+      "de": "Finde jemanden, der die Sprache spricht, die du lernst, und sag Hallo.",
+      "it": "Trova qualcuno che parla la lingua che stai imparando e salutalo.",
+      "ja": "学んでいる言語を話す人を見つけて、あいさつしよう。",
+      "ar": "ابحث عن شخص يتحدث اللغة التي تتعلمها وقل مرحبًا."
+    },
+    "Find a partner": {
+      "fr": "Trouver un partenaire",
+      "es": "Buscar un compañero",
+      "pt": "Encontrar um parceiro",
+      "de": "Partner finden",
+      "it": "Trova un partner",
+      "ja": "パートナーを探す",
+      "ar": "ابحث عن شريك"
+    },
+    "No groups yet": {
+      "fr": "Pas encore de groupes",
+      "es": "Aún no hay grupos",
+      "pt": "Ainda não há grupos",
+      "de": "Noch keine Gruppen",
+      "it": "Ancora nessun gruppo",
+      "ja": "まだグループはありません",
+      "ar": "لا توجد مجموعات بعد"
+    },
+    "No partners online right now": {
+      "fr": "Aucun partenaire en ligne pour le moment",
+      "es": "No hay compañeros en línea ahora",
+      "pt": "Nenhum parceiro online agora",
+      "de": "Gerade keine Partner online",
+      "it": "Nessun partner online al momento",
+      "ja": "今オンラインのパートナーはいません",
+      "ar": "لا يوجد شركاء متصلون الآن"
+    },
+    "No partners yet": {
+      "fr": "Pas encore de partenaires",
+      "es": "Aún no hay compañeros",
+      "pt": "Ainda não há parceiros",
+      "de": "Noch keine Partner",
+      "it": "Ancora nessun partner",
+      "ja": "まだパートナーはいません",
+      "ar": "لا يوجد شركاء بعد"
+    },
+    "People who join TalkAmigo will show up here. Complete your profile so they can find you.": {
+      "fr": "Les personnes qui rejoignent TalkAmigo apparaîtront ici. Complète ton profil pour qu’elles te trouvent.",
+      "es": "Las personas que se unan a TalkAmigo aparecerán aquí. Completa tu perfil para que te encuentren.",
+      "pt": "As pessoas que entrarem no TalkAmigo vão aparecer aqui. Complete seu perfil para que encontrem você.",
+      "de": "Leute, die TalkAmigo beitreten, erscheinen hier. Vervollständige dein Profil, damit sie dich finden.",
+      "it": "Le persone che si iscrivono a TalkAmigo appariranno qui. Completa il tuo profilo così ti trovano.",
+      "ja": "TalkAmigoに参加した人がここに表示されます。見つけてもらえるようにプロフィールを完成させよう。",
+      "ar": "سيظهر هنا من ينضمون إلى TalkAmigo. أكمل ملفك ليجدوك."
+    },
+    "No room alerts yet": {
+      "fr": "Pas encore d’alertes",
+      "es": "Aún no hay alertas",
+      "pt": "Ainda não há alertas",
+      "de": "Noch keine Hinweise",
+      "it": "Ancora nessun avviso",
+      "ja": "まだ通知はありません",
+      "ar": "لا توجد تنبيهات بعد"
+    },
+    "When people you follow or your teachers open a room, it shows here.": {
+      "fr": "Quand les personnes que tu suis ou tes profs ouvrent un salon, il apparaît ici.",
+      "es": "Cuando la gente que sigues o tus profes abran una sala, aparecerá aquí.",
+      "pt": "Quando quem você segue ou seus professores abrirem uma sala, ela aparece aqui.",
+      "de": "Wenn Leute, denen du folgst, oder deine Lehrkräfte einen Raum öffnen, erscheint er hier.",
+      "it": "Quando chi segui o i tuoi insegnanti aprono una stanza, la vedi qui.",
+      "ja": "フォロー中の人や先生がルームを開くと、ここに表示されます。",
+      "ar": "عندما يفتح من تتابعهم أو معلّموك غرفة ستظهر هنا."
+    },
+    "News, tips and offers from TalkAmigo will show up here.": {
+      "fr": "Les actus, conseils et offres de TalkAmigo apparaîtront ici.",
+      "es": "Las novedades, consejos y ofertas de TalkAmigo aparecerán aquí.",
+      "pt": "Novidades, dicas e ofertas do TalkAmigo vão aparecer aqui.",
+      "de": "Neuigkeiten, Tipps und Angebote von TalkAmigo erscheinen hier.",
+      "it": "Novità, consigli e offerte di TalkAmigo appariranno qui.",
+      "ja": "TalkAmigoからのお知らせ・ヒント・特典がここに表示されます。",
+      "ar": "ستظهر هنا أخبار ونصائح وعروض TalkAmigo."
+    },
+    "No Flicks yet": {
+      "fr": "Pas encore de Flicks",
+      "es": "Aún no hay Flicks",
+      "pt": "Ainda não há Flicks",
+      "de": "Noch keine Flicks",
+      "it": "Ancora nessun Flicks",
+      "ja": "まだFlicksはありません",
+      "ar": "لا توجد Flicks بعد"
+    }
+  }
+}

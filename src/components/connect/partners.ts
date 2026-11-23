@@ -1,7 +1,7 @@
 /**
  * Which partners Connect shows, and in what order (prototype vDiscover).
  *
- * - Boosted people first (in the demo: Reem), then the most recently active.
+ * - Boosted people first, then the most recently active.
  * - Tabs: All · Online · Nearby (sorted by distance) · Serious learners · Teachers. City and Age are Plus.
  * - Language chips: "My languages" = people whose native language I speak or learn; one language = people native in it.
  * The advanced filters (level, age, region…) come with the Filters page in a later slice.
@@ -9,9 +9,10 @@
 import { PEOPLE, type Person } from '../../data/people';
 
 export type ConnectTab = 'all' | 'online' | 'nearby' | 'serious' | 'teachers';
-export const BOOSTED = new Set(['reem']); // demo: Reem has a profile boost running
+/** People with a profile boost running (boosts arrive in slice 9; empty until then). */
+export const BOOSTED = new Set<string>();
 
-// Rough capital positions (prototype CAP) and a few demo cities (COORD), for "≈ 340 km".
+// Rough capital positions (prototype CAP) and a few city positions (prototype COORD), for "≈ 340 km".
 const CAP: Record<string, [number, number]> = {
   GB: [51.51, -0.13], FR: [48.86, 2.35], ES: [40.42, -3.7], DE: [52.52, 13.4], IT: [41.9, 12.5], PT: [38.72, -9.14], SE: [59.33, 18.07],
   NL: [52.37, 4.9], BE: [50.85, 4.35], IE: [53.35, -6.26], CH: [46.95, 7.45], US: [40.71, -74], CA: [45.5, -73.57], JP: [35.68, 139.69],

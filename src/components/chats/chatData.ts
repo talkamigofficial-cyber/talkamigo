@@ -1,9 +1,10 @@
 /**
- * Builds what the Chats list shows from the saved demo chats (same rules as the prototype's vChats).
+ * Builds what the Chats list shows from this account's chats (same rules as the prototype's vChats).
  * Pure functions: no screen code here, so they are easy to test and to swap for server data later.
+ * A new account has no chats (NEXT_STEPS §3); real chats arrive with slice 3.
  */
-import demo from '../../data/generated/demo.json';
 import { getPerson } from '../../data/people';
+import { liveLives, liveRooms } from '../../data/live';
 
 export type Msg = { f?: string; t?: string; voice?: boolean; room?: string; img?: boolean; poll?: { q: string }; share?: { k: string }; right?: string; by?: string; gift?: { n?: string } };
 export type Chat = { unread: number; msgs: Msg[] };
@@ -51,26 +52,11 @@ export function groupLastLine(g: Group): { who: string; text: string; raw: boole
 export function liveFriends(follows: Record<string, boolean>, chatIds: string[]): { id: string; kind: 'live' | 'room' }[] {
   const circle = new Set([...Object.keys(follows).filter((k) => follows[k]), ...chatIds]);
   const out: { id: string; kind: 'live' | 'room' }[] = [];
-  for (const L of demo.lives) if (L.host !== 'me' && circle.has(L.host) && !out.find((o) => o.id === L.host)) out.push({ id: L.host, kind: 'live' });
-  for (const r of demo.rooms) {
-    for (const x of [r.host, ...(r.speakers as string[])]) {
+  for (const L of liveLives) if (L.host !== 'me' && circle.has(L.host) && !out.find((o) => o.id === L.host)) out.push({ id: L.host, kind: 'live' });
+  for (const r of liveRooms) {
+    for (const x of [r.host, ...r.speakers]) {
       if (x !== 'me' && circle.has(x) && !out.find((o) => o.id === x)) out.push({ id: x, kind: 'room' });
     }
   }
   return out;
-}
-
-/** Activity items newer than 10 hours count as unread (prototype actRead: ago > 600 min = read). */
-export const activityUnread = () => demo.activity.filter((a) => a.ago <= 600).length;
-
-/** The first Room alert, shown as the preview line of the "Room alerts" row. */
-export function roomAlertPreview(): string {
-  const [who, what] = demo.roomAlerts[0] as string[];
-  return `🎙 ${getPerson(who)?.name ?? ''} ${what}`;
-}
-
-/** The first TalkAmigo Team message (offers only show to Standard members; the coupon only while it is valid). */
-export function teamPreview(plan: string, hasCoupon: boolean): string {
-  const items = (demo.team as { t: string; a: string; ad?: number }[]).filter((x) => !x.ad || plan === 'standard').filter((x) => !(x.a === 'boost' && !hasCoupon));
-  return items[0]?.t ?? '';
 }

@@ -1,35 +1,30 @@
 /**
  * Someone else's profile (prototype vUser). Opened from Connect, Chats and anywhere a person's photo is tapped:
- *   /user/camille
+ *   /user/<id>
  *
- * Photo (▶ when they have an intro video) · Flicks / Followers / Following numbers ·
- * name, age, Teacher, flag + city, online, "Follows you" · Speaks / Learning ·
- * Message, Follow, Gift · Top supporters · tabs Flicks / About · ••• menu.
- * The numbers are demo numbers, as in the prototype; they come from the server in slice 2.
+ * Photo · number of Flicks · name, age, Teacher, flag + city, online, "Follows you" · Speaks / Learning ·
+ * Follow · tabs Flicks / About · ••• menu (close friends, mute).
+ * No invented numbers (NEXT_STEPS §3): follower counts arrive with the server (slice 2).
+ * Hidden until their feature is built (NEXT_STEPS §4): Message (slice 3), gifts and top supporters (slice 9),
+ * intro video playback, Invite to Duo.
+ * An unknown id (e.g. an account that was deleted) shows "This account is no longer available".
  */
 import { useState } from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { useLocalSearchParams } from 'expo-router';
-import demo from '../../data/generated/demo.json';
 import { getPerson } from '../../data/people';
+import { liveFlicks } from '../../data/live';
 import { useApp } from '../../state/store';
 import { useLang, useT } from '../../i18n';
-import { BRAND_GRADIENT, useColors } from '../../theme/colors';
+import { useColors } from '../../theme/colors';
 import { Avatar, Flag } from '../../components/Avatar';
 import { Button } from '../../components/Button';
-import { Icon } from '../../components/Icon';
 import { Pressy } from '../../components/Pressy';
 import { Screen, TopBar } from '../../components/Screen';
 import { T } from '../../components/T';
-import { comingSoon, toast } from '../../components/Toast';
-import { FlickGrid, Stat, TopSupporters, UserMenu, type GridItem } from '../../components/profile/ProfileParts';
-import { followToast, formatCount } from '../../components/profile/helpers';
-
-// Extra demo tiles so every profile's grid looks lived-in (prototype fakeGrid)
-const fakeGrid = (id: string): GridItem[] =>
-  [['🍽️', '#C2410C'], ['🎶', '#5B2BB5'], ['🌇', '#B4004E'], ['📸', '#0F766E']].map(([e, col], i) => ({
-    id: `${id}g${i}`, photo: e, likes: 40 + i * 37, bg: `radial-gradient(100% 80% at 30% 20%, rgba(255,255,255,0.25), transparent 60%), ${col}`,
-  }));
+import { EmptyState } from '../../components/EmptyState';
+import { FlickGrid, Stat, UserMenu, type GridItem } from '../../components/profile/ProfileParts';
+import { followToast } from '../../components/profile/helpers';
 
 export default function UserProfile() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -46,14 +41,14 @@ export default function UserProfile() {
     return (
       <Screen>
         <TopBar />
-        <T style={{ padding: 20, color: c.muted }}>This account is no longer available</T>
+        <EmptyState icon="user" title="This account is no longer available" style={{ flex: 1, paddingBottom: 80 }} />
       </Screen>
     );
   }
 
-  const theirFlicks: GridItem[] = (demo.flicks as { id: string; by: string; bg: string; photo?: string | null; text?: string; likes: number }[])
+  const theirFlicks: GridItem[] = liveFlicks
     .filter((m) => m.by === id)
-    .map((m) => ({ id: m.id, bg: m.bg, photo: m.photo ?? undefined, text: m.text, likes: m.likes }));
+    .map((m) => ({ id: m.id, bg: m.bg ?? '#3A0A20', photo: typeof m.photo === 'string' ? m.photo : undefined, text: m.text, likes: m.likes ?? 0 }));
 
   const learning = `Learning ${p.learning} ${p.lvl}`; // i18n-ignore: pattern "lrnlv", e.g. "Learning English B1"
 
@@ -76,20 +71,9 @@ export default function UserProfile() {
       <ScrollView contentContainerStyle={{ paddingBottom: 30 }}>
         {/* photo + numbers */}
         <View style={s.head}>
-          <Pressy
-            scale={0.95}
-            onPress={() => toast(p.video ? `Playing ${p.name}’s intro video (demo)` : `${p.name} hasn’t added an intro video yet`)}
-            accessibilityLabel={t('Intro video')}
-          >
-            <Avatar id={id} size={92} ring />
-            {p.video ? (
-              <View style={[s.play, { borderColor: c.bg }]}><Icon name="play" size={12} color="#fff" fill="#fff" /></View>
-            ) : null}
-          </Pressy>
+          <Avatar id={id} size={92} ring />
           <View style={s.stats}>
-            <Stat value={String(theirFlicks.length + 4)} label="Flicks" />
-            <Stat value={formatCount(800 + p.name.length * 211, lang)} label="Followers" />
-            <Stat value={String(120 + p.age * 3)} label="Following" />
+            <Stat value={String(theirFlicks.length)} label="Flicks" />
           </View>
         </View>
 
@@ -113,16 +97,7 @@ export default function UserProfile() {
 
         {/* actions */}
         <View style={s.actions}>
-          <View style={{ flex: 1 }}><Button title="Message" small onPress={comingSoon} /></View>
-          <View style={{ flex: 1 }}><Button title={following ? 'Following ✓' : 'Follow'} kind="glass" small onPress={onFollow} /></View>
-          <Pressy scale={0.9} onPress={comingSoon} style={[s.ibtn, { backgroundColor: c.card, borderColor: c.line }]} accessibilityLabel={t('Send gift')}>
-            <Icon name="gift" size={21} color={c.ink} />
-          </Pressy>
-        </View>
-
-        <T style={[s.h3, { color: c.ink }]}>Top supporters</T>
-        <View style={s.pad}>
-          <TopSupporters exclude={id} />
+          <View style={{ flex: 1 }}><Button title={following ? 'Following ✓' : 'Follow'} kind={following ? 'glass' : 'primary'} small onPress={onFollow} /></View>
         </View>
 
         {/* Flicks / About */}
@@ -139,7 +114,7 @@ export default function UserProfile() {
         </View>
         <View style={[s.pad, { paddingTop: 12, gap: 12 }]}>
           {tab === 'flicks' ? (
-            <FlickGrid items={[...theirFlicks, ...fakeGrid(id)]} />
+            theirFlicks.length ? <FlickGrid items={theirFlicks} /> : <EmptyState icon="mom" title="No Flicks yet" />
           ) : (
             <>
               <T raw style={{ lineHeight: 24, color: c.soft, fontSize: 15 }}>{p.bio}</T>
@@ -150,7 +125,6 @@ export default function UserProfile() {
                   </View>
                 ))}
               </View>
-              <Button title="Invite to Duo" kind="glass" small onPress={comingSoon} />
             </>
           )}
         </View>
@@ -165,7 +139,6 @@ const s = StyleSheet.create({
   ibtn: { width: 44, height: 44, borderRadius: 15, borderWidth: 1, alignItems: 'center', justifyContent: 'center' },
   dots: { fontSize: 15, fontWeight: '900', letterSpacing: 1 },
   head: { flexDirection: 'row', alignItems: 'center', gap: 16, paddingHorizontal: 20 },
-  play: { position: 'absolute', end: -2, bottom: 4, width: 30, height: 30, borderRadius: 15, borderWidth: 3, backgroundImage: BRAND_GRADIENT, alignItems: 'center', justifyContent: 'center' },
   stats: { flex: 1, flexDirection: 'row', justifyContent: 'space-around' },
   who: { paddingTop: 12, paddingHorizontal: 20, gap: 7 },
   line: { flexDirection: 'row', alignItems: 'center', gap: 8, flexWrap: 'wrap' },
@@ -174,7 +147,6 @@ const s = StyleSheet.create({
   city: { fontSize: 13.5 },
   pill: { fontSize: 11.5, fontWeight: '800', paddingVertical: 4, paddingHorizontal: 9, borderRadius: 999, overflow: 'hidden' },
   actions: { flexDirection: 'row', gap: 8, paddingTop: 12, paddingHorizontal: 20 },
-  h3: { fontSize: 17, fontWeight: '700', paddingTop: 18, paddingBottom: 12, paddingHorizontal: 20 },
   seg: { flexDirection: 'row', gap: 4, padding: 4, borderRadius: 16 },
   segBtn: { height: 38, borderRadius: 12, alignItems: 'center', justifyContent: 'center' },
   segText: { fontSize: 14, fontWeight: '700' },

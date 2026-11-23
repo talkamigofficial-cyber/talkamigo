@@ -10,7 +10,7 @@ import { Avatar } from '../Avatar';
 import { Icon } from '../Icon';
 import { Pressy } from '../Pressy';
 import { T } from '../T';
-import { comingSoon, toast } from '../Toast';
+import { toast } from '../Toast';
 import { useLang, useT } from '../../i18n';
 import { useColors } from '../../theme/colors';
 import { getPerson } from '../../data/people';
@@ -53,7 +53,6 @@ export const PartnerRow = memo(function PartnerRow({ id, nearby }: { id: string;
   const active = p.online ? 'Active now' : seen >= 60 ? `Active ${Math.round(seen / 60)} h ago` : `Active ${seen} min ago`;
 
   const onWave = () => {
-    if (waved) return comingSoon(); // opens the chat in the next slice
     useApp.getState().wave(id);
     toast(`You waved at ${p.name} 👋`, { icon: 'check' });
   };
@@ -94,9 +93,16 @@ export const PartnerRow = memo(function PartnerRow({ id, nearby }: { id: string;
         </View>
       </Pressy>
       </View>
-      <Pressy scale={0.9} style={[s.wave, { backgroundColor: c.brand }]} onPress={onWave} accessibilityLabel={waved ? t('Message') : spokenLabel('wave', p.name, lang)}>
-        {waved ? <Icon name="chat" size={18} color="#fff" strokeWidth={2.2} /> : <Text style={{ fontSize: 18 }}>👋</Text>}
-      </Pressy>
+      {/* after a wave the prototype turns this into a chat button; chats open in slice 3, so until then it just shows a tick */}
+      {waved ? (
+        <View style={[s.wave, { backgroundColor: c.chip }]} accessibilityLabel={t(`You waved at ${p.name} 👋`)}>
+          <Icon name="check" size={18} color={c.muted} strokeWidth={2.4} />
+        </View>
+      ) : (
+        <Pressy scale={0.9} style={[s.wave, { backgroundColor: c.brand }]} onPress={onWave} accessibilityLabel={spokenLabel('wave', p.name, lang)}>
+          <Text style={{ fontSize: 18 }}>👋</Text>
+        </Pressy>
+      )}
     </View>
   );
 });
