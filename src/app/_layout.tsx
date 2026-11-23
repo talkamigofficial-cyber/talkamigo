@@ -12,7 +12,11 @@ import { LogBox, View } from 'react-native';
 // The navigation library sets a style the web preview doesn't know; harmless, only in the browser preview.
 LogBox.ignoreLogs(['Invalid style property of "direction"']);
 import { Stack } from 'expo-router';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { SafeAreaProvider, initialWindowMetrics } from 'react-native-safe-area-context';
+import { BetaApp } from '../web/BetaApp';
+
+/** true while the app is the beta itself (step 1). */
+const STEP1_BETA = true;
 import { useApp } from '../state/store';
 import { useLang } from '../i18n';
 import { useColors } from '../theme/colors';
@@ -28,6 +32,10 @@ export default function RootLayout() {
   const c = useColors();
 
   if (!ready) return <View style={{ flex: 1, backgroundColor: '#850612' }} />;
+
+  // STEP 1 (BUILD_EXACT_COPY.md): the beta is the whole app. Drawn here directly, outside the page stack,
+  // so nothing can add space around it. Step 2 removes this line and the native pages below come back.
+  if (STEP1_BETA) return <SafeAreaProvider initialMetrics={initialWindowMetrics}><BetaApp /></SafeAreaProvider>;
 
   return (
     <SafeAreaProvider>

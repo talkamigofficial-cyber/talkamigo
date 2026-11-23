@@ -16,8 +16,10 @@
  *  - the red launch screen stays until the page is ready, so there is no white flash.
  * The keyboard is left to the web view, exactly like Safari: the page moves its own typing boxes.
  */
+import type React from 'react';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Linking, Platform, Share, StyleSheet, View } from 'react-native';
+import { initialWindowMetrics, useSafeAreaInsets, type EdgeInsets } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
 import * as SplashScreen from 'expo-splash-screen';
 import { WebView, type WebViewMessageEvent, type WebViewNavigation } from 'react-native-webview';
@@ -71,7 +73,23 @@ const BRIDGE = `
 true;
 `;
 
+/**
+ * The iPhone's clock area (top) and home bar (bottom), in points, handed to the page as --sa-top, --sa-bottom…
+ * The page uses these instead of the web view's own safe-area values, which were wrong on a real iPhone
+ * (the page sat ~59 pt too low and the tab bar labels were cut off).
+ */
+function insetsJs(i: EdgeInsets) {
+  return `(function(){var s=document.documentElement.style;s.setProperty('--sa-top','${i.top}px');s.setProperty('--sa-bottom','${i.bottom}px');s.setProperty('--sa-left','${i.left}px');s.setProperty('--sa-right','${i.right}px');window.dispatchEvent(new Event('resize'));})();true;`;
+}
+const FIRST_INSETS: EdgeInsets = initialWindowMetrics?.insets ?? { top: 0, bottom: 0, left: 0, right: 0 };
+
 export function BetaApp() {
+  const insets = useSafeAreaInsets();
+  const web = useRef<React.ComponentRef<typeof WebView>>(null);
+  // the page gets the sizes before its first drawing (below), then again whenever they change (e.g. rotation)
+  const firstJs = useRef(insetsJs(FIRST_INSETS) + BRIDGE).current;
+  useEffect(() => { web.current?.injectJavaScript(insetsJs(insets)); }, [insets]);
+
   const [statusStyle, setStatusStyle] = useState<'light' | 'dark'>('light');
   const ready = useRef(false);
 
@@ -114,11 +132,12 @@ export function BetaApp() {
     <View style={styles.root}>
       <StatusBar style={statusStyle} />
       <WebView
+        ref={web}
         style={styles.web}
         containerStyle={styles.web}
         source={{ html: PAGE_HTML, baseUrl: BASE_URL }}
         originWhitelist={['*']}
-        injectedJavaScriptBeforeContentLoaded={BRIDGE}
+        injectedJavaScriptBeforeContentLoaded={firstJs}
         onMessage={onMessage}
         onShouldStartLoadWithRequest={onShouldStartLoad}
         onOpenWindow={(e) => openOutside(e.nativeEvent.targetUrl)}
@@ -147,7 +166,9 @@ export function BetaApp() {
         // Android equivalents
         textZoom={100}
         setBuiltInZoomControls={false}
-        onLoadEnd={showPage}
+        onLoadEnd={() => { web.current?.injectJavaScript(insetsJs(insets)); showPage(); }}
+        contentInset={{ top: 0, bottom: 0, left: 0, right: 0 }}
+
       />
     </View>
   );
@@ -155,6 +176,7 @@ export function BetaApp() {
 
 const styles = StyleSheet.create({
   // red like the launch screen, so the moment the page appears never flashes white
-  root: { flex: 1, backgroundColor: '#C20A1A' },
+  // covers the whole screen exactly, from the very top to the very bottom, whatever is around it
+  root: { position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: '#C20A1A' },
   web: { flex: 1, backgroundColor: 'transparent' },
 });

@@ -161,6 +161,47 @@ change('helper: height of the clock / Dynamic Island area',
   "/* [app] height of the iPhone's top safe area (clock / Dynamic Island), measured once per layout */\nlet APP_SAFE_TOP=null; window.addEventListener('resize',()=>{ APP_SAFE_TOP=null; });\nfunction appSafeTop(){ if(APP_SAFE_TOP===null){ const d=document.createElement('div'); d.style.cssText='position:fixed;top:0;left:0;width:1px;height:env(safe-area-inset-top,0px);visibility:hidden;pointer-events:none'; document.body.appendChild(d); APP_SAFE_TOP=d.offsetHeight||0; d.remove(); } return APP_SAFE_TOP; }\nfunction stackTop(){");
 change('iPhone screen edges + flag styles (extra CSS)', '</style>', APP_CSS + '</style>');
 
+// Headers fit the phone in every language (founder, 23 Nov: in French the Connect bell went off the screen).
+// Measured on the phone itself, with its real font: first the title gets a little smaller (down to 20 px),
+// then the "Plus" word next to the crown hides, then the gaps tighten, then the side margins. Never cuts the title with "…" if it can fit.
+const FIT_JS = `<script>
+/* [app] make header rows fit the screen (.top = page headers, .sheethead = pop-up titles) */
+(function(){
+  function over(row){ return row.scrollWidth > row.clientWidth; }
+  function cut(h){ return !!h && h.scrollWidth > h.clientWidth; }
+  function fitRow(row){
+    var h = row.querySelector('h1, h2, h3');
+    if (h && h.dataset.fit) { h.style.removeProperty('font-size'); h.style.removeProperty('letter-spacing'); }
+    row.style.removeProperty('gap'); row.style.removeProperty('padding-left'); row.style.removeProperty('padding-right'); row.querySelectorAll('.pct').forEach(function(x){ x.style.removeProperty('display'); });
+    if (!over(row) && !cut(h)) return;
+    if (h) {
+      h.dataset.fit = '1';
+      var size = parseFloat(getComputedStyle(h).fontSize);
+      while ((over(row) || cut(h)) && size > 20) { size -= 1; h.style.setProperty('font-size', size + 'px', 'important'); h.style.setProperty('letter-spacing', '-.03em', 'important'); }
+    }
+    if (over(row) || cut(h)) row.querySelectorAll('.pct').forEach(function(x){ x.style.setProperty('display', 'none', 'important'); });
+    if (over(row) || cut(h)) row.style.setProperty('gap', '4px', 'important');
+    if (over(row) || cut(h)) { row.style.setProperty('padding-left', '10px', 'important'); row.style.setProperty('padding-right', '10px', 'important'); }
+  }
+  var queued = false;
+  function fitAll(){ queued = false; document.querySelectorAll('.top, .sheethead').forEach(function(r){ if (r.offsetParent) fitRow(r); }); }
+  function soon(){ if (!queued) { queued = true; requestAnimationFrame(fitAll); } }
+  new MutationObserver(soon).observe(document.documentElement, { childList: true, subtree: true });
+  window.addEventListener('resize', soon);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(soon);
+  soon();
+})();
+</script>`;
+html += FIT_JS; applied.push('headers fit the screen in every language'); // the beta has no </body>: added at the very end
+
+// iPhone top and bottom space: the app hands the page the real sizes (--sa-top, --sa-bottom…, set in src/web/BetaApp.tsx).
+// The web view's own env(safe-area-inset-…) was wrong on the founder's iPhone (page pushed ~59 pt down, tab labels cut).
+{ const before = html.length;
+  let n = 0;
+  html = html.replace(/env\(safe-area-inset-(top|bottom|left|right)(\s*,\s*0px)?\)/g, (m, side) => { n++; return 'var(--sa-' + side + ',0px)'; });
+  if (n < 30) throw new Error('build-web: expected 30+ safe-area values, found ' + n);
+  applied.push('iPhone top/bottom space from the app (' + n + ' places)'); void before; }
+
 // ─────────────────────────────────────────────────────────────────────────────
 fs.mkdirSync('src/web', { recursive: true });
 fs.writeFileSync('src/web/page.ts',
