@@ -2,7 +2,7 @@
  * "Join TalkAmigo" — Create account, Step 1 of 9 (prototype vAuth() with mode 'create', step 'pick'; v45/v46).
  *
  * The white TalkAmigo plate, "Free to join · about 2 minutes.", a note that sign-up is in the phone's
- * language, the mini demo chat, then Sign up with Google / Apple / phone number, the teacher card,
+ * language, the mini example chat, then Sign up with Google / Apple / phone number,
  * the trust notes, the Terms line and "Already have an account? Log in".
  *
  * Faked (no server yet): Google and Apple "connect" for a second and always succeed.
@@ -13,12 +13,10 @@ import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { router } from 'expo-router';
 import { Screen } from '../../components/Screen';
 import { LogoPlate } from '../../components/Logo';
-import { Pressy } from '../../components/Pressy';
 import { Icon } from '../../components/Icon';
-import { comingSoon, toast } from '../../components/Toast';
 import { AuthHeader, TrustNotes } from '../../components/auth/AuthParts';
 import { ProviderButtons } from '../../components/auth/ProviderButtons';
-import { JoinDemoChat } from '../../components/auth/JoinDemoChat';
+import { JoinExampleChat } from '../../components/auth/JoinExampleChat';
 import { LegalSheet } from '../../components/auth/AuthSheets';
 import { authDone } from '../../components/auth/authFlow';
 import { LANG_NAME, pickLang, useT } from '../../i18n';
@@ -35,7 +33,6 @@ export default function Join() {
     setBusy(m);
     setTimeout(() => {
       setBusy(null);
-      toast(`Signed up with ${m === 'google' ? 'Google' : 'Apple'} (demo)`, { icon: 'check', top: true });
       authDone('create', m);
     }, 900);
   };
@@ -59,18 +56,11 @@ export default function Join() {
           </View>
         </View>
 
-        <JoinDemoChat />
+        <JoinExampleChat />
 
         <ProviderButtons mode="create" onPick={pick} busy={busy} />
 
-        <Pressy onPress={comingSoon} scale={0.98} style={styles.teach}>
-          <View style={styles.teachIcon}><Icon name="book" size={20} color="#1D4ED8" /></View>
-          <View style={{ flex: 1, minWidth: 0 }}>
-            <Text style={styles.teachTitle}>{t('Do you teach a language?')}</Text>
-            <Text style={styles.teachSub}>{t('Sign up as a teacher and give paid lessons')}</Text>
-          </View>
-          <Icon name="chev" size={18} color="#fff" strokeWidth={2.4} />
-        </Pressy>
+        {/* "Do you teach a language?" (teacher sign-up) comes back in the teachers slice; hidden until it works */}
 
         <TrustNotes rows={[
           ['lock', 'We never post anything or see your Google/Apple password'],
@@ -104,10 +94,6 @@ const styles = StyleSheet.create({
   sub: { fontSize: 15.5, fontWeight: '600', color: 'rgba(255,255,255,0.92)' },
   note: { flexDirection: 'row', gap: 8, alignItems: 'flex-start' },
   noteText: { flex: 1, fontSize: 13, lineHeight: 19, color: 'rgba(255,255,255,0.88)' },
-  teach: { flexDirection: 'row', alignItems: 'center', gap: 12, padding: 14, borderRadius: 18, borderWidth: 1.5, borderColor: 'rgba(255,255,255,0.55)', backgroundColor: 'rgba(255,255,255,0.12)' },
-  teachIcon: { width: 38, height: 38, borderRadius: 12, backgroundColor: '#fff', alignItems: 'center', justifyContent: 'center' },
-  teachTitle: { color: '#fff', fontSize: 16, fontWeight: '800' },
-  teachSub: { color: 'rgba(255,255,255,0.85)', fontSize: 13 },
   legal: { fontSize: 12, lineHeight: 19, textAlign: 'center', color: 'rgba(255,255,255,0.86)' },
   link: { color: '#fff', fontWeight: '700', textDecorationLine: 'underline' },
   already: { fontSize: 14, textAlign: 'center', color: 'rgba(255,255,255,0.86)' },

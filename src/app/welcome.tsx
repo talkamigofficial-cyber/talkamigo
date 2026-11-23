@@ -2,8 +2,8 @@
  * Welcome: the first screen (prototype vWelcome(); design decided in v39, v45, v46).
  *
  * Red logo background with the big faded app icon, the white TalkAmigo plate, greeting bubbles that
- * pop in and float, the tagline chips, then Create account / Log in, the trust strip and
- * "Just looking? Try the demo".
+ * pop in and float, the tagline chips, then Create account / Log in and the trust strip.
+ * (The prototype's "Just looking? Try the demo" link is removed: the app has no invented content, NEXT_STEPS §3–4.)
  * If someone used this phone before, a "Continue as Sam" card opens their account in one tap and the
  * second button becomes "Use another account".
  * The 🌐 button picks the app language for AFTER sign-up; the welcome and sign-up pages always follow
@@ -94,9 +94,6 @@ export default function Welcome() {
             </View>
           ))}
         </View>
-        <Pressy onPress={() => { useApp.getState().tryDemo(); router.replace('/'); }} scale={0.96} style={{ alignSelf: 'center', padding: 4 }}>
-          <Text style={styles.demo}>{t('Just looking? Try the demo')}</Text>
-        </Pressy>
       </View>
 
       <AppLanguageSheet
@@ -186,7 +183,6 @@ const styles = StyleSheet.create({
   trust: { flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center', columnGap: 14, rowGap: 6, paddingTop: 4 },
   trustItem: { flexDirection: 'row', alignItems: 'center', gap: 5 },
   trustText: { color: 'rgba(255,255,255,0.88)', fontSize: 12, fontWeight: '700' },
-  demo: { color: '#fff', opacity: 0.85, fontSize: 13, fontWeight: '700', textDecorationLine: 'underline', textDecorationColor: 'rgba(255,255,255,0.45)' },
   bubble: { position: 'absolute', flexDirection: 'row', alignItems: 'center', gap: 6, paddingVertical: 8, paddingHorizontal: 13, backgroundColor: 'rgba(255,255,255,0.94)', boxShadow: '0 10px 28px rgba(60,0,40,0.28)', zIndex: 2 },
   tailStart: { borderTopLeftRadius: 18, borderTopRightRadius: 18, borderBottomRightRadius: 18, borderBottomLeftRadius: 5 },
   tailEnd: { borderTopLeftRadius: 18, borderTopRightRadius: 18, borderBottomLeftRadius: 18, borderBottomRightRadius: 5 },

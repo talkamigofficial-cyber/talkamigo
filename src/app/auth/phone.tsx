@@ -49,7 +49,7 @@ export default function PhoneNumber() {
   const send = () => {
     if (!ok) return toast('Enter a valid phone number');
     router.push({ pathname: '/auth/code', params: { mode, cc, phone: digits } });
-    toast('Code sent (demo)', { icon: 'check', top: true });
+    toast('Code sent', { icon: 'check', top: true });
   };
 
   return (

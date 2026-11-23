@@ -21,23 +21,32 @@ import { toast } from '../Toast';
 import { measureTarget, type TourTargetId } from './TourTarget';
 
 type Tab = '/flicks' | '/chats' | '/connect' | '/rooms' | '/me';
-type Step = { target?: TourTargetId; title: string; points: string[]; go?: Tab; button?: string; last?: boolean };
+type Step = { target?: TourTargetId; title: string; points: string[]; go?: Tab; button?: string; last?: boolean; needs?: keyof typeof BUILT };
+
+/**
+ * Features a tour card talks about. A card with `needs` only shows once that feature exists in the app
+ * (no card about a button that isn't there yet — NEXT_STEPS §4). Switch to true when the feature ships.
+ */
+const BUILT = { postFlick: false, openRoom: false };
 
 /** The cards, word for word from the prototype. `go` = this card's button opens that tab. */
-export const TOUR_STEPS: Step[] = [
+const ALL_STEPS: Step[] = [
   { title: 'Welcome to TalkAmigo', points: ['Here’s a quick look at the essentials. It takes about a minute.', 'Tap Next when you’re ready. You can go back or skip at any time.'] },
   { target: 'tab-flicks', title: 'Flicks', points: ['Short posts from people learning languages, like you.', 'Swipe up for the next one. Tap any word to see what it means.', 'Stuck? Tap Translate under the caption.'] },
-  { target: 'flicks-post', title: 'Post your own Flick', points: ['Write in the language you’re learning.', 'Mistakes are welcome: others can send you a kind correction.'] },
+  { target: 'flicks-post', needs: 'postFlick', title: 'Post your own Flick', points: ['Write in the language you’re learning.', 'Mistakes are welcome: others can send you a kind correction.'] },
   { target: 'tab-chats', title: 'Chats', points: ['Your 1-to-1 chats and group chats.', 'People you don’t follow land in Requests first. You decide who gets in.'], go: '/chats', button: 'Open Chats' },
   { target: 'tab-connect', title: 'Connect', points: ['Find partners who speak the language you’re learning, and learn yours.', 'Tap 👋 to say hi. Use the filter for level, online people and more.'], go: '/connect', button: 'Open Connect' },
   { target: 'tab-rooms', title: 'Rooms', points: ['Talk rooms are voice only: join and just listen, or ask to speak.', 'Live rooms: one person on camera, everyone else comments.', 'Lessons: small classes with checked teachers, paid once.'], go: '/rooms', button: 'Open Rooms' },
-  { target: 'rooms-open', title: 'Open your own room', points: ['Start a talk room or a live room whenever you like. You’re the host.'] },
+  { target: 'rooms-open', needs: 'openRoom', title: 'Open your own room', points: ['Start a talk room or a live room whenever you like. You’re the host.'] },
   { target: 'tab-me', title: 'Me', points: ['Your profile, your levels, your Flicks and your settings.'], go: '/me', button: 'Open Me' },
   { target: 'me-langcard', title: 'Your language card', points: ['Your level in each language and your real practice time this week.', 'Change your levels any time in Settings → Learning.'] },
   { target: 'me-coins', title: 'Coins', points: ['Coins are what you buy, in the Wallet.', 'You spend them on gifts and boosts.', 'Coins can’t be turned into money.'] },
   { target: 'me-diamonds', title: 'Diamonds', points: ['Diamonds are what you receive when someone sends you a gift (a quarter of the gift’s coins).', 'From 1,000 Diamonds you can cash out to your bank, or turn them into Coins.'] },
   { target: 'me-settings', title: 'Settings & safety', points: ['Privacy, who can message you, app language and light or dark look.', 'Press and hold a message, or tap •••, to report or block someone. We review every report.'], last: true },
 ];
+
+/** The cards shown: every card whose feature exists. */
+export const TOUR_STEPS: Step[] = ALL_STEPS.filter((st) => !st.needs || BUILT[st.needs]);
 
 /** Which tab card `i` is on: the tab opened by the last "Open …" button before it. */
 const tabFor = (i: number): Tab => {

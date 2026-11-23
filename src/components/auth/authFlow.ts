@@ -4,7 +4,8 @@
  * No server yet (slice 1): nothing is really checked. The rules copied from the prototype:
  *   Sign up (mode 'create')  → a brand-new account, then sign-up step "Hi! Who are you?"
  *   Log in  (mode 'signin')  → if the account saved on this phone used this way to log in, open it;
- *                               otherwise "Approve on your other phone" (one phone per account, v31 Oct).
+ *                               otherwise "No account on this phone" with Create account (CLAUDE.md §5:
+ *                               "If someone logs in with an account that doesn't exist, offer to create one").
  *   "Continue as…"           → opens the account saved on this phone, no approval needed.
  *
  * In slice 2 the server decides which account belongs to a Google/Apple/phone login.
@@ -38,22 +39,10 @@ export function openSavedAccount() {
 export function authDone(mode: 'create' | 'signin', method: AuthMethod, phone?: string) {
   if (mode === 'signin') {
     if (hasAccountFor(method)) openSavedAccount();
-    else router.push({ pathname: '/auth/login', params: { step: 'approve', m: method } });
+    else router.push({ pathname: '/auth/login', params: { step: 'none', m: method } });
     return;
   }
   useApp.getState().startSignup(method);
   if (phone) useApp.setState({ authPhone: phone.replace(/\D/g, '') });
   goFresh('/signup/who');
-}
-
-/**
- * "Approve on my other phone (demo)": in the prototype an approved log-in with no account
- * saved on this phone opens the demo account (Sam), as if it came from the other phone.
- */
-export function approveOnOtherPhone(method: AuthMethod) {
-  const choice = useApp.getState().welcomeLangChoice;
-  useApp.getState().tryDemo();
-  useApp.setState({ lastAuth: method, ...(choice ? { appLangChoice: choice } : {}) });
-  goFresh('/');
-  toast('Approved. Your other phone has been logged out.');
 }

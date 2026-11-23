@@ -1,5 +1,5 @@
 /**
- * The mini chat that plays in on the Join page (prototype joinDemo(), v45/v46):
+ * The mini chat that plays in on the Join page (prototype joinDemo(), an example conversation, v45/v46):
  * Noah asks a question, you answer with a mistake, a green correction appears, Noah suggests a call.
  * It is always in English (v46) and is NOT translated: it shows a real conversation.
  * Underneath: 5 faces + "Native speakers from 190+ countries are waiting to chat".
@@ -18,7 +18,7 @@ const LINES = [
   { kind: 'them', text: 'Nice! Want to call tonight? 📞', at: 2600 },
 ] as const;
 
-export function JoinDemoChat() {
+export function JoinExampleChat() {
   const t = useT();
   return (
     <View style={styles.card}>

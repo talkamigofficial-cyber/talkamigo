@@ -5,7 +5,7 @@
  * a step or reopening the app keeps it (v55, v87).
  */
 import { useState } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { Keyboard, StyleSheet, Text, View } from 'react-native';
 import { useApp } from '../../state/store';
 import { useT } from '../../i18n';
 import { toast } from '../../components/Toast';
@@ -33,6 +33,19 @@ export default function WhoStep() {
   const update = useApp((s) => s.updateMe);
   const [wheelOpen, setWheelOpen] = useState(false);
 
+  /**
+   * Birthday: close the keyboard FIRST, then show the wheel once the keyboard has gone, so the whole
+   * wheel is visible (with the keyboard still up it was cut in half — founder's iPhone, NEXT_STEPS §2.2).
+   */
+  const openWheel = () => {
+    if (!Keyboard.isVisible()) return setWheelOpen(true);
+    let done = false;
+    const show = () => { if (done) return; done = true; sub.remove(); setWheelOpen(true); };
+    const sub = Keyboard.addListener('keyboardDidHide', show);
+    Keyboard.dismiss();
+    setTimeout(show, 450); // safety net if the "keyboard gone" signal never comes
+  };
+
   const check = userCheck(me.handle);
   const bad = nameBad(me.name);
   const reason = reasonFor(me.name, me.handle, me.bday);
@@ -47,7 +60,8 @@ export default function WhoStep() {
     >
       <View style={styles.field}>
         <FieldLabel label="Display name" required />
-        <WhiteInput value={me.name} onChangeText={(name) => update({ name })} maxLength={24} autoComplete="given-name" placeholder={t('Your first name')} accessibilityLabel={t('Display name')} />
+        {/* NOT a log-in form: these settings stop the iPhone from offering saved passwords (NEXT_STEPS §2.3) */}
+        <WhiteInput {...NOT_A_LOGIN} value={me.name} onChangeText={(name) => update({ name })} maxLength={24} autoCapitalize="words" placeholder={t('Your first name')} accessibilityLabel={t('Display name')} />
         <Hint text={bad} kind="bad" />
       </View>
 
@@ -56,12 +70,12 @@ export default function WhoStep() {
         <View style={[styles.userBox, { borderColor: me.handle ? (check.ok ? '#14804A' : '#E0101F') : 'transparent' }]}>
           <Text style={styles.at}>@</Text>
           <WhiteInput
+            {...NOT_A_LOGIN}
             value={me.handle}
             onChangeText={(handle) => update({ handle })}
             maxLength={20}
             autoCapitalize="none"
-            autoCorrect={false}
-            autoComplete="username"
+            spellCheck={false}
             placeholder="yourname"
             style={styles.userInput}
             accessibilityLabel={t('Username')}
@@ -88,7 +102,7 @@ export default function WhoStep() {
             }}
           />
         ) : (
-          <Pressy onPress={() => setWheelOpen(true)} scale={0.98} style={styles.bdBtn} accessibilityLabel={t('Choose your birthday')}>
+          <Pressy onPress={openWheel} scale={0.98} style={styles.bdBtn} accessibilityLabel={t('Choose your birthday')}>
             <Text style={[styles.bdText, !me.bday && { color: '#9A9AA5' }]}>{me.bday ? formatBirthday(me.bday, t.lang) : t('Choose your birthday')}</Text>
             <Icon name="chev" size={18} color="#9A9AA5" />
           </Pressy>
@@ -97,6 +111,14 @@ export default function WhoStep() {
     </SignupFrame>
   );
 }
+
+/** Text-box settings for name and username: no saved-password bar, no autofill, no autocorrect. */
+const NOT_A_LOGIN = {
+  textContentType: 'none',
+  autoComplete: 'off',
+  autoCorrect: false,
+  importantForAutofill: 'no',
+} as const;
 
 const styles = StyleSheet.create({
   field: { gap: 7 },

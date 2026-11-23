@@ -46,4 +46,9 @@ export const signupSession = {
   nativesTouched: false,
   /** the community promise tick on the photo step (kept while moving between steps) */
   promise: false,
+  /**
+   * The intro video recorded or chosen on the last step (a file on this phone). The store only keeps
+   * `me.video = true`; the file itself is uploaded and checked by the server from slice 2.
+   */
+  introVideoUri: null as string | null,
 };

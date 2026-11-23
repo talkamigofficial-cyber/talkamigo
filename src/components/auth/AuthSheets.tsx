@@ -3,7 +3,6 @@
  *   - AppLanguageSheet  ('applang')   the 🌐 button on Welcome
  *   - DialSheet         ('dial')      country code picker for the phone number
  *   - TroubleSheet      ('trouble')   "Trouble logging in?"
- *   - LostPhoneSheet    ('lostphone') "No access to your other phone?"
  *   - LegalSheet        ('legal')     Terms of Use / Privacy Policy summaries
  */
 import { useMemo, useState } from 'react';
@@ -13,7 +12,6 @@ import { Pressy } from '../Pressy';
 import { Icon, type IconName } from '../Icon';
 import { Button } from '../Button';
 import { emojiFlag } from '../Avatar';
-import { comingSoon, toast } from '../Toast';
 import { LANG_NAME, countryName, phoneLang, useT } from '../../i18n';
 import { useColors } from '../../theme/colors';
 import lists from '../../data/generated/lists.json';
@@ -90,48 +88,36 @@ export function DialSheet({ visible, onClose, onPick }: { visible: boolean; onCl
 function PickRow({ icon, title, sub, onPress }: { icon: IconName; title: string; sub: string; onPress?: () => void }) {
   const c = useColors();
   const t = useT();
-  return (
-    <Pressy onPress={onPress} scale={1} highlight={c.chip} style={styles.pick}>
+  const inner = (
+    <>
       <View style={[styles.pickIcon, { backgroundColor: c.chip }]}><Icon name={icon} size={22} color={c.ink} strokeWidth={1.9} /></View>
       <View style={{ flex: 1 }}>
         <Text style={[styles.pickTitle, { color: c.ink }]}>{t(title)}</Text>
         <Text style={[styles.pickSub, { color: c.muted }]}>{t(sub)}</Text>
       </View>
-    </Pressy>
+    </>
   );
+  // a row without an action is plain text, not a button (no dead buttons)
+  if (!onPress) return <View style={styles.pick}>{inner}</View>;
+  return <Pressy onPress={onPress} scale={1} highlight={c.chip} style={styles.pick}>{inner}</Pressy>;
 }
 
 export function TroubleSheet({ visible, onClose }: { visible: boolean; onClose: () => void }) {
   const c = useColors();
+  // help text only: the support desk comes with the server, so there is no "Contact support" row yet
   const rows: [IconName, string, string][] = [
     ['user', 'Try the way you signed up', 'Look for the “Last used” tag. Google, Apple and phone are separate logins.'],
     ['phone', 'New phone number?', 'Log in with Google or Apple if you added it, or contact support to move your account.'],
-    ['chat', 'Contact support', 'We reply within 24 hours.'],
   ];
   return (
     <Sheet visible={visible} onClose={onClose} title="Trouble logging in?">
       <View style={[styles.group, { backgroundColor: c.card, borderColor: c.line }]}>
         {rows.map(([icon, a, b], i) => (
           <View key={a} style={i > 0 ? { borderTopWidth: 1, borderTopColor: c.line } : null}>
-            {/* help pages and the support desk come with the server */}
-            <PickRow icon={icon} title={a} sub={b} onPress={comingSoon} />
+            <PickRow icon={icon} title={a} sub={b} />
           </View>
         ))}
       </View>
-    </Sheet>
-  );
-}
-
-// ---------------------------------------------------------------- No access to your other phone?
-
-export function LostPhoneSheet({ visible, onClose }: { visible: boolean; onClose: () => void }) {
-  return (
-    <Sheet visible={visible} onClose={onClose} title="No access to your other phone?">
-      <Paragraphs rows={[
-        ['Lost, broken or stolen', 'Contact support from this screen. We check it’s really you, then log your old phone out and let you in here.'],
-        ['Your messages', 'Messages on the old phone can’t be moved without it. Your plan, coins and Diamonds are safe.'],
-      ]} />
-      <Button title="Contact support" onPress={() => { onClose(); toast('Support request sent. We reply within 24h (demo).'); }} />
     </Sheet>
   );
 }

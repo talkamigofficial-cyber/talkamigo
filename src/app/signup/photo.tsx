@@ -1,6 +1,6 @@
 /**
  * Sign-up step 8 of 9 — "Add a profile photo" (prototype step 5, 'ob-photo', 'ob-promise'; layout from v87).
- * Photo with "Choose photo" / "Take photo" beside it, six demo photos, then the community promise tick
+ * Photo with "Choose photo" / "Take photo" beside it, six ready-made photos, then the community promise tick
  * right under the photo (required), then the photo rules in one short line.
  * The button says "Skip photo" until a photo is chosen; it only works once the promise is ticked.
  *
@@ -21,10 +21,12 @@ import { Pressy } from '../../components/Pressy';
 import { Sheet } from '../../components/Sheet';
 import { toast } from '../../components/Toast';
 import { SignupFrame } from '../../components/signup/SignupFrame';
+import { CardButton } from '../../components/signup/RedPieces';
 import { goNext, signupSession } from '../../components/signup/flow';
 import { useColors } from '../../theme/colors';
 
-const DEMO = lists.demoPhotos as [string, string][];
+/** Six ready-made profile pictures (an emoji on a colour), for people who don't want to use a photo. */
+const READY = lists.demoPhotos as [string, string][];
 
 export default function PhotoStep() {
   const t = useT();
@@ -62,16 +64,16 @@ export default function PhotoStep() {
       <View style={styles.row}>
         <Avatar id="me" size={84} />
         <View style={styles.buttons}>
-          <Button kind="glass" small icon="photo" title="Choose photo" onPress={choose} style={styles.btn} />
-          <Button kind="glass" small icon="camera" title="Take photo" onPress={() => setAskCamera(true)} style={styles.btn} />
+          <CardButton icon="photo" title="Choose photo" onPress={choose} />
+          <CardButton icon="camera" title="Take photo" onPress={() => setAskCamera(true)} />
         </View>
       </View>
 
-      <View style={styles.demo}>
-        {DEMO.map(([emoji, bg], i) => {
+      <View style={styles.ready}>
+        {READY.map(([emoji, bg], i) => {
           const on = !!me.photo && 'emoji' in me.photo && me.photo.emoji === emoji;
           return (
-            <Pressy key={emoji} scale={0.9} onPress={() => { update({ photo: { emoji, bg } }); added(); }} accessibilityLabel={`Demo photo ${i + 1}`} style={[styles.demoBtn, { backgroundImage: bg, borderColor: on ? '#fff' : 'transparent' }]}>
+            <Pressy key={emoji} scale={0.9} onPress={() => { update({ photo: { emoji, bg } }); added(); }} accessibilityLabel={`${t('Choose photo')} ${i + 1}`} style={[styles.readyBtn, { backgroundImage: bg, borderColor: on ? '#fff' : 'transparent' }]}>
               <Text style={{ fontSize: 20 }}>{emoji}</Text>
             </Pressy>
           );
@@ -103,9 +105,8 @@ export default function PhotoStep() {
 const styles = StyleSheet.create({
   row: { flexDirection: 'row', alignItems: 'center', gap: 12 },
   buttons: { flex: 1, gap: 8, minWidth: 0 },
-  btn: { height: 44, backgroundColor: 'rgba(255,255,255,0.95)', borderWidth: 0 },
-  demo: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
-  demoBtn: { width: 40, height: 40, borderRadius: 20, borderWidth: 2, alignItems: 'center', justifyContent: 'center' },
+  ready: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
+  readyBtn: { width: 40, height: 40, borderRadius: 20, borderWidth: 2, alignItems: 'center', justifyContent: 'center' },
   promise: { flexDirection: 'row', gap: 10, alignItems: 'flex-start', backgroundColor: '#fff', borderRadius: 16, paddingVertical: 11, paddingHorizontal: 12 },
   tick: { width: 24, height: 24, borderRadius: 7, borderWidth: 2, borderColor: '#C9C9D1', alignItems: 'center', justifyContent: 'center', marginTop: 1 },
   tickOn: { backgroundColor: '#E0101F', borderColor: '#E0101F' },

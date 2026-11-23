@@ -109,7 +109,7 @@ export default function Code() {
           accessibilityLabel={t('Enter the 6-digit code')}
         />
         <View style={styles.under}>
-          <Text style={styles.demo}>{t('Demo: any 6 digits work')}</Text>
+          <View />
           <Pressy onPress={resend} disabled={left > 0} scale={0.95}>
             <Text style={[styles.resend, left > 0 && { color: 'rgba(255,255,255,0.86)' }]}>
               {/* "Resend in 0:30" uses the "resend" pattern */}
@@ -144,7 +144,6 @@ const styles = StyleSheet.create({
   digit: { fontSize: 26, fontWeight: '700', color: '#fff' },
   hidden: { position: 'absolute', width: 1, height: 1, opacity: 0 },
   under: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingHorizontal: 20, paddingTop: 12 },
-  demo: { fontSize: 13, color: 'rgba(255,255,255,0.86)' },
   resend: { fontSize: 14, fontWeight: '800', color: '#fff' },
   warn: { flexDirection: 'row', gap: 10, paddingVertical: 12, paddingHorizontal: 14, borderRadius: 24, backgroundColor: onRed.card },
   warnText: { flex: 1, fontSize: 13, lineHeight: 19, color: '#3A3A44' },

@@ -1,0 +1,12 @@
+{
+  "_about": "Welcome, log-in and sign-up texts (round 2, 23 Nov 2026): the word 'demo' removed (founder, NEXT_STEPS §4), real intro-video recording, honest 'no account on this phone' log-in.",
+  "strings": {
+    "Record my intro": { "fr": "Enregistrer ma présentation", "es": "Grabar mi presentación", "pt": "Gravar minha apresentação", "de": "Vorstellung aufnehmen", "it": "Registra la presentazione", "ja": "自己紹介を録画", "ar": "سجّل تعريفي" },
+    "Choose a video": { "fr": "Choisir une vidéo", "es": "Elegir un vídeo", "pt": "Escolher um vídeo", "de": "Video wählen", "it": "Scegli un video", "ja": "動画を選ぶ", "ar": "اختر فيديو" },
+    "Code sent": { "fr": "Code envoyé", "es": "Código enviado", "pt": "Código enviado", "de": "Code gesendet", "it": "Codice inviato", "ja": "コードを送信しました", "ar": "تم إرسال الرمز" },
+    "No account on this phone": { "fr": "Aucun compte sur ce téléphone", "es": "No hay ninguna cuenta en este teléfono", "pt": "Nenhuma conta neste celular", "de": "Kein Konto auf diesem Handy", "it": "Nessun account su questo telefono", "ja": "この端末にはアカウントがありません", "ar": "لا يوجد حساب على هذا الهاتف" },
+    "No TalkAmigo account on this phone logs in this way. Create one: it takes about 2 minutes.": { "fr": "Aucun compte TalkAmigo sur ce téléphone ne se connecte de cette façon. Crée-en un : ça prend environ 2 minutes.", "es": "Ninguna cuenta de TalkAmigo en este teléfono inicia sesión así. Crea una: tarda unos 2 minutos.", "pt": "Nenhuma conta TalkAmigo neste celular entra dessa forma. Crie uma: leva cerca de 2 minutos.", "de": "Kein TalkAmigo-Konto auf diesem Handy meldet sich so an. Erstelle eins: Das dauert etwa 2 Minuten.", "it": "Nessun account TalkAmigo su questo telefono accede in questo modo. Creane uno: ci vogliono circa 2 minuti.", "ja": "この端末でこの方法でログインするTalkAmigoアカウントはありません。作成しましょう（約2分）。", "ar": "لا يوجد حساب TalkAmigo على هذا الهاتف يسجّل الدخول بهذه الطريقة. أنشئ حسابًا: يستغرق ذلك دقيقتين تقريبًا." },
+    "Use another way": { "fr": "Utiliser un autre moyen", "es": "Usar otro método", "pt": "Usar outra forma", "de": "Anders anmelden", "it": "Usa un altro modo", "ja": "別の方法を使う", "ar": "استخدم طريقة أخرى" },
+    "Video added · we check every video": { "fr": "Vidéo ajoutée · nous vérifions chaque vidéo", "es": "Vídeo añadido · revisamos todos los vídeos", "pt": "Vídeo adicionado · verificamos todos os vídeos", "de": "Video hinzugefügt · wir prüfen jedes Video", "it": "Video aggiunto · controlliamo ogni video", "ja": "動画を追加しました・すべての動画を確認しています", "ar": "تمت إضافة الفيديو · نراجع كل فيديو" }
+  }
+}

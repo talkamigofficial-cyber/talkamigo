@@ -6,10 +6,13 @@
  *   <WhiteInput>         white text box (anything people type in stays a clean white card, v41)
  *   <Hint>               small line under a field (yellow = problem, green = OK)
  *   <SectionLabel>       small capitals label ("POPULAR")
+ *   <CardButton>         white button with dark text (Choose photo / Take photo). Fixed colours: the red
+ *                        pages look the same in light and dark mode (founder's iPhone was in dark mode and the
+ *                        theme-coloured text turned white on white).
  */
 import { StyleSheet, Text, TextInput, View, type TextInputProps } from 'react-native';
 import { Pressy } from '../Pressy';
-import { Icon } from '../Icon';
+import { Icon, type IconName } from '../Icon';
 import { useT } from '../../i18n';
 import { onRed } from '../../theme/colors';
 
@@ -66,7 +69,19 @@ export function SectionLabel({ text }: { text: string }) {
   return <Text style={styles.label}>{t(text).toLocaleUpperCase()}</Text>;
 }
 
+export function CardButton({ title, icon, onPress }: { title: string; icon: IconName; onPress: () => void }) {
+  const t = useT();
+  return (
+    <Pressy onPress={onPress} scale={0.95} style={styles.cardBtn} accessibilityLabel={t(title)}>
+      <Icon name={icon} size={18} color="#16161D" strokeWidth={2.2} />
+      <Text style={styles.cardBtnText} numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.8}>{t(title)}</Text>
+    </Pressy>
+  );
+}
+
 const styles = StyleSheet.create({
+  cardBtn: { height: 44, borderRadius: 14, backgroundColor: 'rgba(255,255,255,0.95)', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8, paddingHorizontal: 12, boxShadow: '0 8px 22px rgba(60,0,40,0.18)' },
+  cardBtnText: { color: '#16161D', fontSize: 14, fontWeight: '800', flexShrink: 1 },
   chip: { height: 36, paddingHorizontal: 14, borderRadius: 999, borderWidth: 1, borderColor: 'rgba(255,255,255,0.35)', backgroundColor: 'rgba(255,255,255,0.18)', justifyContent: 'center' },
   chipOn: { backgroundColor: '#fff', borderColor: '#fff' },
   chipText: { color: '#fff', fontSize: 14, fontWeight: '700' },
