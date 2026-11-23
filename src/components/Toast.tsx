@@ -67,7 +67,3 @@ const styles = StyleSheet.create({
   sub: { color: 'rgba(255,255,255,0.75)', fontSize: 13, marginTop: 1 },
 });
 
-/** For buttons whose feature is built in a later slice (chat screen, rooms, wallet…). */
-export function comingSoon() {
-  toast('Coming in the next update', { icon: 'clock' });
-}

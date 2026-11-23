@@ -56,6 +56,7 @@ export default function WhoStep() {
       title="Hi! Who are you?"
       sub="Only your age is shown. TalkAmigo is 18+."
       reason={reason}
+      showEnd={wheelOpen}
       onNext={() => { update({ name: me.name.trim() }); goNext('who'); }}
     >
       <View style={styles.field}>

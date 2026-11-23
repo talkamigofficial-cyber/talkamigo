@@ -16,7 +16,7 @@ import { T } from '../T';
 import { toast } from '../Toast';
 
 /** Ready-made pictures (an emoji on a colour), for people who'd rather not use a photo of themselves. */
-const READY = lists.demoPhotos as [string, string][];
+const READY = lists.photoChoices as [string, string][];
 
 export function PhotoSheet({ visible, onClose }: { visible: boolean; onClose: () => void }) {
   const c = useColors();

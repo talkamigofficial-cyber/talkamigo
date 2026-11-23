@@ -2,14 +2,14 @@
  * The mini chat that plays in on the Join page (prototype joinDemo(), an example conversation, v45/v46):
  * Noah asks a question, you answer with a mistake, a green correction appears, Noah suggests a call.
  * It is always in English (v46) and is NOT translated: it shows a real conversation.
- * Underneath: 5 faces + "Native speakers from 190+ countries are waiting to chat".
+ * Round 2 (NEXT_STEPS §3, empty app): the 5 faces and "Native speakers from 190+ countries are waiting to chat"
+ * were removed — they showed invented people and a claim that isn't true yet. The chat stays: it is a clearly
+ * illustrative example of how corrections work, with a plain round letter instead of a real-looking person.
  */
 import { useEffect, useRef } from 'react';
 import { Animated, Platform, StyleSheet, Text, View } from 'react-native';
-import { Avatar } from '../Avatar';
 import { Icon } from '../Icon';
 import { Direction } from '../Direction';
-import { useT } from '../../i18n';
 
 const LINES = [
   { kind: 'them', text: 'Hi! Are you learning English?', at: 250 },
@@ -19,13 +19,12 @@ const LINES = [
 ] as const;
 
 export function JoinExampleChat() {
-  const t = useT();
   return (
     <View style={styles.card}>
       <View style={{ gap: 7 }} accessibilityElementsHidden importantForAccessibility="no-hide-descendants">
         {LINES.map((line, i) => (
           <PlayIn key={i} delay={line.at} style={[styles.row, line.kind === 'me' && { justifyContent: 'flex-end' }]}>
-            {line.kind === 'them' ? <Avatar id="noah" size={30} /> : null}
+            {line.kind === 'them' ? <View style={styles.letter}><Text style={styles.letterText}>N</Text></View> : null}
             {line.kind === 'fix' ? (
               // the correction is English, so it reads left-to-right even in Arabic
               <Direction rtl={false} style={styles.fix}>
@@ -39,14 +38,6 @@ export function JoinExampleChat() {
             )}
           </PlayIn>
         ))}
-      </View>
-      <View style={styles.foot}>
-        <View style={styles.crowd}>
-          {['camille', 'kenji', 'lucia', 'tunde', 'aiko'].map((id, i) => (
-            <View key={id} style={[styles.face, i > 0 && { marginStart: -9 }]}><Avatar id={id} size={26} /></View>
-          ))}
-        </View>
-        <Text style={styles.footText}>{t('Native speakers from 190+ countries are waiting to chat')}</Text>
       </View>
     </View>
   );
@@ -74,8 +65,6 @@ const styles = StyleSheet.create({
   fix: { marginStart: 38, flexShrink: 1, flexDirection: 'row', alignItems: 'center', flexWrap: 'wrap', backgroundColor: '#E9FBEF', borderColor: '#BDEFCD', borderWidth: 1, borderRadius: 12, paddingVertical: 6, paddingHorizontal: 10 },
   wrong: { fontSize: 13, color: '#B42318', opacity: 0.8, textDecorationLine: 'line-through' },
   fixText: { fontSize: 13, color: '#15803D' },
-  foot: { flexDirection: 'row', alignItems: 'center', gap: 10, borderTopWidth: 1, borderTopColor: 'rgba(255,255,255,0.22)', paddingTop: 10 },
-  crowd: { flexDirection: 'row', paddingStart: 8 },
-  face: { borderRadius: 15, borderWidth: 2, borderColor: 'rgba(255,255,255,0.0)' },
-  footText: { flex: 1, color: '#fff', fontSize: 13, fontWeight: '700', lineHeight: 18 },
+  letter: { width: 30, height: 30, borderRadius: 15, backgroundImage: 'linear-gradient(135deg,#7FB2FF,#1E3A8A)', alignItems: 'center', justifyContent: 'center' },
+  letterText: { color: '#fff', fontWeight: '800', fontSize: 13 },
 });

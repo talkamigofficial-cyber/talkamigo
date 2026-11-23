@@ -23,3 +23,15 @@ Date · decision · why. Newest at the bottom.
 - **Sign-up counter says "of 9"** everywhere (the Join page said "of 8" while later steps said "of 9": the v88 "How did you find TalkAmigo?" step was never counted on Join).
 - **Prototype bugs fixed while building:** "Continue as" showed the untranslated word "phone"; the French "Following" button said "Abonnements" (the tab name); the Chats title no longer cuts to "Discussi…" on small phones; Arabic settings rows line up on the reading side; Arabic Join demo correction no longer runs off the edge.
 - **Kept for later slices (show "Coming in the next update"):** opening a chat, joining rooms/lives/lessons, comments, gifts, share, Wallet/Shop/Plans, boosts, posting a Flick, teacher sign-up, most Settings pages. Flicks "Learn" shows Flicks in your language but not the practice cards yet (they need speech services).
+
+## 23 Nov 2026 — round 2 (NEXT_STEPS §2–4)
+
+- **Empty-state design B** picked by the founder (icon in a soft red square, title, one sentence, at most one red button). Shared component `src/components/EmptyState.tsx`.
+- **The app is empty:** no invented people, chats, rooms, lives, lessons, Flicks, offers, Room alerts or Team messages, no demo numbers. A new account starts at 0. "Try the demo" removed. All lists read from `src/data/live.ts` (empty until the server in slice 2). The prototype demo content stays in `src/data/generated/demo.json`, unused, as the seed for the hidden Test world (slice 2).
+- **No "demo" and no "Coming in the next update":** buttons for features that aren't built are hidden. Where a next step doesn't exist yet (open a room, post a Flick), the empty state has no button.
+- **Real flags** (country-flag-icons, MIT): square flags cropped to a circle with a thin dark ring.
+- **Sign-up fixes:** birthday closes the keyboard first and shows the full wheel; name/username boxes no longer trigger the iPhone password bar; red sign-up screens use fixed colours (the photo buttons were white-on-white in dark mode); log-in with no account on this phone offers to create one (no fake "approve on your other phone"); intro video records for real with the iPhone camera (30 s) or is chosen from the phone; the teacher sign-up card is hidden until slice 7.
+- **Join page:** the example chat stays (illustration of corrections), but the 5 faces and "Native speakers from 190+ countries are waiting to chat" were removed (invented people, untrue claim for an empty app).
+- **Tour:** "Post your own Flick" and "Open your own room" cards are switched off until those features exist (10 cards).
+- **Tab bar:** icon over label, badge on the Chats icon, pages clipped above the bar. Not reproducible in the browser: to be confirmed on the founder's iPhone.
+- **Blue gear button:** it is Expo Go's own tools button, not TalkAmigo's; it does not exist in the real app.

@@ -27,7 +27,7 @@ write('lists', {
   interests: d.ALLINTS,
   popularInterests: d.POPINTS,
   dialCodes: d.DIAL,
-  demoPhotos: d.PHOTOS, // [emoji, background]
+  photoChoices: d.PHOTOS, // ready-made profile photos: [emoji, background]
   flagDrawings: d.FLAG, // 12 countries drawn as colour stripes in the prototype; others use the emoji flag
 });
 

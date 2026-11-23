@@ -67,7 +67,8 @@ export default function Code() {
     toast('New code sent', { top: true });
   };
 
-  const sentTo = `+${DIAL[cc] ?? '44'} ${formatPhone(phone)}`;
+  // the number is wrapped in left-to-right marks so it never comes out reversed in Arabic (CLAUDE.md: phone numbers stay LTR)
+  const sentTo = `\u2066+${DIAL[cc] ?? '44'} ${formatPhone(phone)}\u2069`;
 
   return (
     <Screen red>

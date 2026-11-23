@@ -8,7 +8,7 @@
  * it's public comes with the server (slice 2). No "(demo)" anywhere (NEXT_STEPS §4).
  */
 import { useState } from 'react';
-import { Platform, StyleSheet, Text, View } from 'react-native';
+import { Platform, StyleSheet, Text, View, useWindowDimensions } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { useApp } from '../../state/store';
 import { useT } from '../../i18n';
@@ -29,6 +29,10 @@ export default function VideoStep() {
   const hasVideo = useApp((s) => s.me.video);
   const update = useApp((s) => s.updateMe);
   const [askCamera, setAskCamera] = useState(false);
+  // small phones get a shorter preview so both buttons fit without scrolling (v87 "every step fits the screen")
+  const screenH = useWindowDimensions().height;
+  const small = screenH < 700;
+  const tiny = screenH < 620; // iPhone SE size
 
   const saved = (r: ImagePicker.ImagePickerResult) => {
     if (r.canceled || !r.assets[0]) return;
@@ -56,19 +60,20 @@ export default function VideoStep() {
       button={hasVideo ? 'Finish' : 'Skip for now & finish'}
       onNext={() => goNext('video')}
     >
-      <View style={styles.box}>
-        <Avatar id="me" size={110} noFlag />
+      <View style={[styles.box, small && { height: tiny ? 92 : 150 }]}>
+        <Avatar id="me" size={tiny ? 48 : small ? 70 : 110} noFlag />
         {hasVideo ? (
           <View style={[styles.tagRow, { backgroundColor: '#14804A' }]}>
             <Icon name="check" size={13} color="#fff" strokeWidth={3} />
             <Text style={styles.tagText}>{t('Intro video saved')}</Text>
           </View>
         ) : null}
-        <Text style={styles.tip}>💡 {t('Say your name, where you’re from and what you’re learning')}</Text>
+        {/* on the smallest phones the tip moves under the box as one line, so the box can be short */}
+        {!tiny ? <Text style={styles.tip}>💡 {t('Say your name, where you’re from and what you’re learning')}</Text> : null}
       </View>
 
-      <Button kind={hasVideo ? 'outlineWhite' : 'white'} icon="video" title={hasVideo ? 'Record again' : 'Record my intro'} onPress={() => setAskCamera(true)} />
-      <Button kind="outlineWhite" icon="folder" title="Choose a video" onPress={choose} />
+      <Button kind={hasVideo ? 'outlineWhite' : 'white'} icon="video" title={hasVideo ? 'Record again' : 'Record my intro'} small={tiny} onPress={() => setAskCamera(true)} />
+      <Button kind="outlineWhite" icon="folder" title="Choose a video" small={tiny} onPress={choose} />
 
       <View style={styles.rulesRow}>
         <Icon name="shield" size={14} color="rgba(255,255,255,0.82)" />

@@ -26,7 +26,7 @@ import { goNext, signupSession } from '../../components/signup/flow';
 import { useColors } from '../../theme/colors';
 
 /** Six ready-made profile pictures (an emoji on a colour), for people who don't want to use a photo. */
-const READY = lists.demoPhotos as [string, string][];
+const READY = lists.photoChoices as [string, string][];
 
 export default function PhotoStep() {
   const t = useT();

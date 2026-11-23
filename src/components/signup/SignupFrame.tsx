@@ -9,7 +9,7 @@
  * so the title and Continue always fit on an iPhone SE (v87).
  * The current step is saved every time the screen is shown, so reopening the app resumes here (v87).
  */
-import { useCallback } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { useFocusEffect } from 'expo-router';
 import { Screen, BackButton } from '../Screen';
@@ -30,11 +30,16 @@ type Props = {
   canContinue?: boolean;
   onNext: () => void;
   fixed?: boolean;
+  /** true = scroll to the bottom of the page (used when the birthday wheel opens) */
+  showEnd?: boolean;
   children: React.ReactNode;
 };
 
-export function SignupFrame({ step, title, sub, reason, button = 'Continue', canContinue = true, onNext, fixed, children }: Props) {
+export function SignupFrame({ step, title, sub, reason, button = 'Continue', canContinue = true, onNext, fixed, showEnd, children }: Props) {
   const t = useT();
+  const scroll = useRef<React.ComponentRef<typeof ScrollView>>(null);
+  // when something opens at the bottom of the page (the birthday wheel), scroll so all of it is on screen
+  useEffect(() => { if (showEnd) setTimeout(() => scroll.current?.scrollToEnd({ animated: true }), 60); }, [showEnd]);
   useFocusEffect(useCallback(() => { useApp.getState().setSignupStep(step); }, [step]));
   const n = STEP_NUMBER[step];
 
@@ -59,7 +64,7 @@ export function SignupFrame({ step, title, sub, reason, button = 'Continue', can
         {fixed ? (
           <View style={styles.body}>{head}{children}</View>
         ) : (
-          <ScrollView contentContainerStyle={styles.body} keyboardShouldPersistTaps="handled" keyboardDismissMode="none">
+          <ScrollView ref={scroll} contentContainerStyle={styles.body} keyboardShouldPersistTaps="handled" keyboardDismissMode="none">
             {head}
             {children}
           </ScrollView>
