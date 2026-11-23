@@ -1,32 +1,29 @@
 /**
  * Rooms tab (decided 1–2 Nov 2026, "Rooms page"):
- *   Plans + red "Open room" at the top → big title "Talk rooms" / "Live rooms" → sliding banner →
- *   two big cards (Talk rooms · Live rooms, the chosen one turns red, remembered) →
- *   Rooms (or "Live now") · Lessons → language chips → the list.
+ *   big title "Talk rooms" / "Live rooms" → two big cards (Talk rooms · Live rooms, the chosen one turns red,
+ *   remembered) → Rooms (or "Live now") · Lessons → language chips → the list.
  *
  * Talk rooms: room cards, boosted first, with one "Popular lesson" circle as the 3rd item.
  * Live rooms: tiles two per row, with one paid live lesson circle as the 3rd item.
  * The list starts with a few cards and adds 10 more as you scroll (prototype lazyN), so it opens fast.
+ *
+ * Round 2 (NEXT_STEPS §3–4): the app is empty until real people open rooms, so each list shows an empty
+ * state. "Plans", "Open room" and the offer banner are hidden until those features exist (slices 6, 7, 9).
  */
 import { useMemo, useState } from 'react';
 import { FlatList, ScrollView, StyleSheet, Text, View, useWindowDimensions } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { SvgXml } from 'react-native-svg';
 import { useApp } from '../../state/store';
 import { useT } from '../../i18n';
-import { offerEnd } from '../../i18n/slotFixers';
-import { useColors, useScheme, BRAND_GRADIENT } from '../../theme/colors';
+import { useColors, useScheme } from '../../theme/colors';
 import { Icon } from '../../components/Icon';
 import { Pressy } from '../../components/Pressy';
-import { comingSoon } from '../../components/Toast';
-import { Banner } from '../../components/rooms/Banner';
+import { EmptyState } from '../../components/EmptyState';
 import { RoomCard } from '../../components/rooms/RoomCard';
 import { LiveTile } from '../../components/rooms/LiveTile';
 import { LessonCircle, PaidLiveCircle } from '../../components/rooms/LessonCircle';
 import { Lessons } from '../../components/rooms/Lessons';
-import { MASCOT_PLAIN } from '../../components/rooms/mascot';
-import { banners, langChips, livesFor, talkRoomsFor, type Live, type Room } from '../../components/rooms/roomsData';
-import { TourTarget } from '../../components/tour/TourTarget';
+import { langChips, livesFor, talkRoomsFor, type Live, type Room } from '../../components/rooms/roomsData';
 
 type Item =
   | { k: 'room'; r: Room }
@@ -41,18 +38,11 @@ export default function RoomsTab() {
   const dark = useScheme() === 'dark';
   const { width } = useWindowDimensions();
   const me = useApp((s) => s.me);
-  const plan = useApp((s) => s.plan);
   const mode = useApp((s) => s.roomMode);
   const [tab, setTab] = useState<'rooms' | 'lessons'>('rooms');
   const [chip, setChip] = useState('All');
   const [shown, setShown] = useState(8);
   const pageWidth = Math.min(width, 600) - 40;
-
-  const bannerItems = useMemo(() => banners({
-    plan, chip, me, offerEnd: offerEnd('en'),
-    langName: (l) => l, // the banner text is translated as a whole below
-    day: (d) => { try { return new Intl.DateTimeFormat('en-GB', { weekday: 'short' }).format(d); } catch { return ''; } },
-  }), [plan, chip, me]);
 
   // the list under the chips
   const items: Item[] = useMemo(() => {
@@ -78,21 +68,7 @@ export default function RoomsTab() {
 
   const header = (
     <View>
-      <View style={styles.top}>
-        <View style={{ flex: 1 }} />
-        <Pressy scale={0.94} onPress={comingSoon} style={styles.plans}>
-          <Icon name="crown" size={13} color="#FFC531" fill="#FFC531" strokeWidth={0} />
-          <Text style={styles.plansText}>{t('Plans')}</Text>
-        </Pressy>
-        <TourTarget id="rooms-open">
-          <Pressy scale={0.94} onPress={comingSoon} style={styles.open}>
-            <Icon name={mode === 'live' ? 'video' : 'mic'} size={19} color="#fff" strokeWidth={2.2} />
-            <Text style={styles.openText}>{t('Open room')}</Text>
-          </Pressy>
-        </TourTarget>
-      </View>
       <Text style={[styles.title, { color: c.ink }]}>{t(mode === 'live' ? 'Live rooms' : 'Talk rooms')}</Text>
-      {bannerItems.length > 0 && <View style={styles.pad}><Banner items={bannerItems} /></View>}
 
       <View style={[styles.pad, styles.modes]}>
         {([['talk', 'mic', 'Talk rooms', 'Speak, listen and practise'], ['live', 'video', 'Live rooms', 'One person live on camera']] as const).map(([k, icon, label, sub]) => {
@@ -165,16 +141,10 @@ export default function RoomsTab() {
       );
     }
     if (item.k === 'paidLive') return <View style={styles.cell}><PaidLiveCircle x={item.x} size={Math.min(260, width * 0.72)} /></View>;
-    return (
-      <View style={styles.cell}>
-        <View style={[styles.quiet, { backgroundColor: c.card, borderColor: c.line }]}>
-          <SvgXml xml={MASCOT_PLAIN} width={110} height={88} />
-          <Text style={[styles.quietTitle, { color: c.ink }]}>{t('It’s quiet in here… for now')}</Text>
-          <Text style={{ color: c.muted, fontSize: 14 }}>{t(`Be the first to start a ${mode === 'live' ? 'live room' : 'talk room'}.`)}</Text>
-          <Pressy scale={0.94} onPress={comingSoon} style={styles.openSmall}><Text style={styles.openText}>{t('Open room')}</Text></Pressy>
-        </View>
-      </View>
-    );
+    // empty (design B). No button: opening a room arrives in slice 6.
+    return mode === 'live'
+      ? <EmptyState icon="video" title="No live rooms right now" text="When someone goes live in your languages, it shows here." />
+      : <EmptyState icon="mic" title="No talk rooms right now" text="When someone opens a talk room in your languages, it shows here." />;
   };
 
   return (
@@ -195,13 +165,7 @@ export default function RoomsTab() {
 }
 
 const styles = StyleSheet.create({
-  top: { flexDirection: 'row', alignItems: 'center', gap: 10, paddingTop: 16, paddingHorizontal: 20 },
-  plans: { height: 38, paddingHorizontal: 12, borderRadius: 999, backgroundColor: '#1A1418', flexDirection: 'row', alignItems: 'center', gap: 4 },
-  plansText: { color: '#FFC531', fontSize: 13, fontWeight: '800' },
-  open: { height: 42, paddingHorizontal: 16, borderRadius: 14, backgroundImage: BRAND_GRADIENT, flexDirection: 'row', alignItems: 'center', gap: 8, boxShadow: '0 10px 24px rgba(224,16,31,0.32)' },
-  openSmall: { height: 42, paddingHorizontal: 16, borderRadius: 14, backgroundImage: BRAND_GRADIENT, justifyContent: 'center' },
-  openText: { color: '#fff', fontSize: 14, fontWeight: '800' },
-  title: { paddingTop: 2, paddingHorizontal: 20, paddingBottom: 12, fontSize: 34, fontWeight: '800', letterSpacing: -0.85, lineHeight: 37 },
+  title: { paddingTop: 16, paddingHorizontal: 20, paddingBottom: 12, fontSize: 34, fontWeight: '800', letterSpacing: -0.85, lineHeight: 37 },
   pad: { paddingHorizontal: 20 },
   modes: { paddingTop: 16, flexDirection: 'row', gap: 10 },
   mode: { borderWidth: 1.5, borderRadius: 22, paddingTop: 16, paddingBottom: 14, paddingHorizontal: 10, alignItems: 'center', gap: 5 },
@@ -216,6 +180,4 @@ const styles = StyleSheet.create({
   cell: { paddingHorizontal: 20, marginBottom: 12 },
   popLabel: { flexDirection: 'row', alignItems: 'center', gap: 4 },
   label: { fontSize: 11.5, fontWeight: '800', letterSpacing: 1 },
-  quiet: { borderRadius: 24, borderWidth: 1, padding: 24, alignItems: 'center', gap: 10 },
-  quietTitle: { fontSize: 20, fontWeight: '700', textAlign: 'center' },
 });

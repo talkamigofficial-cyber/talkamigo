@@ -15,8 +15,7 @@ import { useColors, useScheme } from '../../theme/colors';
 import { PEOPLE } from '../../data/people';
 import { Avatar } from '../Avatar';
 import { Icon } from '../Icon';
-import { Pressy } from '../Pressy';
-import { comingSoon } from '../Toast';
+import { Tap } from './Tap';
 import { money } from './money';
 import { cssBackground } from '../../theme/background';
 import type { Live, Room } from './roomsData';
@@ -36,7 +35,7 @@ function Ring({ size, width, part, track, gap }: { size: number; width: number; 
   );
 }
 
-export function LessonCircle({ x, kind, size, big }: { x: Room | Live; kind: 'room' | 'live'; size: number; big?: boolean }) {
+export function LessonCircle({ x, kind, size, big, onPress }: { x: Room | Live; kind: 'room' | 'live'; size: number; big?: boolean; onPress?: () => void }) {
   const t = useT();
   const lang = useLang();
   const c = useColors();
@@ -46,7 +45,7 @@ export function LessonCircle({ x, kind, size, big }: { x: Room | Live; kind: 'ro
   const live = kind === 'live';
   const host = PEOPLE[x.host];
   return (
-    <Pressy scale={0.98} onPress={comingSoon} style={[styles.wrap, { width: size }]} accessibilityLabel={x.title}>
+    <Tap onPress={onPress} scale={0.98} style={[styles.wrap, { width: size }]} accessibilityLabel={x.title}>
       <View style={[styles.circle, { width: size, height: size, borderRadius: size / 2, backgroundColor: c.ink, boxShadow: live ? '0 10px 24px rgba(224,16,31,0.18)' : '0 10px 24px rgba(0,0,0,0.12)' }]}>
         <Ring size={size + 10} width={2} gap={3} part={live ? 1 : booked / seats} track="rgba(127,127,140,0.35)" />
         <View style={styles.badge}>
@@ -62,11 +61,11 @@ export function LessonCircle({ x, kind, size, big }: { x: Room | Live; kind: 'ro
         <Icon name={live ? 'video' : 'mic'} size={13} color={c.muted} strokeWidth={2.2} />
         <Text style={[styles.seatsText, { color: c.muted }]} numberOfLines={1}>{t(`${seats - booked} seats left`)}</Text>
       </View>
-    </Pressy>
+    </Tap>
   );
 }
 
-export function PaidLiveCircle({ x, size }: { x: Live; size: number }) {
+export function PaidLiveCircle({ x, size, onPress }: { x: Live; size: number; onPress?: () => void }) {
   const t = useT();
   const lang = useLang();
   const c = useColors();
@@ -74,7 +73,7 @@ export function PaidLiveCircle({ x, size }: { x: Live; size: number }) {
   const seats = x.seats || 8, booked = Math.min(seats, x.booked ?? 5);
   return (
     <View style={styles.plc}>
-      <Pressy scale={0.98} onPress={comingSoon} style={{ width: size, height: size }} accessibilityLabel={x.title}>
+      <Tap onPress={onPress} scale={0.98} style={{ width: size, height: size }} accessibilityLabel={x.title}>
         <View style={[styles.plcb, { width: size, height: size, borderRadius: size / 2, ...cssBackground(x.bg, '#3A0A20') }]}>
           <View style={[StyleSheet.absoluteFill, { backgroundImage: 'radial-gradient(closest-side, transparent 50%, rgba(0,0,0,0.6))' }]} />
           <View style={styles.plci}>
@@ -94,7 +93,7 @@ export function PaidLiveCircle({ x, size }: { x: Live; size: number }) {
           </Svg>
         </View>
         <View pointerEvents="none" style={{ position: 'absolute', inset: -5, borderRadius: size, borderWidth: 2, borderColor: 'rgba(127,127,140,0.35)' }} />
-      </Pressy>
+      </Tap>
       <View style={styles.seats}>
         <Icon name="video" size={15} color={c.muted} />
         <Text style={[styles.seatsText, { color: c.muted, fontSize: 13 }]}>{t(`${seats - booked} seats left`)}</Text>

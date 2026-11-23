@@ -16,9 +16,7 @@ import { useColors } from '../theme/colors';
 import { Avatar, Flag } from '../components/Avatar';
 import { Icon, type IconName } from '../components/Icon';
 import { Pressy } from '../components/Pressy';
-import { Button } from '../components/Button';
 import { T } from '../components/T';
-import { comingSoon } from '../components/Toast';
 import { COVERS, useProfileExtras } from '../components/me/profileExtras';
 import { EditFieldSheet, type EditField } from '../components/me/EditFieldSheet';
 import { PhotoSheet } from '../components/me/PhotoSheet';
@@ -46,7 +44,7 @@ export default function EditProfile() {
       <ScrollView
         onScroll={(e) => setSolid(e.nativeEvent.contentOffset.y > COVER_H - 70)}
         scrollEventThrottle={32}
-        contentContainerStyle={{ paddingBottom: 110 + insets.bottom }}
+        contentContainerStyle={{ paddingBottom: 30 + insets.bottom }}
       >
         {/* cover */}
         <View style={[styles.cover, { height: COVER_H + insets.top, backgroundImage: COVERS[extras.cover % COVERS.length] }]}>
@@ -142,7 +140,7 @@ export default function EditProfile() {
                 <T style={[styles.small, { color: c.muted }]}>TalkAmigo ID</T>
                 <Text style={[styles.value, { color: c.ink }]}>@{me.handle}</Text>
               </View>
-              <Pressy onPress={comingSoon} scale={0.94}><T style={{ color: c.tintText, fontWeight: '800', fontSize: 15 }}>Edit</T></Pressy>
+              {/* changing the @username (once every 30 days) needs the server's availability check: slice 2 */}
             </View>
             <View style={styles.row}>
               <View style={{ flex: 1 }}>
@@ -174,10 +172,7 @@ export default function EditProfile() {
         <View style={{ width: 40 }} />
       </View>
 
-      {/* Preview pinned at the bottom */}
-      <View style={[styles.preview, { paddingBottom: Math.max(insets.bottom, 16) + 10, backgroundImage: `linear-gradient(transparent, ${c.bg} 30%)` }]}>
-        <Button title="Preview" icon="eye2" onPress={comingSoon} />
-      </View>
+      {/* "Preview" (your profile as others see it) comes back with real profiles in slice 2 */}
 
       <EditFieldSheet field={editing} onClose={() => setEditing(null)} />
       <PhotoSheet visible={photoOpen} onClose={() => setPhotoOpen(false)} />

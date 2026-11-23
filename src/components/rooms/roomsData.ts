@@ -8,9 +8,9 @@
  *   + More languages → everything
  * Boosted rooms come first. One "Popular lesson" (a paid teacher room) is mixed in as the 3rd item.
  *
- * Demo content; in slice 2 it comes from the server.
+ * The lists come from src/data/live.ts: empty until real people open rooms (from slice 6, via the server).
  */
-import demo from '../../data/generated/demo.json';
+import { liveLessons, liveLives, liveRooms } from '../../data/live';
 import type { Me } from '../../state/store';
 
 export type Room = {
@@ -23,9 +23,9 @@ export type Live = {
 };
 export type Lesson = { id: string; mode: 'talk' | 'live'; host: string; l: string; lang: string; title: string; level: string; goal: string; mins: number; seats: number; booked: number; day: string; time: string };
 
-export const ROOMS = demo.rooms as unknown as Room[];
-export const LIVES = demo.lives as unknown as Live[];
-export const LESSONS = demo.lessonsPlan as unknown as Lesson[];
+export const ROOMS = liveRooms as unknown as Room[];
+export const LIVES = liveLives as unknown as Live[];
+export const LESSONS = liveLessons as unknown as Lesson[];
 
 /** Languages I speak and learn (no duplicates). */
 export const myLangs = (me: Me) => [...new Set([...me.natives, ...me.langs])];
@@ -109,28 +109,3 @@ export function lessonsNow(langOk: (l: string) => boolean, mode: 'talk' | 'live'
   const first = mode === 'live' ? 'live' : 'room';
   return all.sort((a, b) => (a.kind === first ? 0 : 1) - (b.kind === first ? 0 : 1));
 }
-
-// ---------- banners at the top ----------
-export type Banner = { tag: string; title: string; sub: string; emoji: string; bg: string };
-
-/** Offers for Standard users, then "Teacher live now" and "New lesson" in the chosen language (v2 Nov). */
-export function banners(o: { plan: string; chip: LangChip; me: Me; offerEnd: string; langName: (en: string) => string; day: (d: Date) => string }): Banner[] {
-  const offers: Banner[] = o.plan === 'standard' ? [
-    { tag: 'Offer', title: '2× coins until Sunday', sub: `Top up 630, get 630 extra · ends ${o.offerEnd}`, emoji: '🪙', bg: 'linear-gradient(135deg, #FFB000, #E05A00)' },
-    { tag: 'Offer', title: 'Get seen first', sub: 'Boost your profile for 30 min', emoji: '🚀', bg: 'linear-gradient(135deg, #EE1626, #8A0016)' },
-    { tag: 'Plus', title: 'See who viewed you', sub: 'Private rooms · free first boost · no offers', emoji: '👑', bg: 'linear-gradient(135deg, #1B1B21, #5A0A1A)' },
-  ] : [];
-  const mine = myLangs(o.me);
-  const ok = (l: string, ls?: string[]) => ls ? langMatch(ls, o.chip, o.me)
-    : o.chip.startsWith('L:') ? l === o.chip.slice(2) : o.chip.startsWith('P:') ? false : o.chip === 'More' ? true : mine.includes(l);
-  const live = [...ROOMS, ...LIVES].filter((r) => r.price && ok(r.l, r.ls)).slice(0, 1).map((r) => ({
-    tag: 'Teacher live now', title: r.title, sub: `${hostName(r.host)} · ${o.langName(r.l)} · ${r.level}`, emoji: '🎓', bg: 'linear-gradient(135deg, #B4001E, #3A0610)',
-  }));
-  const now = Date.now();
-  const up = LESSONS.filter((x) => ok(x.l) && lessonDate(x).getTime() > now).sort((a, b) => lessonDate(a).getTime() - lessonDate(b).getTime()).slice(0, 2).map((x) => ({
-    tag: 'New lesson', title: x.title, sub: `${o.day(lessonDate(x))} ${x.time} · ${o.langName(x.l)} · ${hostName(x.host)} · ${x.mins} min`, emoji: '📅', bg: 'linear-gradient(135deg, #2A2A33, #0E0E12)',
-  }));
-  return [...offers, ...live, ...up];
-}
-
-const hostName = (id: string) => ((demo.people as Record<string, { name: string }>)[id]?.name ?? '');

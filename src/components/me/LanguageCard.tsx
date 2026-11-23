@@ -1,6 +1,6 @@
 /**
  * The "Language card" at the top of the Me tab (decided 29 Oct 2026, deliberately not like HelloTalk):
- * red top edge · photo (+ to add an intro video) · name, age, pencil (Edit profile), plan badge ·
+ * red top edge · photo · name, age, pencil (Edit profile), plan badge ·
  * flag, city, @username · Online · stats tiles Following / Followers / Views (v98: above the levels) ·
  * native languages ("Fluent") · each learning language as a 6-step A1–C2 ladder with the labels in
  * ONE row under the bars (v85) and the real time practised this week.
@@ -14,14 +14,13 @@ import { Avatar, Flag } from '../Avatar';
 import { Icon, type IconName } from '../Icon';
 import { Pressy } from '../Pressy';
 import { T } from '../T';
-import { comingSoon } from '../Toast';
 import { useProfileExtras } from './profileExtras';
 import { LEVELS, ageOf, followingCount, langCode, practiceThisWeek, shortNumber } from './helpers';
 
 export function LanguageCard() {
   const c = useColors();
   const t = useT();
-  const { me, plan, account, follows, followersN, views, newFollowers, newViews } = useApp();
+  const { me, plan, follows, followersN, views, newFollowers, newViews } = useApp();
   const showAge = useProfileExtras((s) => s.showAge);
   const age = ageOf(me.bday);
   const learning = me.langs.filter((l) => !me.natives.includes(l));
@@ -33,12 +32,8 @@ export function LanguageCard() {
 
       {/* photo + name */}
       <View style={styles.head}>
-        <Pressy onPress={comingSoon} scale={0.95} accessibilityLabel={me.video ? 'Play my intro video' : 'Add an intro video'}>
-          <Avatar id="me" size={72} />
-          <View style={[styles.plus, { borderColor: c.card }]}>
-            <Text style={styles.plusText}>{me.video ? '▶' : '+'}</Text>
-          </View>
-        </Pressy>
+        {/* the "+ / ▶ intro video" button comes back when intro videos can be recorded and played (later slice) */}
+        <Avatar id="me" size={72} />
         <View style={{ flex: 1, minWidth: 0, gap: 4 }}>
           <View style={styles.nameRow}>
             <Text style={[styles.name, { color: c.ink }]}>
@@ -64,7 +59,7 @@ export function LanguageCard() {
 
       {/* stats tiles (v98) */}
       <View style={styles.stats}>
-        <StatTile icon="user" value={String(followingCount(account, follows))} label="Following" />
+        <StatTile icon="user" value={String(followingCount(follows))} label="Following" />
         <StatTile icon="people" value={shortNumber(followersN, t.lang)} label="Followers" badge={newFollowers} />
         <StatTile icon="eye" value={shortNumber(views, t.lang)} label="Views" badge={newViews} />
       </View>
@@ -86,16 +81,16 @@ export function LanguageCard() {
 function StatTile({ icon, value, label, badge }: { icon: IconName; value: string; label: string; badge?: number }) {
   const c = useColors();
   return (
-    // the View carries flex:1 because Pressy puts its style on the inner view (see report)
+    // not a button yet: the Following / Followers / Views pages arrive with real accounts (slice 2)
     <View style={{ flex: 1, minWidth: 0 }}>
-    <Pressy onPress={comingSoon} scale={0.96} style={[styles.tile, { backgroundColor: c.chip }]} accessibilityLabel={`${value} ${label}`}>
+    <View style={[styles.tile, { backgroundColor: c.chip }]} accessibilityLabel={`${value} ${label}`}>
       {badge ? <View style={styles.badge}><Text style={styles.badgeText}>+{badge}</Text></View> : null}
       <View style={styles.tileValue}>
         <Icon name={icon} size={15} color="#E0101F" strokeWidth={2.2} />
         <Text style={{ fontSize: 15.5, fontWeight: '700', color: c.ink, fontVariant: ['tabular-nums'] }}>{value}</Text>
       </View>
       <T style={{ fontSize: 11.5, color: c.muted }} numberOfLines={1}>{label}</T>
-    </Pressy>
+    </View>
     </View>
   );
 }

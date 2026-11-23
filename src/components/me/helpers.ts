@@ -4,7 +4,6 @@
  * ("2h 10m this week", "Profile 45% complete") instead of the translation table.
  */
 import type { Lang } from '../../i18n';
-import demo from '../../data/generated/demo.json';
 import type { Me } from '../../state/store';
 
 export const LEVELS = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2'] as const;
@@ -91,17 +90,18 @@ export function profileCompleteLine(pc: number, me: Me, lang: Lang): string {
   return ({ fr: 'Profil complété à $ % ›', es: 'Perfil completo al $ % ›', pt: 'Perfil $% completo ›', de: 'Profil zu $ % vollständig ›', it: 'Profilo completo al $% ›', ja: 'プロフィール完成度 $% ›', ar: 'اكتمال الملف $% ›' } as Record<Exclude<Lang, 'en'>, string>)[lang].replace('$', String(pc));
 }
 
-/** This week's practice (streak days, minutes spoken, corrections) — demo numbers for the demo, zero for a new account. */
-export function weekOf(account: 'demo' | 'new' | null) {
-  if (account === 'demo') return { ...demo.stats.week, today: demo.stats.today, goal: Number(demo.prefs.goal) || 20 };
-  return { mins: 0, fixes: 0, days: [0, 0, 0, 0, 0, 0, 0], today: 0, goal: 20 };
+/**
+ * This week's practice (streak days, minutes spoken, corrections given, today's minutes, daily goal).
+ * Practice time is measured from calls and rooms (slices 6–8); until then it is honestly zero.
+ */
+export function weekOf() {
+  return { mins: 0, fixes: 0, days: [false, false, false, false, false, false, false], today: 0, goal: 20 };
 }
 
-/** People I follow: the demo starts with 86 (the prototype's followBase), a new account with nobody. */
-export function followingCount(account: 'demo' | 'new' | null, follows: Record<string, boolean>): number {
-  return (account === 'demo' ? 86 : 0) + Object.values(follows).filter(Boolean).length;
+/** People I follow. */
+export function followingCount(follows: Record<string, boolean>): number {
+  return Object.values(follows).filter(Boolean).length;
 }
-
 
 // moved to src/theme/background.ts (one shared copy)
 export { cssBackground } from '../../theme/background';

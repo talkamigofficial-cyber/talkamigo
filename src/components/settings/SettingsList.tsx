@@ -59,14 +59,15 @@ export function Row({ label, sub, icon, value, onPress, danger, chevron = true, 
           <Icon name={icon} size={19} color={danger ? '#E0101F' : c.ink} strokeWidth={2.2} />
         </View>
       ) : null}
-      <View style={{ flex: 1, minWidth: 0, gap: 2 }}>
+      {/* the label always keeps at least ~90 pt; a long value ("Comme le téléphone") shrinks with … instead */}
+      <View style={{ flex: 1, minWidth: 90, gap: 2 }}>
         <Text style={[styles.rowLabel, align, { color: danger ? c.tintText : c.ink }]}>{raw ? label : t(label)}</Text>
         {sub ? <Text style={[styles.sub, align, { color: c.muted }]}>{t(sub)}</Text> : null}
       </View>
       {right ?? (
         <>
           {typeof value === 'string' ? <Text style={[styles.value, { color: c.muted }]} numberOfLines={1}>{value}</Text> : value}
-          {chevron && <Icon name="chev" size={17} color={c.muted} strokeWidth={2.4} />}
+          {chevron && <View style={{ flexShrink: 0 }}><Icon name="chev" size={17} color={c.muted} strokeWidth={2.4} /></View>}
         </>
       )}
     </Pressy>
@@ -81,5 +82,5 @@ const styles = StyleSheet.create({
   tile: { width: 36, height: 36, borderRadius: 12, alignItems: 'center', justifyContent: 'center' },
   rowLabel: { fontSize: 16, fontWeight: '600' },
   sub: { fontSize: 12.5, fontWeight: '500' },
-  value: { fontSize: 14, fontWeight: '600', maxWidth: 150 },
+  value: { fontSize: 14, fontWeight: '600', maxWidth: '45%', flexShrink: 1 },
 });

@@ -1,7 +1,7 @@
 /**
  * "Log out of TalkAmigo?" — explains that messages live only on this phone and are deleted when you
  * log out, while plan, coins and Diamonds stay with the account (decided 31 Oct 2026, "One phone at a time").
- * Plus chat backup arrives in a later slice, so its button shows "Coming in the next update".
+ * The "Keep my chats with Plus backup" button comes back when Plus chat backup exists (slice 9).
  */
 import { View } from 'react-native';
 import { router } from 'expo-router';
@@ -10,7 +10,7 @@ import { useColors } from '../../theme/colors';
 import { Sheet } from '../Sheet';
 import { T } from '../T';
 import { Button } from '../Button';
-import { comingSoon, toast } from '../Toast';
+import { toast } from '../Toast';
 
 export function LogoutSheet({ visible, onClose }: { visible: boolean; onClose: () => void }) {
   const c = useColors();
@@ -32,7 +32,6 @@ export function LogoutSheet({ visible, onClose }: { visible: boolean; onClose: (
           <T style={{ fontSize: 14, lineHeight: 21, color: c.muted }}>They stay with your account. Log in on any phone and they’re still there.</T>
         </View>
       </View>
-      <Button kind="ghost" title="Keep my chats with Plus backup" onPress={comingSoon} />
       <Button title="Log out and delete messages" onPress={logOut} style={{ backgroundImage: 'linear-gradient(#B00C18, #B00C18)' }} />
     </Sheet>
   );

@@ -9,19 +9,18 @@ import { useT, useLang } from '../../i18n';
 import { PEOPLE } from '../../data/people';
 import { Avatar, Flag } from '../Avatar';
 import { Icon } from '../Icon';
-import { Pressy } from '../Pressy';
-import { comingSoon } from '../Toast';
+import { Tap } from './Tap';
 import { cssBackground } from '../../theme/background';
 import { Marquee } from './Marquee';
 import { n0 } from './money';
 import type { Live } from './roomsData';
 
-export const LiveTile = memo(function LiveTile({ x }: { x: Live }) {
+export const LiveTile = memo(function LiveTile({ x, onPress }: { x: Live; onPress?: () => void }) {
   const t = useT();
   const lang = useLang();
   const host = PEOPLE[x.host];
   return (
-    <Pressy scale={0.98} onPress={comingSoon} style={[styles.tile, cssBackground(x.bg)]} accessibilityLabel={x.title}>
+    <Tap onPress={onPress} scale={0.98} style={[styles.tile, cssBackground(x.bg)]} accessibilityLabel={x.title}>
       <View style={styles.center}><Avatar id={x.host} size={76} noFlag /></View>
       <View style={[StyleSheet.absoluteFill, { backgroundImage: 'linear-gradient(transparent 50%, rgba(0,0,0,0.65))' }]} pointerEvents="none" />
       <View style={styles.top}>
@@ -40,7 +39,7 @@ export const LiveTile = memo(function LiveTile({ x }: { x: Live }) {
           {host ? <Flag cc={host.cc} size={13} /> : null}
         </View>
       </View>
-    </Pressy>
+    </Tap>
   );
 });
 

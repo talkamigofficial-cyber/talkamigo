@@ -11,22 +11,21 @@ import { useColors, useScheme, BRAND_GRADIENT } from '../../theme/colors';
 import { PEOPLE } from '../../data/people';
 import { Avatar } from '../Avatar';
 import { Icon } from '../Icon';
-import { Pressy } from '../Pressy';
-import { comingSoon } from '../Toast';
+import { Tap } from './Tap';
 import { Marquee, useReduceMotion } from './Marquee';
 import { n0 } from './money';
 import { cardFaces, type Room } from './roomsData';
 
 const ALL_IDS = Object.keys(PEOPLE);
 
-export const RoomCard = memo(function RoomCard({ r }: { r: Room }) {
+export const RoomCard = memo(function RoomCard({ r, onPress }: { r: Room; onPress?: () => void }) {
   const t = useT();
   const lang = useLang();
   const c = useColors();
   const dark = useScheme() === 'dark';
   const faces = cardFaces(r, ALL_IDS);
   return (
-    <Pressy scale={0.98} onPress={comingSoon} style={[styles.card, { backgroundColor: dark ? c.card : c.bg, borderColor: c.line }]}>
+    <Tap onPress={onPress} scale={0.98} style={[styles.card, { backgroundColor: dark ? c.card : c.bg, borderColor: c.line }]}>
       <View style={[StyleSheet.absoluteFill, { backgroundImage: `linear-gradient(180deg, transparent ${dark ? 50 : 55}%, ${dark ? 'rgba(255,40,60,0.10)' : 'rgba(224,16,31,0.06)'})` }]} pointerEvents="none" />
       <View style={styles.tags}>
         <Pill text={r.lang} bg={c.chip} color={c.ink} raw />
@@ -54,7 +53,7 @@ export const RoomCard = memo(function RoomCard({ r }: { r: Room }) {
           <Text style={styles.countText}>{n0(r.count, lang)}</Text>
         </View>
       </View>
-    </Pressy>
+    </Tap>
   );
 });
 

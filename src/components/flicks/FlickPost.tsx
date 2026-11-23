@@ -18,7 +18,6 @@ import { getPerson } from '../../data/people';
 import { Avatar, Flag } from '../Avatar';
 import { Icon } from '../Icon';
 import { Pressy } from '../Pressy';
-import { comingSoon } from '../Toast';
 import { fmtCount } from '../rooms/money';
 import { SOUNDS, useFlickUI, type Flick } from './flicksData';
 import { FLICK_LAYOUT as L } from './layout';
@@ -130,13 +129,12 @@ export const FlickPost = memo(function FlickPost({ flick: m, isNew, height }: Pr
             <Icon name="tr" size={13} color="#fff" strokeWidth={2.4} />
             <Text style={styles.trText}>{t(open ? 'Hide translation' : 'Translate')}</Text>
           </Pressy>
-          <Text style={styles.hint}>{t('Tap a word to learn it')}</Text>
         </View>
         {sound && (
-          <Pressy scale={0.96} onPress={comingSoon} style={styles.snd} accessibilityLabel={t('Open sound')}>
+          <View style={styles.snd}>
             <Icon name="music" size={12} color="#fff" strokeWidth={2.2} />
             <Text style={styles.sndText} numberOfLines={1}>{`${sound} · TalkAmigo Sounds`}</Text>
-          </Pressy>
+          </View>
         )}
       </View>
 
@@ -157,17 +155,8 @@ export const FlickPost = memo(function FlickPost({ flick: m, isNew, height }: Pr
           </View>
         )}
         <RailButton icon="heart" label={fmtCount(m.likes + (liked ? 1 : 0), lang)} filled={liked} onPress={() => useFlickUI.getState().toggleLike(m.id)} a11y="Like" />
-        <RailButton icon="chat" label={String(m.comments?.length ?? 0)} onPress={comingSoon} a11y="Comments" />
-        {mine ? <RailButton icon="rocket" label={t('Boost')} onPress={comingSoon} a11y="Boost this Flick" /> : <RailButton icon="gift" label={t('Gift')} onPress={comingSoon} a11y="Send gift" />}
-        <RailButton icon="share" onPress={comingSoon} a11y="Share" />
-        <RailButton dots onPress={comingSoon} a11y="More options" />
-      </View>
-
-      {/* Pressy styles its inner layer, so absolute positions go on a wrapping View */}
-      <View style={[styles.cbarPos, { bottom: L.cbarBottom }]}>
-        <Pressy scale={0.98} onPress={comingSoon} style={styles.cbar}>
-          <Text style={styles.cbarText}>{t('Add a comment or a correction…')}</Text>
-        </Pressy>
+        {/* Comments, gifts, share, boost, ••• and the comment bar arrive with slice 5 (Flicks); hidden until then
+            so no button does nothing (NEXT_STEPS §4). */}
       </View>
     </View>
   );
@@ -221,13 +210,9 @@ function Media({ m, slide }: { m: Flick; slide: number }) {
   );
 }
 
-/** Text where every word can be tapped to learn it (the word sheet arrives in a later slice). */
+/** A Flick's text. In slice 5 every word becomes tappable (word sheet: meaning, Hear it, save to notebook). */
 function Words({ text, style, inline }: { text: string; style?: object; inline?: boolean }) {
-  const parts = text.split(/(\s+)/);
-  const body = parts.map((w, i) =>
-    /\S/.test(w) ? <Text key={i} onPress={comingSoon} suppressHighlighting>{w}</Text> : w,
-  );
-  return inline ? <>{body}</> : <Text style={style}>{body}</Text>;
+  return inline ? <>{text}</> : <Text style={style}>{text}</Text>;
 }
 
 function RailButton({ icon, label, onPress, a11y, filled, dots }: { icon?: 'heart' | 'chat' | 'gift' | 'share' | 'rocket'; label?: string; onPress: () => void; a11y: string; filled?: boolean; dots?: boolean }) {

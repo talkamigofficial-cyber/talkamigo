@@ -3,15 +3,17 @@
  *
  * Feed rules (prototype vMoments):
  *   For you   → people you don't follow first ("New for you"), then your own and followed people's Flicks.
- *               Rooms and lives marked "Also show on Flicks" appear as LIVE NOW cards after the 1st and 4th post,
- *               and Standard users see one "Sponsored · TalkAmigo" card after the 3rd post.
  *   Following → only mutuals: people you follow who follow you back (v57 "Who follows you is real").
  *   Learn     → Flicks in the language you're learning (chips switch language).
  *
- * The like / translation / sound state here moves to the main store and the server in slice 2.
+ * Round 2 (NEXT_STEPS §3–4): Flicks come from src/data/live.ts, empty until real people post (slice 5).
+ * The prototype's "LIVE NOW" room cards (slice 6) and the "Sponsored · TalkAmigo" offer card are not shown:
+ * no invented content, no buttons that do nothing.
+ *
+ * The like / translation / sound state here moves to the main store and the server in slice 5.
  */
 import { create } from 'zustand';
-import demo from '../../data/generated/demo.json';
+import { liveFlicks } from '../../data/live';
 
 export type Flick = {
   id: string;
@@ -32,28 +34,19 @@ export type Flick = {
   old?: boolean;
 };
 
-export type LiveCard = { kind: 'live' | 'room'; id: string; title: string; host: string; count: number; lang: string; price?: number; bg?: string };
-
 /** TalkAmigo's own sounds (names shown on Flicks). */
 export const SOUNDS: Record<string, string> = {
   s1: 'Café Lo-fi', s2: 'Paris Morning', s3: 'Tokyo Night Drive', s4: 'Samba Sol', s5: 'Study Rain', s6: 'Lagos Sunshine',
 };
 
-/** Other people's Flicks (the prototype's MOMENTS0). Your old demo Flicks only show on your profile. */
-export const OTHERS_FLICKS = (demo.flicks as unknown as Flick[]).filter((f) => f.by !== 'me');
-
-/** Rooms and lives that are open and shown on Flicks. */
-export const LIVE_CARDS: LiveCard[] = [
-  ...(demo.lives as any[]).filter((x) => x.onFlicks).map((x) => ({ kind: 'live' as const, id: x.id, title: x.title, host: x.host, count: x.viewers, lang: x.lang || x.l || '', price: x.price, bg: x.bg })),
-  ...(demo.rooms as any[]).filter((x) => x.onFlicks).map((x) => ({ kind: 'room' as const, id: x.id, title: x.title, host: x.host, count: x.count, lang: x.lang || x.l || '', price: x.price })),
-];
+/** Other people's Flicks (empty until slice 5). */
+export const OTHERS_FLICKS = (liveFlicks as unknown as Flick[]).filter((f) => f.by !== 'me');
 
 export type FeedTab = 'following' | 'foryou' | 'learn';
-export type FeedItem = { type: 'flick'; flick: Flick; isNew: boolean } | { type: 'live'; card: LiveCard } | { type: 'promo' } | { type: 'empty'; text: string };
+export type FeedItem = { type: 'flick'; flick: Flick; isNew: boolean };
 
 export function buildFeed(o: {
-  tab: FeedTab; myFlicks: Flick[]; follows: Record<string, boolean>; followsMe: string[]; chats: Record<string, unknown>;
-  learnLang: string; plan: string;
+  tab: FeedTab; myFlicks: Flick[]; follows: Record<string, boolean>; followsMe: string[]; chats: Record<string, unknown>; learnLang: string;
 }): FeedItem[] {
   const all = [...o.myFlicks.filter((m) => !m.old), ...OTHERS_FLICKS];
   const mutual = (id: string) => !!o.follows[id] && o.followsMe.includes(id);
@@ -61,27 +54,7 @@ export function buildFeed(o: {
   if (o.tab === 'following') shown = all.filter((m) => m.by !== 'me' && mutual(m.by));
   else if (o.tab === 'learn') shown = all.filter((m) => m.lang === o.learnLang);
   else shown = [...all.filter((m) => m.by !== 'me' && !o.follows[m.by]), ...all.filter((m) => m.by === 'me' || o.follows[m.by])];
-
-  const items: FeedItem[] = shown.map((f) => ({
-    type: 'flick', flick: f,
-    isNew: o.tab === 'foryou' && f.by !== 'me' && !o.follows[f.by] && !o.chats[f.by],
-  }));
-  if (!items.length) {
-    return [{ type: 'empty', text: o.tab === 'following' ? 'When you and someone follow each other, their Flicks show here.' : 'No Flicks in your learning languages yet.' }];
-  }
-  if (o.tab === 'learn') return items;
-
-  // LIVE NOW cards after the 1st and 4th post (Following: only mutuals' rooms)
-  const lives = LIVE_CARDS.filter((x) => o.tab !== 'following' || mutual(x.host));
-  const out: FeedItem[] = [];
-  let li = 0;
-  items.forEach((it, i) => {
-    out.push(it);
-    if ((i === 0 || i === 3) && lives[li]) out.push({ type: 'live', card: lives[li++] });
-  });
-  // one offer card for Standard users, after the 3rd item (Plus and Infinity never see offers)
-  if (o.plan === 'standard' && o.tab === 'foryou' && out.length > 3) out.splice(3, 0, { type: 'promo' });
-  return out;
+  return shown.map((f) => ({ type: 'flick', flick: f, isNew: o.tab === 'foryou' && f.by !== 'me' && !o.follows[f.by] && !o.chats[f.by] }));
 }
 
 type FlickUI = {

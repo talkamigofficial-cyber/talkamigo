@@ -5,7 +5,8 @@
  *   Happening now: language chips + teacher circles, two per row,
  *   Schedule: a 7-day strip (red count on days with lessons), language + time-of-day chips,
  *             a row of teacher faces (All · Following · each teacher), that day's lessons sorted by time.
- * Reserving and joining (€0.99 with Apple) arrive in a later slice.
+ * Reserving and joining (€0.99 with Apple) arrive in slice 10; until then lessons are shown but not tappable.
+ * With no lessons at all (the Live world starts empty) the page is one empty state.
  */
 import { useMemo, useState } from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
@@ -16,7 +17,8 @@ import { PEOPLE } from '../../data/people';
 import { Avatar } from '../Avatar';
 import { Icon } from '../Icon';
 import { Pressy } from '../Pressy';
-import { comingSoon } from '../Toast';
+import { EmptyState } from '../EmptyState';
+import { Tap } from './Tap';
 import { LessonCircle } from './LessonCircle';
 import { localeOf, money } from './money';
 import { LESSONS, lessonDate, lessonsNow, timeOfDay, weekDays, type Lesson } from './roomsData';
@@ -62,11 +64,15 @@ export function Lessons({ mode, width }: { mode: 'talk' | 'live'; width: number 
   const langChips = [chip('lang', 'mine', 'My languages'), ...learn.map((l) => chip('lang', l, l)), chip('lang', 'all', 'All languages')];
   const circle = Math.floor((width - 12) / 2);
 
+  // nothing happening and nothing planned: one empty state (design B, 23 Nov 2026)
+  if (!now.length && !base.length) {
+    return <EmptyState icon="cal" title="No lessons live right now" text="Nothing planned yet in your languages." style={{ paddingVertical: 28 }} />;
+  }
+
   return (
     <View style={{ gap: 12 }}>
       <View style={styles.quiet}>
         <Text style={[styles.quietText, { color: c.muted }]}>{t('Small lessons with checked teachers.')} <Text style={{ color: c.ink, fontWeight: '700' }}>{money(0.99, cc, lang)}</Text></Text>
-        <Pressy scale={0.94} onPress={comingSoon}><Text style={[styles.lnk, { color: c.brandText }]}>{t('How it works ›')}</Text></Pressy>
       </View>
 
       <View style={[styles.seg, { backgroundColor: dark ? 'rgba(118,118,128,0.24)' : c.chip }]}>
@@ -162,7 +168,7 @@ function LessonRow({ x }: { x: Lesson }) {
   const cc = useApp((s) => s.me.cc);
   const left = x.seats - x.booked;
   return (
-    <Pressy scale={1} highlight="rgba(120,120,128,0.16)" onPress={comingSoon} style={[styles.row, { backgroundColor: c.chip }]}>
+    <Tap style={[styles.row, { backgroundColor: c.chip }]}>
       <View style={[styles.time, { backgroundColor: c.ink }]}>
         <Text style={[styles.timeText, { color: c.bg }]}>{x.time}</Text>
         <Text style={[styles.timeMins, { color: c.bg }]}>{`${x.mins} min`}</Text>
@@ -179,7 +185,7 @@ function LessonRow({ x }: { x: Lesson }) {
         <Text style={[styles.rowSeat, { color: c.muted }]}>{t(left === 1 ? '1 seat left' : `${left} seats left`)}</Text>
       </View>
       <View style={styles.tprice}><Text style={styles.tpriceText}>{money(0.99, cc, lang)}</Text></View>
-    </Pressy>
+    </Tap>
   );
 }
 

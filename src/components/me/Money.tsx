@@ -29,13 +29,16 @@ export function Gem({ size = 18 }: { size?: number }) {
   );
 }
 
-/** Grey rounded chip with a coin or Diamond and the balance. */
-export function BalanceChip({ kind, value, onPress, label }: { kind: 'coin' | 'gem'; value: string; onPress: () => void; label: string }) {
+/** Grey rounded chip with a coin or Diamond and the balance. A button only when given onPress (Wallet, slice 9). */
+export function BalanceChip({ kind, value, onPress, label }: { kind: 'coin' | 'gem'; value: string; onPress?: () => void; label: string }) {
   const c = useColors();
-  return (
-    <Pressy onPress={onPress} accessibilityLabel={label} style={{ height: 40, flexDirection: 'row', alignItems: 'center', gap: 6, paddingHorizontal: 12, borderRadius: 999, backgroundColor: c.chip }}>
+  const style = { height: 40, flexDirection: 'row' as const, alignItems: 'center' as const, gap: 6, paddingHorizontal: 12, borderRadius: 999, backgroundColor: c.chip };
+  const inside = (
+    <>
       {kind === 'coin' ? <Coin /> : <Gem />}
       <Text style={{ fontWeight: '800', fontSize: 14, color: c.ink }}>{value}</Text>
-    </Pressy>
+    </>
   );
+  if (!onPress) return <View style={style} accessibilityLabel={`${value} ${label}`}>{inside}</View>;
+  return <Pressy onPress={onPress} accessibilityLabel={label} style={style}>{inside}</Pressy>;
 }
