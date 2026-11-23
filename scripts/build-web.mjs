@@ -146,6 +146,45 @@ const APP_CSS = `
 .lsplit .ltvid{position:absolute;top:8px;inset-inline-start:8px;height:24px;padding:0 8px;border-radius:999px;background:#E0101F;display:flex;align-items:center}
 .lsplit .ltvid svg{width:14px;height:14px;fill:none;stroke:#fff;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
 .lb3.lgnocam{opacity:.5}
+/* [app] typing in a talk room (class rtype, set while the keyboard is up): the room ends at the keyboard; extras hide so messages show */
+.troom.rtype .tdock,.troom:has(>.emopan) .tdock,.troom.rtype .trules,.troom:has(>.emopan) .trules,.troom.rtype .tnotice:not(.tpin),.troom:has(>.emopan) .tnotice:not(.tpin),.troom.rtype .ttools,.troom:has(>.emopan) .ttools,.troom.rtype .tsub,.troom:has(>.emopan) .tsub,.troom.rtype .tseat.empty,.troom:has(>.emopan) .tseat.empty,.troom.rtype .tadots,.troom:has(>.emopan) .tadots{display:none!important}
+.troom.rtype form.tbar,.troom:has(>.emopan) form.tbar{padding-bottom:8px!important}
+.troom.rtype .rgame,.troom:has(>.emopan) .rgame{margin-top:6px;padding:6px 12px;gap:2px}
+.troom.rtype .rgame:not(.col) .rgh,.troom:has(>.emopan) .rgame:not(.col) .rgh,.troom.rtype .rgame .rgsub,.troom:has(>.emopan) .rgame .rgsub{display:none!important}
+.troom.rtype .rgame .rgnext,.troom:has(>.emopan) .rgame .rgnext{height:30px}
+.troom.rtype #roomscroll,.troom:has(>.emopan) #roomscroll{min-height:0;flex:1 1 auto!important;height:auto!important}
+.troom.rtype .tgrid,.troom:has(>.emopan) .tgrid{zoom:1!important}
+.troom.rtype #roomscroll,.troom:has(>.emopan) #roomscroll{display:flex!important;flex-direction:column}
+.troom.rtype #roomscroll::before,.troom:has(>.emopan) #roomscroll::before{content:'';flex:1 1 auto}
+.troom>.atlist{position:absolute;left:0;right:0;z-index:12;max-height:46vh;overflow-y:auto}
+/* emoji panel open: same layout as while typing; the bar sits right on the panel (no home-bar gap) */
+.troom:has(>.emopan) form.tbar{padding-bottom:8px!important}
+.troom:has(>.emopan) .tdock{display:none!important}
+/* Guess the word: blanks never wrap; the hint is readable in light mode */
+.rgword.rgb{white-space:nowrap;overflow:hidden;letter-spacing:.1em!important}
+/* live, emoji panel open: the bar sits right on the panel (it was hidden under it) and the comments stay above the bar */
+.stream.remo>form.lbar{bottom:256px!important}
+.stream.remo>.lcfeed{display:flex!important;bottom:312px!important;max-height:calc(100% - 312px - 190px)!important}
+/* the keyboard-down button steps aside while the @ list is open (it covered the names) */
+body:has(.atlist) .kbdone.ico{visibility:hidden}
+/* reply card (talk rooms and lives): sits right above the box, red edge, name in red, the message on one line, × to cancel */
+.rrbar{animation:rrin .18s cubic-bezier(.2,.8,.2,1)}
+@keyframes rrin{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.rrbar .rrbi{width:28px;height:28px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;background:rgba(224,16,31,.14)}
+.rrbar .rrbi svg{width:15px;height:15px;fill:none;stroke:#E0101F;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.rrbar b{color:#E0101F}
+.stream .rrbar b{color:#FF8A93}
+.stream>.rrbar{bottom:84px;margin:0 12px;-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);background:rgba(0,0,0,.55)}
+.stream:has(>.rrbar)>.lcfeed{bottom:146px!important}
+.rrbar>.rrbi{flex:0 0 28px!important}
+body:has(.rrbar) .kbdone.ico{visibility:hidden}
+/* minimised live: the × sits inside the card's corner (it was cut off: the card hides anything outside it, and it ran past the screen edge) */
+.mcard.mlive .mc-x{top:6px!important;right:auto!important;inset-inline-end:6px!important;width:26px;height:26px;background:rgba(0,0,0,.55);box-shadow:none!important;-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
+.troom>.rrbar{margin:4px 10px 6px}
+@media (prefers-reduced-motion:reduce){.rrbar{animation:none}}
+/* swipe to reply on room and live comments (same as chats): the row follows the finger, the arrow appears beside it */
+#roomscroll [data-sw],#livechat [data-sw]{position:relative;touch-action:pan-y}
+[data-theme=light] .troom .rgh2{color:#4A4A55}
 `;
 // the Plans footer and the "Create group" footer (New group) use the same inline spacing: both move above the home bar
 { const find = '<div class="pad" style="padding-bottom:20px;padding-top:8px">';
@@ -201,6 +240,48 @@ change("live guest camera: texts with names (rules)",
 change("live guest camera: texts with names (8 languages)",
   "w10a:{fr:'Plus que 10 min dans ce salon'",
   "lgjoinT:{fr:'$1 a rejoint le live · touche sa case pour couper son micro ou l’envoyer dans le public',es:'$1 se unió · toca su recuadro para silenciar o mover',pt:'$1 entrou · toque no quadro para silenciar ou mover',de:'$1 ist dabei · tippe auf das Feld, um stummzuschalten oder zu verschieben',it:'$1 è sul palco · tocca il riquadro per silenziare o spostare',ja:'$1さんが参加しました · 枠をタップしてミュートや移動ができます',ar:'انضمام $1 · اضغط على المربّع لكتم الصوت أو النقل'},gcamOn:{fr:'$1 a allumé sa caméra 📹',es:'$1 encendió su cámara 📹',pt:'$1 ligou a câmera 📹',de:'$1 hat die Kamera eingeschaltet 📹',it:'$1 ha acceso la fotocamera 📹',ja:'$1さんがカメラをオンにしました 📹',ar:'الكاميرا مفعّلة لدى $1 📹'},gcamOff:{fr:'$1 a coupé sa caméra',es:'$1 apagó su cámara',pt:'$1 desligou a câmera',de:'$1 hat die Kamera ausgeschaltet',it:'$1 ha spento la fotocamera',ja:'$1さんがカメラをオフにしました',ar:'الكاميرا متوقفة لدى $1'},gcamHostOff:{fr:'Caméra de $1 coupée',es:'Cámara de $1 apagada',pt:'Câmera de $1 desligada',de:'Kamera von $1 ist aus',it:'Fotocamera di $1 spenta',ja:'$1さんのカメラをオフにしました',ar:'تم إيقاف كاميرا $1'},w10a:{fr:'Plus que 10 min dans ce salon'");
+
+
+// ── Talk room typing (founder's screenshots, 23 Nov): room fits above the keyboard, @ list above the bar, no gap above emojis ──
+change("typing in a talk room: nothing is lifted (the room fits above the keyboard instead)",
+  "const stillEls=(c)=>c.kind==='sheet'?[c.box]:c.kind==='room'?[...c.box.querySelectorAll(':scope > .tdock, :scope > form.tbar')]:c.kind==='live'?[...c.box.querySelectorAll(':scope > .lcfeed, :scope > .lrail, :scope > form.lbar')]:[c.f];",
+  "const stillEls=(c)=>c.kind==='sheet'?[c.box]:c.kind==='room'?[]:c.kind==='live'?[...c.box.querySelectorAll(':scope > .lcfeed, :scope > .lrail, :scope > form.lbar, :scope > .atlist, :scope > .trcard, :scope > .rrbar')]:[c.f];");
+change("typing in a talk room: the room ends at the keyboard",
+  "phone.classList.remove('kbopen','kbb'); phone.classList.add('kbstill'); UI.kbBlind=false;",
+  "phone.classList.remove('kbopen','kbb'); phone.classList.add('kbstill'); UI.kbBlind=false;\n    /* [app] (founder, 23 Nov) typing in a talk room: the top of the room never moves, the room simply ends where the keyboard starts.\n       Extras hide (quick replies, rules, mode row, empty seats, subtitles; the game card shows only the word/blanks and hint), so the\n       latest messages stay visible right above the bar. Before, only the bar was lifted: it covered the game card and hid the chat. */\n    if(c.kind==='room'){ const b=c.box, sTop=st?st.getBoundingClientRect().top:0, top=b.getBoundingClientRect().top-sTop; b.classList.add('rtype');\n      const h=Math.max(220,Math.round(ln.V-top)); if(b.style.height!==h+'px'){ b.style.height=h+'px'; b.style.maxHeight=h+'px'; }\n      const sc=document.getElementById('roomscroll'); if(sc&&(anim||sc.scrollHeight-sc.scrollTop-sc.clientHeight<80)) sc.scrollTop=sc.scrollHeight;\n      const al=b.querySelector(':scope > .atlist'), fb=b.querySelector(':scope > form.tbar'); if(al&&fb) al.style.bottom=(b.getBoundingClientRect().bottom-fb.getBoundingClientRect().top)+'px';\n      UI.kbLift=0; UI.kbStillK='room'; return; }");
+change("typing in a talk room: back to normal when the keyboard closes",
+  "phone.querySelectorAll('.kbsp').forEach(e=>e.remove());",
+  "phone.querySelectorAll('.kbsp').forEach(e=>e.remove());\n    phone.querySelectorAll('.troom.rtype').forEach(b=>{ b.classList.remove('rtype'); b.style.height=''; b.style.maxHeight=''; const al=b.querySelector(':scope > .atlist'); if(al) al.style.bottom=''; });\n    if(UI.fxQ&&UI.fxQ.length) setTimeout(fxNext,400);");
+change("@ list sits above the typing bar",
+  "if(!box){ box=document.createElement('div'); box.className='atlist'; f.parentElement.insertBefore(box,f); }",
+  "if(!box){ box=document.createElement('div'); box.className='atlist'; f.parentElement.insertBefore(box,f); }\n  if(f.parentElement.classList.contains('troom')){ const pr=f.parentElement.getBoundingClientRect(), ft=f.getBoundingClientRect().top; box.style.bottom=(pr.bottom-ft)+'px'; const hd=f.parentElement.querySelector('.ttop'); box.style.maxHeight=Math.max(120,Math.round(ft-(hd?hd.getBoundingClientRect().bottom:pr.top+90)-8))+'px'; }\n  if(window.stillAgain) setTimeout(window.stillAgain,0);");
+change("gift animations wait while you type",
+  "if(phone.querySelector('.veil')){ (UI.fxQ=UI.fxQ||[]).push(",
+  "if(phone.querySelector('.veil')||phone.classList.contains('kbstill')){ (UI.fxQ=UI.fxQ||[]).push(");
+change("gift animations wait while you type (queue)",
+  "if(!UI.fxQ||!UI.fxQ.length||phone.querySelector('.veil')||phone.querySelector('.giftfx')) return;",
+  "if(!UI.fxQ||!UI.fxQ.length||phone.querySelector('.veil')||phone.querySelector('.giftfx')||phone.classList.contains('kbstill')) return;");
+change("Guess the word: blanks on one line",
+  "`<b class=\"rgword rgb\">${[...g.w].map(c=>c===' '?'&nbsp;':'_').join(' ')}</b>`",
+  "`<b class=\"rgword rgb\" style=\"font-size:${g.w.length<=7?20:g.w.length<=10?17:14}px\">${[...g.w].map(c=>c===' '?'&nbsp;':'_').join(' ')}</b>`");
+
+
+// ── Reply to a comment in talk rooms and lives: WhatsApp-style card + swipe right to reply (founder, 23 Nov) ──
+change("swipe to reply: talk room comments",
+  "`<div class=\"tmsg${w!=='me'&&mentionsMe(t)?' tmme':''}\">",
+  "`<div class=\"tmsg${w!=='me'&&mentionsMe(t)?' tmme':''}\" data-sw=\"rcm|${w}\">");
+change("swipe to reply: live comments",
+  "`<div class=\"lc lc2${w!=='me'&&mentionsMe(t)?' tmme':''}\">",
+  "`<div class=\"lc lc2${w!=='me'&&mentionsMe(t)?' tmme':''}\" data-sw=\"rcm|${w}\">");
+change("swipe to reply: same pull and arrow as chats",
+  "const isMsg=swS.el.dataset.sw.startsWith('msg|');",
+  "const isMsg=swS.el.dataset.sw.startsWith('msg|')||swS.el.dataset.sw.startsWith('rcm|');");
+change("swipe to reply: let go past the line → reply card + keyboard",
+  "if(k==='msg'&&s.dx>=56){",
+  "/* [app] (founder, 23 Nov) room and live comments: pull right past the line → the reply card appears above the box and the keyboard opens, like WhatsApp */\n  if(k==='rcm'){ if(s.dx>=56&&UI.room){ const t=(s.el.querySelector('.rht')||{}).textContent||''; UI.rre={who:id,t}; UI.remo=null; UI.sheet=null; render();\n      const i2=document.getElementById(UI.room.kind==='live'?'lc-input':'rc-input'); if(i2){ if(window.stillPre) window.stillPre(i2); try{ i2.focus({preventScroll:true}); }catch(x){ i2.focus(); } if(window.stillAgain) setTimeout(window.stillAgain,30); } } return; }\n  if(k==='msg'&&s.dx>=56){");
+change("reply card: who and what you are replying to",
+  "function rreBar(){ const q=UI.rre; return `<div class=\"rrbar\"><span><b><span>Reply to</span> ${q.who==='me'?'<span>yourself</span>':P[q.who]?P[q.who].name:''}</b>",
+  "function rreBar(){ const q=UI.rre; return `<div class=\"rrbar\" role=\"status\"><span class=\"rrbi\">${ic('reply')}</span><span><b><span>Reply to</span> ${q.who==='me'?'<span>yourself</span>':P[q.who]?P[q.who].name:''}</b>");
 
 change('top layers start below the clock (stackTop)',
   "let y=phone.classList.contains('hascall')?70:8;",
