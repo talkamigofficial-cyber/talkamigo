@@ -10,7 +10,6 @@
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import demo from '../data/generated/demo.json';
 import type { Lang } from '../i18n';
 import { pickLang, phoneLang } from '../i18n';
 
@@ -18,9 +17,14 @@ export type Level = 'A1' | 'A2' | 'B1' | 'B2' | 'C1' | 'C2';
 export type AuthMethod = 'google' | 'apple' | 'phone';
 export type Theme = 'system' | 'light' | 'dark';
 export type Plan = 'standard' | 'plus' | 'infinity';
+/** One message in a chat (shape kept from the prototype; real messages come from the server in slice 3). */
+export type Message = { f: string; t?: string; tr?: string; [key: string]: unknown };
+export type Chat = { unread: number; msgs: Message[] };
+export type Group = { name: string; members: string[]; unread: number; msgs: Message[] };
+export type MyFlick = { id: string; kind?: string; photo?: string; bg?: string; text?: string; tr?: string; likes?: number; pinned?: boolean; boosted?: boolean; [key: string]: unknown };
 export type Tab = 'chats' | 'connect' | 'flicks' | 'rooms' | 'me';
 
-/** A profile photo: one of the demo photos (emoji on a colour) or a real photo from the phone. */
+/** A profile photo: one of the ready-made photos (emoji on a colour) or a real photo from the phone. */
 export type Photo = { emoji: string; bg: string } | { uri: string } | null;
 
 export type Me = {
@@ -52,8 +56,8 @@ const emptyMe = (): Me => ({
 
 type State = {
   // ---- who is using the app ----
-  account: 'demo' | 'new' | null; // null = nobody logged in (Welcome screen)
-  savedAccount: 'demo' | 'new' | null; // the account kept on this phone after logging out ("Continue as…")
+  account: 'new' | null; // null = nobody logged in (Welcome screen). Real accounts on the server in slice 2.
+  savedAccount: 'new' | null; // the account kept on this phone after logging out ("Continue as…")
   onboarded: boolean; // finished sign-up
   signupStep: SignupStep | null; // where to resume an unfinished sign-up
   lastAuth: AuthMethod | null; // for "Continue as…" and the "Last used" tag
@@ -82,12 +86,12 @@ type State = {
   followsMe: string[];
   waved: Record<string, boolean>;
 
-  // ---- demo content (replaced by the server in slice 2) ----
-  chats: typeof demo.chats;
+  // ---- what this account has (empty for a new account; filled by the server from slice 2) ----
+  chats: Record<string, Chat>;
   chatOrder: string[];
-  groups: typeof demo.groups;
+  groups: Record<string, Group>;
   offUnread: Record<string, number>;
-  myFlicks: typeof demo.myFlicks;
+  myFlicks: MyFlick[];
 
   // ---- navigation memory ----
   tab: Tab;
@@ -108,7 +112,6 @@ type State = {
   setAiOK: (ok: boolean) => void;
   finishTour: (reward: boolean) => void;
   logBackIn: () => void;
-  tryDemo: () => void;
   logOut: () => void;
   setTab: (tab: Tab) => void;
   setRoomMode: (m: 'talk' | 'live') => void;
@@ -116,23 +119,12 @@ type State = {
   wave: (id: string) => void;
 };
 
-/** Values for a brand-new account: nothing followed, no coins, no demo numbers (v53). */
+/** Values for a brand-new account: nothing followed, 0 coins, 0 Diamonds, no chats (NEXT_STEPS §3). */
 const freshAccount = () => ({
   me: emptyMe(), plan: 'standard' as Plan, coins: 0, diamonds: 0, pendingDiamonds: 0, views: 0, followersN: 0,
   newFollowers: 0, newViews: 0, streak: 0, follows: {}, followsMe: [] as string[], waved: {},
-  chats: {} as typeof demo.chats, chatOrder: [] as string[], groups: {} as typeof demo.groups, offUnread: { lounge: 0, team: 0 },
-  myFlicks: [] as typeof demo.myFlicks, aiOK: null, lookChosen: false, toured: false,
-});
-
-/** The demo account behind "Just looking? Try the demo" (same content as the prototype). */
-const demoAccount = () => ({
-  me: { ...emptyMe(), ...demo.me, showCity: true, bday: '1999-03-14', photo: null, video: false, bio: '', foundVia: null } as Me,
-  plan: 'standard' as Plan,
-  coins: demo.wallet.coins, diamonds: demo.wallet.diamonds, pendingDiamonds: demo.wallet.pending,
-  views: demo.stats.views, followersN: demo.stats.followersN, newFollowers: demo.stats.newFollowers, newViews: demo.stats.newViews,
-  streak: demo.stats.streak, follows: demo.follows as Record<string, boolean>, followsMe: demo.followsMe, waved: {},
-  chats: demo.chats, chatOrder: demo.chatOrder, groups: demo.groups, offUnread: demo.offUnread as Record<string, number>,
-  myFlicks: demo.myFlicks, aiOK: true, lookChosen: true, toured: true,
+  chats: {} as Record<string, Chat>, chatOrder: [] as string[], groups: {} as Record<string, Group>, offUnread: { lounge: 0, team: 0 },
+  myFlicks: [] as MyFlick[], aiOK: null, lookChosen: false, toured: false,
 });
 
 export const useApp = create<State>()(
@@ -166,7 +158,6 @@ export const useApp = create<State>()(
         const choice = get().welcomeLangChoice;
         set({ account: get().account ?? get().savedAccount ?? 'new', onboarded: true, toured: true, tab: 'flicks', ...(choice ? { appLangChoice: choice } : {}) });
       },
-      tryDemo: () => set({ ...demoAccount(), account: 'demo', onboarded: true, signupStep: null, tab: 'flicks' }),
       logOut: () => set({ savedAccount: get().account, account: null, onboarded: false, signupStep: null }),
 
       setTab: (tab) => set({ tab }),

@@ -9,38 +9,42 @@
  */
 import { memo } from 'react';
 import { Image, StyleSheet, Text, View } from 'react-native';
-import lists from '../data/generated/lists.json';
+import { SvgXml } from 'react-native-svg';
+import * as squareFlags from 'country-flag-icons/string/1x1';
+import { countryName, useLang } from '../i18n';
 import { useApp } from '../state/store';
 import { getPerson } from '../data/people';
 import { Icon } from './Icon';
 import { useColors } from '../theme/colors';
 
-const FLAGS = lists.flagDrawings as unknown as Record<string, [string, string]>;
-// The UK flag is drawn with see-through stripe layers that phones don't paint; use the emoji flag for it.
-delete FLAGS.GB;
+/** Square flag drawings for every country (country-flag-icons, MIT licence), cropped to a circle below. */
+const FLAG_SVGS = squareFlags as Record<string, string>;
 
-/** Emoji flag for a 2-letter country code ('FR' → 🇫🇷). */
+/** Emoji flag for a 2-letter country code ('FR' → 🇫🇷). Only used as a fallback for codes with no drawing. */
 export const emojiFlag = (cc: string) => cc.toUpperCase().replace(/./g, (ch) => String.fromCodePoint(127397 + ch.charCodeAt(0)));
 
-/** A round flag on its own (used in lists, chips, phone code picker). */
-export function Flag({ cc, size = 18 }: { cc: string; size?: number }) {
-  const c = useColors();
+/**
+ * A real flag picture, cropped to a circle with a thin dark ring (founder, NEXT_STEPS §2.5).
+ * Used on profile photos (bottom-left), before cities, in country lists and the phone-code picker.
+ */
+export const Flag = memo(function Flag({ cc, size = 18 }: { cc: string; size?: number }) {
+  const lang = useLang();
   if (!cc) return null;
-  const drawn = FLAGS[cc];
+  const svg = FLAG_SVGS[cc.toUpperCase()];
   return (
     <View
-      style={{
-        width: size, height: size, borderRadius: size / 2, overflow: 'hidden', alignItems: 'center', justifyContent: 'center',
-        backgroundColor: '#fff', ...(drawn ? { backgroundImage: drawn[1] } : {}),
-        boxShadow: `0 0 0 1px ${c.line}`,
-      }}
+      style={{ width: size, height: size, borderRadius: size / 2, overflow: 'hidden', borderWidth: 1, borderColor: 'rgba(0,0,0,0.35)', backgroundColor: '#fff', alignItems: 'center', justifyContent: 'center' }}
       accessibilityRole="image"
-      accessibilityLabel={drawn?.[0] ?? cc}
+      accessibilityLabel={countryName(cc.toUpperCase(), lang)}
     >
-      {!drawn && <Text style={{ fontSize: size * 1.25, lineHeight: size * 1.3 }}>{emojiFlag(cc)}</Text>}
+      {svg ? (
+        <SvgXml xml={svg} width={size} height={size} preserveAspectRatio="xMidYMid slice" />
+      ) : (
+        <Text style={{ fontSize: size * 0.8 }}>{emojiFlag(cc)}</Text>
+      )}
     </View>
   );
-}
+});
 
 type Props = { id: string; size?: number; ring?: boolean; noFlag?: boolean; online?: boolean };
 

@@ -37,7 +37,16 @@ function readCsv(file) {
   return rows;
 }
 
+// our corrections: the main file + one file per area in scripts/translation-fixes/ (so several people can add texts without clashing)
 const fixes = JSON.parse(fs.readFileSync('scripts/translation-fixes.json', 'utf8'));
+if (fs.existsSync('scripts/translation-fixes')) {
+  for (const f of fs.readdirSync('scripts/translation-fixes').filter((x) => x.endsWith('.json')).sort()) {
+    const extra = JSON.parse(fs.readFileSync('scripts/translation-fixes/' + f, 'utf8'));
+    Object.assign((fixes.strings ??= {}), extra.strings ?? {});
+    Object.assign((fixes.patternChanges ??= {}), extra.patternChanges ?? {});
+    (fixes.patternAdds ??= []).push(...(extra.patternAdds ?? []));
+  }
+}
 
 // ---------- fixed texts ----------
 const strings = {};

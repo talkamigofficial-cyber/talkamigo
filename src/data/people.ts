@@ -1,7 +1,7 @@
 /**
- * Demo people (26, same as the prototype). In slice 2 these come from the server.
+ * People in the app. The Live world starts empty (NEXT_STEPS §3); from slice 2 people come from the server.
  */
-import demo from './generated/demo.json';
+import { livePeople } from './live';
 
 export type Person = {
   name: string;
@@ -25,6 +25,6 @@ export type Person = {
   isNew?: boolean;
 };
 
-export const PEOPLE = demo.people as unknown as Record<string, Person>;
+export const PEOPLE: Record<string, Person> = livePeople;
 
 export const getPerson = (id: string): Person | null => PEOPLE[id] ?? null;

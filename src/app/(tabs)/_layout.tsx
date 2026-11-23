@@ -26,7 +26,8 @@ const TABS: { route: string; tab: Tab; label: string; icon: IconName; target: To
 export default function TabsLayout() {
   return (
     <View style={{ flex: 1 }}>
-      <Tabs screenOptions={{ headerShown: false }} tabBar={(props) => <TabBar {...props} />}>
+      {/* sceneStyle overflow hidden: a page can never draw over the tab bar (founder's iPhone, NEXT_STEPS §2.6) */}
+      <Tabs screenOptions={{ headerShown: false, sceneStyle: { overflow: 'hidden' } }} tabBar={(props) => <TabBar {...props} />}>
         {TABS.map((t) => <Tabs.Screen key={t.route} name={t.route} />)}
       </Tabs>
       {/* the welcome tour runs once, right after sign-up, on top of the tabs */}
@@ -70,15 +71,18 @@ function TabBar({ state, emitter, navigateToTab }: BottomTabBarProps) {
               useApp.getState().setTab(tab.tab);
             }}
           >
-            <Icon name={tab.icon} size={tab.tab === 'rooms' ? 27 : 25} color={on ? active : idle} strokeWidth={tab.tab === 'rooms' ? (on ? 1.85 : 1.55) : on ? 2.4 : 2} />
+            {/* the icon box is the anchor for the unread badge (top-right of the icon) */}
+            <View style={styles.iconBox}>
+              <Icon name={tab.icon} size={tab.tab === 'rooms' ? 27 : 25} color={on ? active : idle} strokeWidth={tab.tab === 'rooms' ? (on ? 1.85 : 1.55) : on ? 2.4 : 2} />
+              {badge ? (
+                <View style={[styles.dot, { borderColor: bg }]}>
+                  <Text style={styles.dotText}>{badge > 99 ? '99+' : badge}</Text>
+                </View>
+              ) : null}
+            </View>
             <Text style={[styles.label, { color: on ? active : idle }]} numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.75}>
               {t(tab.label)}
             </Text>
-            {badge ? (
-              <View style={[styles.dot, { borderColor: bg }]}>
-                <Text style={styles.dotText}>{badge}</Text>
-              </View>
-            ) : null}
           </Pressy>
           </TourTarget>
         );
@@ -88,9 +92,11 @@ function TabBar({ state, emitter, navigateToTab }: BottomTabBarProps) {
 }
 
 const styles = StyleSheet.create({
-  bar: { flexDirection: 'row', borderTopWidth: 1, paddingHorizontal: 4, paddingTop: 8 },
-  tab: { flex: 1, minWidth: 0, height: 52, alignItems: 'center', justifyContent: 'center', gap: 3 },
+  // the bar is a solid strip in the normal page flow, under the pages and above the iPhone home bar
+  bar: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-around', borderTopWidth: 1, paddingHorizontal: 4, paddingTop: 6, zIndex: 10, elevation: 10 },
+  tab: { flex: 1, minWidth: 0, height: 54, flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 3 },
+  iconBox: { width: 30, height: 28, alignItems: 'center', justifyContent: 'center' },
   label: { fontSize: 10.5, fontWeight: '700', letterSpacing: -0.1, maxWidth: '100%' },
-  dot: { position: 'absolute', top: 2, start: '50%', marginStart: 6, minWidth: 18, height: 18, paddingHorizontal: 5, borderRadius: 9, backgroundColor: '#E0101F', borderWidth: 2, alignItems: 'center', justifyContent: 'center' },
+  dot: { position: 'absolute', top: -5, right: -9, minWidth: 18, height: 18, paddingHorizontal: 4, borderRadius: 9, backgroundColor: '#E0101F', borderWidth: 2, alignItems: 'center', justifyContent: 'center' },
   dotText: { color: '#fff', fontSize: 10, fontWeight: '800' },
 });
