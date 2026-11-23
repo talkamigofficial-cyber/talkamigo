@@ -1,5 +1,7 @@
 # TalkAmigo — instructions for the next coding round
 
+> **Not yet.** Do `BUILD_EXACT_COPY.md` first. This file is for the rounds after the founder confirms the app is an exact copy of the beta.
+
 Written 23 Nov 2026, from the founder's screen recording and screenshots of the real app (Expo Go build, slice 1).
 Read this together with `HANDOFF.md`, `CLAUDE.txt`, `talkamigo-beta.html` and the two translation files. The prototype stays the reference for layout, wording and behaviour.
 
