@@ -140,6 +140,12 @@ const APP_CSS = `
 .mini.hi{bottom:calc(150px + env(safe-area-inset-bottom,0px))}
 .vprog{bottom:calc(82px + env(safe-area-inset-bottom,0px))}
 .vlen2{bottom:calc(92px + env(safe-area-inset-bottom,0px))}
+/* live: a guest with their camera on (video look + camera badge), and a camera button that isn't allowed in this live */
+.lsplit .lt.vid{background:radial-gradient(80% 60% at 30% 25%,rgba(255,190,140,.55),transparent 60%),radial-gradient(90% 70% at 80% 90%,rgba(120,60,200,.6),transparent 60%),#1d1a2b!important}
+.lsplit .lt.vid .av{transform:scale(1.25)}
+.lsplit .ltvid{position:absolute;top:8px;inset-inline-start:8px;height:24px;padding:0 8px;border-radius:999px;background:#E0101F;display:flex;align-items:center}
+.lsplit .ltvid svg{width:14px;height:14px;fill:none;stroke:#fff;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.lb3.lgnocam{opacity:.5}
 `;
 // the Plans footer and the "Create group" footer (New group) use the same inline spacing: both move above the home bar
 { const find = '<div class="pad" style="padding-bottom:20px;padding-top:8px">';
@@ -152,6 +158,49 @@ const APP_CSS = `
 change('live: audience asks with a raised hand, not a mic',
   'data-a="lg-join" aria-label="${R.gAsk?\'Asked to join\':\'Ask to join\'}">${ic(\'mic\')}</button>',
   'data-a="lg-join" aria-label="${R.gAsk?\'Asked to join\':\'Ask to join\'}">${ic(\'hand\')}</button>');
+
+
+// (also: the host's "X joined · tap their square…" pop-up was English in every language — translated below)
+// ── Live rooms: guest cameras (founder, 23 Nov 2026: 1st guest free, 2nd if the host has Plus, 3rd voice only) ──
+change("live guest camera: rules and helpers",
+  "const gMut=(R,id)=>!!((R&&R.gMut)||{})[id];",
+  "const gMut=(R,id)=>!!((R&&R.gMut)||{})[id];\n/* [app] guest cameras in lives (founder, 23 Nov 2026): the 1st guest can turn their camera on in any live, the 2nd only if the HOST has Plus/Infinity (or is a teacher), the 3rd stays voice only.\n   The camera always starts off, only the guest turns it on, the host can turn it off. In the real app these two numbers are server settings (app_config). */\nconst LG_CAM_FREE=1, LG_CAM_PLUS=2;\nconst lgHostPlus=L=>L.host==='me'?plusOK():!!(L.vip||(P[L.host]&&P[L.host].teacher));\nconst gCamMax=L=>lgHostPlus(L)?LG_CAM_PLUS:LG_CAM_FREE;\nconst gCamOK=(R,L,id)=>{ const k=lgs(R).indexOf(id); return k>-1&&k<gCamMax(L); };\nconst gCam=(R,id)=>!!((R&&R.gCam)||{})[id];\nfunction gCamFix(R,L){ if(!R||!R.gCam||!L) return; Object.keys(R.gCam).forEach(id=>{ if(!gCamOK(R,L,id)) delete R.gCam[id]; }); }\nfunction gCamSet(id,on,byHost){ const R=UI.room, L=R&&S.lives.find(x=>x.id===R.id); if(!L||!isG(R,id)) return; R.gCam=Object.assign({},R.gCam); if(on) R.gCam[id]=true; else delete R.gCam[id];\n  R.chat.push(['_',byHost?(id==='me'?'The host turned your camera off':P[id].name+'’s camera is off'):id==='me'?(on?'You turned your camera on 📹':'You turned your camera off'):P[id].name+(on?' turned their camera on 📹':' turned their camera off')]); render(); }");
+change("live guest camera: other guests may turn theirs on",
+  "R.gMut=Object.assign({},R.gMut,{[id]:id==='me'});",
+  "R.gMut=Object.assign({},R.gMut,{[id]:id==='me'}); if(id!=='me') setTimeout(()=>{ const R2=UI.room; if(R2===R&&isG(R2,id)&&!gCam(R2,id)&&gCamOK(R2,L,id)) gCamSet(id,true); },4000);");
+change("live guest camera: off when leaving the stage",
+  "if(R.gMut) delete R.gMut[id];",
+  "if(R.gMut) delete R.gMut[id]; if(R.gCam) delete R.gCam[id]; gCamFix(R,S.lives.find(x=>x.id===R.id));");
+change("live guest camera: square shows the camera",
+  "class=\"lt ${k===0?'hst':''} ${k>0&&gMut(R,g)?'mut':''}\"",
+  "class=\"lt ${k===0?'hst':''} ${k>0&&gMut(R,g)?'mut':''} ${k>0&&gCam(R,g)?'vid':''}\"");
+change("live guest camera: camera badge on the square",
+  "${k>0&&gMut(R,g)?`<span class=\"ltmut\">${ic('micoff')}</span>`:''}",
+  "${k>0&&gMut(R,g)?`<span class=\"ltmut\">${ic('micoff')}</span>`:''}${k>0&&gCam(R,g)?`<span class=\"ltvid\">${ic('video')}</span>`:''}");
+change("live guest camera: button next to the mic",
+  "${isG(R,'me')?`<button type=\"button\" class=\"lb3 ${gMut(R,'me')?'':'grn'}\" data-a=\"lg-mic\"",
+  "${isG(R,'me')?`<button type=\"button\" class=\"lb3 ${gCam(R,'me')?'grn':''} ${gCamOK(R,L,'me')?'':'lgnocam'}\" data-a=\"lg-vcam\" aria-pressed=\"${gCam(R,'me')?'true':'false'}\" aria-label=\"${gCam(R,'me')?'Turn camera off':'Turn camera on'}\">${ic(gCam(R,'me')?'video':'vidoff')}</button><button type=\"button\" class=\"lb3 ${gMut(R,'me')?'':'grn'}\" data-a=\"lg-mic\"");
+change("live guest camera: actions",
+  "case 'lg-mic': {",
+  "case 'lg-vcam': { const R=UI.room, L=R&&S.lives.find(x=>x.id===R.id); if(!L||!isG(R,'me')) break; if(UI.sheet&&UI.sheet.t==='lgme') UI.sheet=null;\n      if(gCam(R,'me')){ gCamSet('me',false); toast('Your camera is off'); break; }\n      if(!gCamOK(R,L,'me')){ render(); toast(lgs(R).indexOf('me')<LG_CAM_PLUS&&!lgHostPlus(L)?'Only 1 guest camera in this live · Plus hosts can have 2':'Only 2 guests can use their camera · you’re on with your voice'); break; }\n      gCamSet('me',true); toast('Your camera is on · everyone in the live can see you'); break; }\n    case 'lg-camoff': { const R=UI.room; if(!R||!gCam(R,v)) break; UI.sheet=null; gCamSet(v,false,true); toast('Camera turned off'); break; }\n    case 'lg-mic': {");
+change("live guest camera: ask for the camera first",
+  "function permFor(a,v){ ",
+  "function permFor(a,v){ if(a==='lg-vcam'){ const R=UI.room, L=R&&S.lives.find(x=>x.id===R.id); return L&&isG(R,'me')&&!gCam(R,'me')&&gCamOK(R,L,'me')?['cam']:null; } ");
+change("live guest camera: host can turn it off",
+  "grid=onSt?act('lg-mute',id,muted?'mic':'micoff',muted?'Unmute mic':'Mute mic')+",
+  "grid=onSt?act('lg-mute',id,muted?'mic':'micoff',muted?'Unmute mic':'Mute mic')+(gCam(R,id)?act('lg-camoff',id,'vidoff','Turn camera off'):'')+");
+change("live guest camera: in the \"You\u2019re a guest\" sheet",
+  "<button class=\"btn glass\" data-a=\"lg-leave\">${ic('down')} <span>Back to the audience</span></button>`; }",
+  "${(()=>{ const L=S.lives.find(x=>x.id===R.id); return !L?'':gCamOK(R,L,'me')?`<button class=\"btn ${gCam(R,'me')?'glass':''}\" data-a=\"lg-vcam\">${ic(gCam(R,'me')?'vidoff':'video')} <span>${gCam(R,'me')?'Turn my camera off':'Turn my camera on'}</span></button>`:'<p class=\"muted\" style=\"margin:0;font-size:13px\">Your camera stays off in this live</p>'; })()}<button class=\"btn glass\" data-a=\"lg-leave\">${ic('down')} <span>Back to the audience</span></button>`; }");
+change("live guest camera: texts in 8 languages",
+  "\nTurn camera off|Couper la caméra|Apagar la cámara|Desligar a câmera|Kamera ausschalten|Spegni la fotocamera|カメラをオフにする|إيقاف الكاميرا\n",
+  "\nTurn camera off|Couper la caméra|Apagar la cámara|Desligar a câmera|Kamera ausschalten|Spegni la fotocamera|カメラをオフにする|إيقاف الكاميرا\nYour camera is on · everyone in the live can see you|Ta caméra est allumée · tout le live te voit|Tu cámara está encendida · todo el directo te ve|Sua câmera está ligada · todos na live veem você|Deine Kamera ist an · alle im Live sehen dich|La fotocamera è accesa · tutti nella live ti vedono|カメラがオンです · ライブの全員に映っています|الكاميرا تعمل · يراك الجميع في البث\nYour camera is off|Ta caméra est coupée|Tu cámara está apagada|Sua câmera está desligada|Deine Kamera ist aus|La fotocamera è spenta|カメラがオフです|الكاميرا متوقفة\nOnly 1 guest camera in this live · Plus hosts can have 2|Une seule caméra d’invité dans ce live · les hôtes Plus peuvent en avoir 2|Solo 1 cámara de invitado en este directo · los anfitriones Plus pueden tener 2|Só 1 câmera de convidado nesta live · anfitriões Plus podem ter 2|Nur 1 Gastkamera in diesem Live · Plus-Hosts können 2 haben|Solo 1 fotocamera ospite in questa live · gli host Plus possono averne 2|このライブのゲストカメラは1台まで · Plusのホストは2台まで使えます|كاميرا ضيف واحدة فقط في هذا البث · يمكن لمضيفي Plus استخدام كاميرتين\nOnly 2 guests can use their camera · you’re on with your voice|Seuls 2 invités peuvent allumer leur caméra · toi, tu es là avec ta voix|Solo 2 invitados pueden usar su cámara · tú participas con tu voz|Só 2 convidados podem usar a câmera · você participa com a voz|Nur 2 Gäste können ihre Kamera nutzen · du bist mit deiner Stimme dabei|Solo 2 ospiti possono usare la fotocamera · tu partecipi con la voce|カメラを使えるゲストは2人まで · あなたは音声で参加中です|يمكن لضيفين فقط استخدام الكاميرا · أنت مشارك بصوتك\nYou turned your camera on 📹|Tu as allumé ta caméra 📹|Encendiste tu cámara 📹|Você ligou sua câmera 📹|Du hast deine Kamera eingeschaltet 📹|Hai acceso la fotocamera 📹|カメラをオンにしました 📹|شغّلت الكاميرا 📹\nYou turned your camera off|Tu as coupé ta caméra|Apagaste tu cámara|Você desligou sua câmera|Du hast deine Kamera ausgeschaltet|Hai spento la fotocamera|カメラをオフにしました|أوقفت الكاميرا\nThe host turned your camera off|L’hôte a coupé ta caméra|El anfitrión apagó tu cámara|O anfitrião desligou sua câmera|Der Host hat deine Kamera ausgeschaltet|L’host ha spento la tua fotocamera|ホストがあなたのカメラをオフにしました|أوقف المضيف الكاميرا الخاصة بك\nCamera turned off|Caméra coupée|Cámara apagada|Câmera desligada|Kamera ausgeschaltet|Fotocamera spenta|カメラをオフにしました|تم إيقاف الكاميرا\nTurn my camera on|Allumer ma caméra|Encender mi cámara|Ligar minha câmera|Meine Kamera einschalten|Accendi la mia fotocamera|カメラをオンにする|تشغيل الكاميرا\nTurn my camera off|Couper ma caméra|Apagar mi cámara|Desligar minha câmera|Meine Kamera ausschalten|Spegni la mia fotocamera|カメラをオフにする|إيقاف الكاميرا\nYour camera stays off in this live|Ta caméra reste coupée dans ce live|Tu cámara se queda apagada en este directo|Sua câmera fica desligada nesta live|Deine Kamera bleibt in diesem Live aus|La tua fotocamera resta spenta in questa live|このライブではカメラはオフのままです|تبقى الكاميرا متوقفة في هذا البث\n");
+change("live guest camera: texts with names (rules)",
+  "[/^10 min left in this (room|live)$/,'w10a']",
+  "[/^(.+) turned their camera on 📹$/,'gcamOn'],[/^(.+) joined · tap their square to mute or move them$/,'lgjoinT'],[/^(.+) turned their camera off$/,'gcamOff'],[/^(.+)’s camera is off$/,'gcamHostOff'],[/^10 min left in this (room|live)$/,'w10a']");
+change("live guest camera: texts with names (8 languages)",
+  "w10a:{fr:'Plus que 10 min dans ce salon'",
+  "lgjoinT:{fr:'$1 a rejoint le live · touche sa case pour couper son micro ou l’envoyer dans le public',es:'$1 se unió · toca su recuadro para silenciar o mover',pt:'$1 entrou · toque no quadro para silenciar ou mover',de:'$1 ist dabei · tippe auf das Feld, um stummzuschalten oder zu verschieben',it:'$1 è sul palco · tocca il riquadro per silenziare o spostare',ja:'$1さんが参加しました · 枠をタップしてミュートや移動ができます',ar:'انضمام $1 · اضغط على المربّع لكتم الصوت أو النقل'},gcamOn:{fr:'$1 a allumé sa caméra 📹',es:'$1 encendió su cámara 📹',pt:'$1 ligou a câmera 📹',de:'$1 hat die Kamera eingeschaltet 📹',it:'$1 ha acceso la fotocamera 📹',ja:'$1さんがカメラをオンにしました 📹',ar:'الكاميرا مفعّلة لدى $1 📹'},gcamOff:{fr:'$1 a coupé sa caméra',es:'$1 apagó su cámara',pt:'$1 desligou a câmera',de:'$1 hat die Kamera ausgeschaltet',it:'$1 ha spento la fotocamera',ja:'$1さんがカメラをオフにしました',ar:'الكاميرا متوقفة لدى $1'},gcamHostOff:{fr:'Caméra de $1 coupée',es:'Cámara de $1 apagada',pt:'Câmera de $1 desligada',de:'Kamera von $1 ist aus',it:'Fotocamera di $1 spenta',ja:'$1さんのカメラをオフにしました',ar:'تم إيقاف كاميرا $1'},w10a:{fr:'Plus que 10 min dans ce salon'");
 
 change('top layers start below the clock (stackTop)',
   "let y=phone.classList.contains('hascall')?70:8;",
