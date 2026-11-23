@@ -1,6 +1,6 @@
 # TalkAmigo — Project Brief for Claude Code
 
-> **Update 23 Nov 2026 (read first):** the real app is built with **React Native + Expo (SDK 58) + Expo Router**, one codebase for iPhone and Android, tested on the founder's iPhone with **Expo Go** (not Xcode / the Simulator). Wherever this brief says Swift, SwiftUI, Xcode, Simulator, Kotlin or `ios/`, read it as the React Native equivalent. Developer guide: `docs/ARCHITECTURE.md`. The reference for screens and behaviour is the prototype in `docs/handoff/` (v106); when it and this brief disagree, the prototype wins. Decisions: `docs/DECISIONS.md`.
+> **Update 23 Nov 2026 (read first):** the real app is built with **React Native + Expo (SDK 58) + Expo Router**, one codebase for iPhone and Android, tested on the founder's iPhone with **Expo Go** (not Xcode / the Simulator). Wherever this brief says Swift, SwiftUI, Xcode, Simulator, Kotlin or `ios/`, read it as the React Native equivalent. Developer guide: `docs/ARCHITECTURE.md`. The reference for screens and behaviour is the prototype in `docs/handoff/` (v106); when it and this brief disagree, the prototype wins. Decisions: `docs/DECISIONS.md`. **Current instructions for the next rounds: `docs/handoff/NEXT_STEPS.md`.**
 
 > Put this file in the root folder of the TalkAmigo project on the Mac. Claude Code reads `CLAUDE.md` automatically at the start of every session, so this is the single source of truth. When a decision changes, update this file first.
 
@@ -1381,3 +1381,7 @@ Founder's list (answers: keyboard closes only in rooms/lives/comments; if the co
 ## Handoff pack written (22 Nov)
 - Founder will build the real app in Claude Code (React Native + Expo), testing privately on their iPhone before any publishing. Has a Mac and an iPhone; no GitHub or Apple Developer account yet.
 - handoff/ folder: HANDOFF.md (what the prototype fakes, rules and numbers, every screen and pop-up with its buttons, stored data, acceptance checks, build order), talkamigo-beta.html, CLAUDE.txt, translations.csv, translations_patterns.csv. Regenerate with /tmp/claude-0/aud/inv.py + the handoff script after any new version.
+
+## Real app plan (23 Nov)
+- Real app is being built in a Claude Code session (Expo Go, slice 1 done). Founder sent a recording; mistakes and next steps are in handoff/NEXT_STEPS.md (send it with the 5 handoff files).
+- Decisions: app must be EMPTY (no invented people); no word "demo", no "coming in the next update"; testing happens inside the same app through a hidden Test mode for team accounts only (server flag, TEST banner, ~30 marked test people, never mixed with Live); Apple sandbox purchases; Stripe later once the company exists; admin site after the customer app; free plans only until told.
