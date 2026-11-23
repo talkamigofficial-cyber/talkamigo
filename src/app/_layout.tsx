@@ -12,11 +12,10 @@ import { LogBox, View } from 'react-native';
 // The navigation library sets a style the web preview doesn't know; harmless, only in the browser preview.
 LogBox.ignoreLogs(['Invalid style property of "direction"']);
 import { Stack } from 'expo-router';
-import { StatusBar } from 'expo-status-bar';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { useApp } from '../state/store';
 import { useLang } from '../i18n';
-import { useColors, useScheme } from '../theme/colors';
+import { useColors } from '../theme/colors';
 import { ToastHost } from '../components/Toast';
 import { Direction } from '../components/Direction';
 
@@ -27,8 +26,6 @@ export default function RootLayout() {
 
   const lang = useLang();
   const c = useColors();
-  const scheme = useScheme();
-  const onboarded = useApp((s) => s.onboarded);
 
   if (!ready) return <View style={{ flex: 1, backgroundColor: '#850612' }} />;
 
@@ -36,7 +33,7 @@ export default function RootLayout() {
     <SafeAreaProvider>
       {/* Arabic flips the whole layout; phone numbers and the logo stay left-to-right where they are drawn */}
       <Direction rtl={lang === 'ar'} style={{ flex: 1, backgroundColor: c.bg }}>
-        <StatusBar style={!onboarded || scheme === 'dark' ? 'light' : 'dark'} />
+        {/* step 1: the status bar is set by the beta page (src/web/BetaApp.tsx); native screens set their own in step 2 */}
         <Stack
           screenOptions={{
             headerShown: false,

@@ -1,18 +1,13 @@
 /**
- * Start-up: decides which page to open.
- *   nobody logged in           → Welcome
- *   sign-up not finished       → the step where they stopped (v87: "reopening the app goes back to the same step")
- *   signed up, steps after it  → Choose your look → Your AI helpers → the app (the tour runs on top of Flicks)
- *   otherwise                  → the app, on Flicks (CLAUDE.md §4: "The app opens on Flicks")
+ * Start-up.
+ *
+ * STEP 1 of docs/handoff/BUILD_EXACT_COPY.md (23 Nov 2026): the app IS the beta, full screen (src/web/BetaApp.tsx).
+ * The native screens built in slices 1–2 stay in this folder for step 2 (rebuilding the beta screen by screen,
+ * natively) but nothing opens them yet. The earlier start-up rules (Welcome → sign-up → tabs) are in git history
+ * (commit "Slice 1 screens…") and come back screen by screen in step 2.
  */
-import { Redirect } from 'expo-router';
-import { useApp } from '../state/store';
+import { BetaApp } from '../web/BetaApp';
 
 export default function Start() {
-  const { account, onboarded, signupStep, lookChosen, aiOK } = useApp();
-  if (!account) return <Redirect href="/welcome" />;
-  if (!onboarded) return <Redirect href={`/signup/${signupStep ?? 'who'}`} />;
-  if (!lookChosen) return <Redirect href="/look" />;
-  if (aiOK === null) return <Redirect href="/ai-helpers" />;
-  return <Redirect href="/flicks" />;
+  return <BetaApp />;
 }

@@ -35,3 +35,13 @@ Date · decision · why. Newest at the bottom.
 - **Tour:** "Post your own Flick" and "Open your own room" cards are switched off until those features exist (10 cards).
 - **Tab bar:** icon over label, badge on the Chats icon, pages clipped above the bar. Not reproducible in the browser: to be confirmed on the founder's iPhone.
 - **Blue gear button:** it is Expo Go's own tools button, not TalkAmigo's; it does not exist in the real app.
+
+## 23 Nov 2026 — step 1 of BUILD_EXACT_COPY.md (pack 3)
+
+- **The app is the beta, full screen** (`src/web/BetaApp.tsx`), bundled inside the app (works without internet). Every screen, pop-up, button and demo content of v106 is there. Round 2's emptying is postponed (founder, pack 3).
+- **Changes on top of the beta** (all listed in `scripts/build-web.mjs`; the beta file itself is never edited):
+  - Real round flag pictures instead of emoji flags (founder: "use real flags").
+  - iPhone space: nothing sits under the clock / Dynamic Island, and nothing at the bottom sits on the home bar or under the tab bar (the beta never had a real top space and its lists ended 6 px under the tab bar).
+  - Wording fixes from slice 1 (French "tu", live vs room time warnings, delete-account sentence, Connect names, Italian Flicks, "Phone number" in Continue as, sign-up counter 9/14).
+- **Defaults used** (founder didn't pick; can be changed): keep the beta's "demo" words for now; hide the iPhone ˄ ˅ Done bar over the keyboard (the beta has its own Done).
+- Native screens from slices 1–2 stay in `src/app/` for step 2, unused for now.
