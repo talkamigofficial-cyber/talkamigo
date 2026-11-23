@@ -147,6 +147,12 @@ const APP_CSS = `
   html = html.split(find).join('<div class="pad" style="padding-bottom:calc(20px + env(safe-area-inset-bottom,0px));padding-top:8px">');
   applied.push('Plans and New group footers above the home bar'); }
 // banners, the offline bar and pop-up messages are stacked from the top by stackTop(): start the stack below the clock
+// Founder, 23 Nov: in a live, people in the audience get a raise-hand button to ask to go on stage.
+// The mic button only appears once they are on stage (on / off as they like); the host can still mute them.
+change('live: audience asks with a raised hand, not a mic',
+  'data-a="lg-join" aria-label="${R.gAsk?\'Asked to join\':\'Ask to join\'}">${ic(\'mic\')}</button>',
+  'data-a="lg-join" aria-label="${R.gAsk?\'Asked to join\':\'Ask to join\'}">${ic(\'hand\')}</button>');
+
 change('top layers start below the clock (stackTop)',
   "let y=phone.classList.contains('hascall')?70:8;",
   "let y=(phone.classList.contains('hascall')?70:8)+appSafeTop();");

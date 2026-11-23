@@ -45,3 +45,4 @@ Date · decision · why. Newest at the bottom.
   - Wording fixes from slice 1 (French "tu", live vs room time warnings, delete-account sentence, Connect names, Italian Flicks, "Phone number" in Continue as, sign-up counter 9/14).
 - **Defaults used** (founder didn't pick; can be changed): keep the beta's "demo" words for now; hide the iPhone ˄ ˅ Done bar over the keyboard (the beta has its own Done).
 - Native screens from slices 1–2 stay in `src/app/` for step 2, unused for now.
+- **Live rooms, 23 Nov (founder):** people in the audience see a **raised hand** to ask to go on stage (was a mic). Once the host accepts, it becomes the **mic button** (starts off, on/off as they like). The host can still mute anyone on stage (tap their square → Mute mic). Guest cameras: not built, waiting for the founder's yes on cost.
