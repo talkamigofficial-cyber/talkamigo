@@ -56,3 +56,5 @@ Date · decision · why. Newest at the bottom.
   - **Gift animations wait while you type** and play when the keyboard closes.
   - Guess the word: hint readable in light mode, blanks never wrap. Minimised live: × inside the card (it was cut off).
   - Picture: `docs/analysis/2026-11-23-rooms-typing-fixed.png`.
+- **Fixed seats in talk rooms, 24 Nov (founder):** whoever goes on stage gets the first free seat and keeps it until they leave the stage; someone joining never pushes anyone along (before, "You" was always drawn last and got pushed); someone leaving leaves their seat empty for the next person. Real app: the seat number is stored per person on the server (`room_participants.seat`).
+- **Typing with 5+ on stage:** the two rows of seats line up in one row (same order, a bit smaller) while typing, so the chat keeps room (iPhone 15: ~125 pt, iPhone SE: ~90 pt). Only if a phone is still too small, the audience row drops its names, then hides while typing. Picture: `docs/analysis/2026-11-24-fixed-seats-typing.png`.

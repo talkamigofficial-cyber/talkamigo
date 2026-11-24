@@ -167,6 +167,15 @@ const APP_CSS = `
 .stream.remo>.lcfeed{display:flex!important;bottom:312px!important;max-height:calc(100% - 312px - 190px)!important}
 /* the keyboard-down button steps aside while the @ list is open (it covered the names) */
 body:has(.atlist) .kbdone.ico{visibility:hidden}
+.troom.rtype2 .tgrid{display:flex!important;flex-wrap:nowrap!important;overflow-x:auto;overflow-y:hidden;scrollbar-width:none;gap:0!important;zoom:1!important}
+.troom.rtype2 .tgrid::-webkit-scrollbar{display:none}
+.troom.rtype2 .tseat{flex:0 0 16.666%!important;min-width:0;gap:3px}
+.troom.rtype2 .tseat .tav{zoom:.74}
+.troom.rtype2 .tnm{font-size:11.5px;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.troom.rtype2 .tnm .eq{display:none}
+.troom.rtype3 .tl>span:last-child{display:none}
+.troom.rtype3 .tlis{padding:2px 0 0!important}
+.troom.rtype4 .tlis{display:none!important}
 /* reply card (talk rooms and lives): sits right above the box, red edge, name in red, the message on one line, × to cancel */
 .rrbar{animation:rrin .18s cubic-bezier(.2,.8,.2,1)}
 @keyframes rrin{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
@@ -248,7 +257,7 @@ change("typing in a talk room: nothing is lifted (the room fits above the keyboa
   "const stillEls=(c)=>c.kind==='sheet'?[c.box]:c.kind==='room'?[]:c.kind==='live'?[...c.box.querySelectorAll(':scope > .lcfeed, :scope > .lrail, :scope > form.lbar, :scope > .atlist, :scope > .trcard, :scope > .rrbar')]:[c.f];");
 change("typing in a talk room: the room ends at the keyboard",
   "phone.classList.remove('kbopen','kbb'); phone.classList.add('kbstill'); UI.kbBlind=false;",
-  "phone.classList.remove('kbopen','kbb'); phone.classList.add('kbstill'); UI.kbBlind=false;\n    /* [app] (founder, 23 Nov) typing in a talk room: the top of the room never moves, the room simply ends where the keyboard starts.\n       Extras hide (quick replies, rules, mode row, empty seats, subtitles; the game card shows only the word/blanks and hint), so the\n       latest messages stay visible right above the bar. Before, only the bar was lifted: it covered the game card and hid the chat. */\n    if(c.kind==='room'){ const b=c.box, sTop=st?st.getBoundingClientRect().top:0, top=b.getBoundingClientRect().top-sTop; b.classList.add('rtype');\n      const h=Math.max(220,Math.round(ln.V-top)); if(b.style.height!==h+'px'){ b.style.height=h+'px'; b.style.maxHeight=h+'px'; }\n      const sc=document.getElementById('roomscroll'); if(sc&&(anim||sc.scrollHeight-sc.scrollTop-sc.clientHeight<80)) sc.scrollTop=sc.scrollHeight;\n      const al=b.querySelector(':scope > .atlist'), fb=b.querySelector(':scope > form.tbar'); if(al&&fb) al.style.bottom=(b.getBoundingClientRect().bottom-fb.getBoundingClientRect().top)+'px';\n      UI.kbLift=0; UI.kbStillK='room'; return; }");
+  "phone.classList.remove('kbopen','kbb'); phone.classList.add('kbstill'); UI.kbBlind=false;\n    /* [app] (founder, 23 Nov) typing in a talk room: the top of the room never moves, the room simply ends where the keyboard starts.\n       Extras hide (quick replies, rules, mode row, empty seats, subtitles; the game card shows only the word/blanks and hint), so the\n       latest messages stay visible right above the bar. Before, only the bar was lifted: it covered the game card and hid the chat. */\n    if(c.kind==='room'){ const b=c.box, sTop=st?st.getBoundingClientRect().top:0, top=b.getBoundingClientRect().top-sTop; b.classList.add('rtype');\n      const h=Math.max(220,Math.round(ln.V-top)); if(b.style.height!==h+'px'){ b.style.height=h+'px'; b.style.maxHeight=h+'px'; }\n      const sc=document.getElementById('roomscroll'); if(sc&&(anim||sc.scrollHeight-sc.scrollTop-sc.clientHeight<80)) sc.scrollTop=sc.scrollHeight;\n      const al=b.querySelector(':scope > .atlist'), fb=b.querySelector(':scope > form.tbar'); if(al&&fb) al.style.bottom=(b.getBoundingClientRect().bottom-fb.getBoundingClientRect().top)+'px';\n      /* tiny phones (iPhone SE): if the chat still has no room, first the audience row drops its names, then it hides while typing */\n      b.classList.remove('rtype3','rtype4'); const chatH=()=>{ const q=document.getElementById('roomscroll'); return q?q.getBoundingClientRect().height:999; };\n      if(chatH()<70){ b.classList.add('rtype3'); if(chatH()<56) b.classList.add('rtype4'); }\n      UI.kbLift=0; UI.kbStillK='room'; return; }");
 change("typing in a talk room: back to normal when the keyboard closes",
   "phone.querySelectorAll('.kbsp').forEach(e=>e.remove());",
   "phone.querySelectorAll('.kbsp').forEach(e=>e.remove());\n    phone.querySelectorAll('.troom.rtype').forEach(b=>{ b.classList.remove('rtype'); b.style.height=''; b.style.maxHeight=''; const al=b.querySelector(':scope > .atlist'); if(al) al.style.bottom=''; });\n    if(UI.fxQ&&UI.fxQ.length) setTimeout(fxNext,400);");
@@ -282,6 +291,21 @@ change("swipe to reply: let go past the line → reply card + keyboard",
 change("reply card: who and what you are replying to",
   "function rreBar(){ const q=UI.rre; return `<div class=\"rrbar\"><span><b><span>Reply to</span> ${q.who==='me'?'<span>yourself</span>':P[q.who]?P[q.who].name:''}</b>",
   "function rreBar(){ const q=UI.rre; return `<div class=\"rrbar\" role=\"status\"><span class=\"rrbi\">${ic('reply')}</span><span><b><span>Reply to</span> ${q.who==='me'?'<span>yourself</span>':P[q.who]?P[q.who].name:''}</b>");
+
+
+// ── Talk room seats (founder, 24 Nov): fixed seat numbers; with 5+ on stage, one row while typing ──
+change("stage seats: everyone keeps their seat number",
+  "const stage=[r.host,...r.speakers,...(R.onStage&&!host?['me']:[])].slice(0,max);\n  const seatsN=Math.max(max,stage.length);",
+  "/* [app] (founder, 24 Nov) fixed seats: whoever goes up gets the first free seat and keeps it until they leave the stage.\n     Someone joining never pushes anyone along; someone leaving leaves their seat empty (numbered) for the next person. */\n  const onSt=[r.host,...r.speakers,...(R.onStage&&!host?['me']:[])].filter((x,k,a)=>x&&a.indexOf(x)===k), seatOf=R.seatOf||(R.seatOf={});\n  Object.keys(seatOf).forEach(x=>{ if(!onSt.includes(x)||(x!==r.host&&seatOf[x]===0)) delete seatOf[x]; }); seatOf[r.host]=0;\n  onSt.forEach(x=>{ if(seatOf[x]==null){ const used=new Set(Object.values(seatOf)); let k=1; while(used.has(k)) k++; seatOf[x]=k; } });\n  const stage=[]; onSt.forEach(x=>{ if(seatOf[x]<max) stage[seatOf[x]]=x; });\n  const seatsN=Math.max(max,stage.length);");
+change("stage seats: audience count uses the people on stage",
+  "const lisN=Math.max(0,r.count-stage.length), pool=Object.keys(P).filter(x=>!stage.includes(x)&&x!==r.host&&!isBlocked(x))",
+  "const lisN=Math.max(0,r.count-stage.filter(Boolean).length), pool=Object.keys(P).filter(x=>!stage.includes(x)&&x!==r.host&&!isBlocked(x))");
+change("typing with 5+ on stage: seats in one row",
+  "if(c.kind==='room'){ const b=c.box, sTop=st?st.getBoundingClientRect().top:0, top=b.getBoundingClientRect().top-sTop; b.classList.add('rtype');",
+  "if(c.kind==='room'){ const b=c.box, sTop=st?st.getBoundingClientRect().top:0, top=b.getBoundingClientRect().top-sTop; b.classList.add('rtype');\n      /* more than 4 people on stage = two rows of seats: while typing they line up in one row (same order), so the chat keeps some room */\n      b.classList.toggle('rtype2', b.querySelectorAll('.tgrid .tseat:not(.empty)').length>4);");
+change("typing with 5+ on stage: back to two rows after",
+  "phone.querySelectorAll('.troom.rtype').forEach(b=>{ b.classList.remove('rtype');",
+  "phone.querySelectorAll('.troom.rtype').forEach(b=>{ b.classList.remove('rtype','rtype2','rtype3','rtype4');");
 
 change('top layers start below the clock (stackTop)',
   "let y=phone.classList.contains('hascall')?70:8;",
