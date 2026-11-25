@@ -386,6 +386,234 @@ change("typing in a talk room: the bar slides back (closing)",
   "phone.querySelectorAll('.troom.rtype').forEach(b=>{ b.classList.remove('rtype','rtype2','rtype3','rtype4','rtype5'); b.style.height=''; b.style.maxHeight='';",
   "phone.querySelectorAll('.troom.rtype').forEach(b=>{ const fb0=b.querySelector(':scope > form.tbar'), y0=fb0?fb0.getBoundingClientRect().top:0;\n      b.classList.remove('rtype','rtype2','rtype3','rtype4','rtype5'); b.style.transition=''; b.style.height=''; b.style.maxHeight=''; b._flip=null;\n      /* the bar and the messages slide back down with the keyboard (graphics chip only, no redraw of the room per frame) */\n      if(fb0&&!matchMedia('(prefers-reduced-motion: reduce)').matches){ const d=y0-fb0.getBoundingClientRect().top; if(Math.abs(d)>4) [fb0,b.querySelector('#roomscroll'),b.querySelector(':scope > .tdock')].filter(Boolean).forEach(e=>e.animate([{transform:'translateY('+d+'px)'},{transform:'none'}],{duration:300,easing:'cubic-bezier(.2,.85,.25,1)'})); }");
 
+
+// ── Real activity numbers on Me (founder, 25 Nov: "corrections given" never went up) ──
+change("Me: real activity numbers (log + this week + streak)",
+  "function vProfile(){",
+  "/* [app] (founder, 25 Nov) REAL activity numbers on Me. Every correction you send and every minute you spend in a call, a talk room or a live\n   is logged per day (and per language for minutes) in S.act; Me → This week, Today, the streak, the day dots and the time under each\n   language on the Language card are worked out from it (they used to be fixed numbers). In the real app the server keeps this log. */\nconst actKey=d=>d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate();\nfunction actDay(d){ const A=S.act||(S.act={v:1,days:{}}), k=actKey(d||new Date()); return A.days[k]||(A.days[k]={m:0,f:0,l:{}}); }\nfunction practiceAdd(min,lang,fix){ const D=actDay(); if(min){ D.m+=min; if(lang) D.l[lang]=(D.l[lang]||0)+min; } if(fix) D.f+=fix; save&&save(); }\nfunction actSeed(){ /* the demo account: 27 days of practice so it looks lived in; new accounts start empty */\n  const A={v:1,days:{}}, now=new Date(); for(let i=26;i>=0;i--){ const d=new Date(now); d.setDate(now.getDate()-i); const r=(d.getDate()*37+d.getMonth()*11)%23, m=i===0?12:14+r, fr=Math.round(m*.64);\n    A.days[actKey(d)]={m,f:i===0?0:i<7?(r%3)+1:(r%2),l:{French:fr,Spanish:m-fr}}; } return A; }\nfunction actSync(){ if(!S.act) S.act=S.noActSeed?{v:1,days:{}}:actSeed(); const A=S.act.days, now=new Date(), t0=new Date(now.getFullYear(),now.getMonth(),now.getDate());\n  const mon=new Date(t0); mon.setDate(t0.getDate()-((t0.getDay()+6)%7)); let mins=0, fixes=0; const days=[], lm={};\n  for(let i=0;i<7;i++){ const d=new Date(mon); d.setDate(mon.getDate()+i); const D=A[actKey(d)]; const past=d<=t0; days.push(past&&D&&(D.m>=1||D.f>0)?1:0); if(D&&past){ mins+=D.m; fixes+=D.f; Object.entries(D.l||{}).forEach(([l,v])=>lm[l]=(lm[l]||0)+v); } }\n  S.week={mins:Math.floor(mins),fixes,days}; const T=A[actKey(t0)]; S.today=Math.floor(T?T.m:0);\n  let st=0; const d=new Date(t0); const act=x=>{ const D=A[actKey(x)]; return D&&(D.m>=1||D.f>0); }; if(!act(d)) d.setDate(d.getDate()-1); while(act(d)&&st<4000){ st++; d.setDate(d.getDate()-1); } S.streak=st;\n  S.me.mins={}; Object.entries(lm).forEach(([l,v])=>S.me.mins[l]=Math.floor(v));\n  Object.keys(A).forEach(k=>{ const [y,mo,da]=k.split('-').map(Number); if((t0-new Date(y,mo-1,da))/864e5>60) delete A[k]; }); }\n/* time in a call, a talk room or a live counts every 15 s while the app is open (the language is the room's; calls count for the language you learn) */\nsetInterval(()=>{ try{ if(document.hidden||!S.onboarded||UI.ob||UI.auth) return; let lang=null; if(onCall()) lang=S.me.learning; else if(UI.room&&!UI.room.paused) lang=roomLangOf(RXo())||S.me.learning; if(lang) practiceAdd(.25,lang,0); }catch(e){} },15000);\nfunction vProfile(){ actSync();");
+change("corrections count (chat)",
+  "c.msgs.push({f:'fix',wrong:m.t,right,note:document.getElementById('corr-n').value.trim()||'Corrected by '+S.me.name,by:'me'});",
+  "c.msgs.push({f:'fix',wrong:m.t,right,note:document.getElementById('corr-n').value.trim()||'Corrected by '+S.me.name,by:'me'}); practiceAdd(0,null,1);");
+change("corrections count (Flick comments)",
+  "(S.extraComments[v]=S.extraComments[v]||[]).unshift(['me',m.text,t]); UI.ctab='fixes';",
+  "(S.extraComments[v]=S.extraComments[v]||[]).unshift(['me',m.text,t]); practiceAdd(0,null,1); UI.ctab='fixes';");
+change("new accounts start with an empty activity log",
+  "S.me.mins={}; S.me.photo=''; S.me.city=''; S.me.name='';",
+  "S.me.mins={}; S.act={v:1,days:{}}; S.me.photo=''; S.me.city=''; S.me.name='';");
+
+
+// ── Chats audit fixes (25 Nov): correction sheet keyboard, block, mute, hide Flicks, polls, calls, pin, long press ──
+change("correction sheet rides above the keyboard (no black screen)",
+  "const f=el.closest('form.tbar,form.lbar,.cwrap,.sheet form[data-f=comment]'); if(!f) return null;",
+  "const f=el.closest('form.tbar,form.lbar,.cwrap,.sheet form[data-f=comment],.sheet form[data-f=correct]'); if(!f) return null;");
+change("correction sheet rides above the keyboard (kind)",
+  "f.matches('form[data-f=comment]')?'sheet'",
+  "f.matches('form[data-f=comment],form[data-f=correct]')?'sheet'");
+change("correction sheet: small phones scroll to the box you type in",
+  "if(s0.offsetHeight>room){ s0.style.maxHeight=room+'px'; s0.scrollTop=s0.scrollHeight; }",
+  "if(s0.offsetHeight>room){ s0.style.maxHeight=room+'px'; if(c.f.matches('[data-f=correct]')){ const er=c.el.getBoundingClientRect(), sr2=s0.getBoundingClientRect(); s0.scrollTop+=er.top-sr2.top-76; } else s0.scrollTop=s0.scrollHeight; }");
+change("correction: time + no English default note + confirmation",
+  "c.msgs.push({f:'fix',wrong:m.t,right,note:document.getElementById('corr-n').value.trim()||'Corrected by '+S.me.name,by:'me'}); practiceAdd(0,null,1); UI.sheet=null; UI.scrollChat=true; render();",
+  "c.msgs.push({f:'fix',wrong:m.t,right,note:document.getElementById('corr-n').value.trim(),by:'me',at:Date.now()}); practiceAdd(0,null,1); UI.sheet=null; UI.scrollChat=true; render(); toast('Correction sent');");
+change("block: leave every screen of that person",
+  "UI.sheet=null; const c0=cur(); if(c0&&(c0.id===v)) S.stack.pop(); render(); toast(P[v].name+' is blocked. They can’t see you or message you.'); break; }",
+  "UI.sheet=null; while(cur()&&cur().id===v) S.stack.pop(); if(UI.call&&UI.call.id===v) act0('endcall'); render(); toast(P[v].name+' is blocked. They can’t see you or message you.'); break; }");
+change("unblock: the chat comes back to the list",
+  "case 'unblock': S.blocked=S.blocked.filter(x=>x!==v); render();",
+  "case 'unblock': S.blocked=S.blocked.filter(x=>x!==v); if(S.chats[v]&&S.chats[v].msgs.length&&!S.order.includes(v)) S.order.unshift(v); render();");
+change("blocked: no messages",
+  "if(f.dataset.f==='send'){ const inp=document.getElementById('msg-'+v), t=inp.value.trim(); if(!t) return;",
+  "if(f.dataset.f==='send'){ const inp=document.getElementById('msg-'+v), t=inp.value.trim(); if(!t) return; if(isBlocked(v)){ toast('You blocked this person · Unblock them to send messages'); return; }");
+change("blocked: no replies",
+  "function reply(id){\n",
+  "function reply(id){ if(isBlocked(id)) return;\n");
+change("blocked: no calls",
+  "case 'call': { const [id,type]=v.split(':'); if(!P[id]) break;",
+  "case 'call': { const [id,type]=v.split(':'); if(!P[id]) break; if(isBlocked(id)){ toast('You blocked this person · Unblock them to call'); break; } if(S.cset&&S.cset[id]&&S.cset[id].calls===false){ toast('Calls are off for this chat · Turn them on in Chat settings'); break; }");
+change("blocked: no gifts",
+  "case 'gift-open': if(String(v).startsWith('@')){",
+  "case 'gift-open': if(P[v]&&isBlocked(v)){ toast('You blocked this person · Unblock them to send gifts'); break; } if(String(v).startsWith('@')){");
+change("mute (swipe) = mute (chat settings)",
+  "case 'chat-mute': S.cmute=S.cmute||{}; S.cmute[v]=!S.cmute[v];",
+  "case 'chat-mute': S.cmute=S.cmute||{}; S.cmute[v]=!S.cmute[v]; S.muted[v]=S.cmute[v];");
+change("mute (chat settings) = mute (swipe)",
+  "if(k==='notif'){ S.muted[id]=!S.muted[id]; }",
+  "if(k==='notif'){ S.muted[id]=!S.muted[id]; S.cmute=S.cmute||{}; S.cmute[id]=S.muted[id]; }");
+change("muted chats: no message banners",
+  "if(who&&isMutedU(who)) return false;",
+  "if(who&&isMutedU(who)) return false; if(kind==='msg'&&who&&((S.cmute||{})[who]||(S.muted||{})[who])){ try{ actLog(kind,html,go,who,o); }catch(e){} return false; }");
+change("chat settings: Hide their Flicks works",
+  "const all=[...S.myMoments.filter(m=>!m.old),...MOMENTS0].filter(m=>!hid('flick',m.id)&&!isBlocked(m.by)&&!isMutedU(m.by));",
+  "const all=[...S.myMoments.filter(m=>!m.old),...MOMENTS0].filter(m=>!hid('flick',m.id)&&!isBlocked(m.by)&&!isMutedU(m.by)&&!((S.cset||{})[m.by]||{}).hideTheirs);");
+change("poll answers are full height",
+  "class=\"pin inputbar\" maxlength=\"60\" placeholder=\"${TX('Answer '+(k+1))}\" style=\"height:46px;",
+  "class=\"pin inputbar\" maxlength=\"60\" placeholder=\"${TX('Answer '+(k+1))}\" style=\"flex:none;height:46px;");
+change("call end: a line in the chat; Duo day goes up once a day",
+  "const who=UI.call.id; UI.call=null; if(S.duo[who]) S.duo[who]++;",
+  "const who=UI.call.id, sec0=UI.call.sec||0, ty0=UI.call.type; UI.call=null; { const dk=new Date().toDateString(); S.duoDay=S.duoDay||{}; if(S.duo[who]&&S.duoDay[who]!==dk&&sec0>=60){ S.duo[who]++; S.duoDay[who]=dk; } }\n      if(v!=='drop'&&sec0>0){ const c=S.chats[who]||(S.chats[who]={msgs:[],unread:0}); c.msgs.push({f:'tip',t:(ty0==='video'?'📹 Video call · ':'📞 Voice call · ')+Math.floor(sec0/60)+':'+String(sec0%60).padStart(2,'0'),at:Date.now()}); }");
+change("pinned chats come first",
+  "+gids.map(groupRow).join('')+[...S.pinned.filter(x=>S.order.includes(x)),...S.order.filter(x=>!S.pinned.includes(x))].filter(x=>!tIds.includes(x)).map(chatRow).join('');",
+  "+S.pinned.filter(x=>S.order.includes(x)&&!tIds.includes(x)).map(chatRow).join('')+gids.map(groupRow).join('')+S.order.filter(x=>!S.pinned.includes(x)&&!tIds.includes(x)).map(chatRow).join('');");
+change("pinned chats show the pin",
+  "<span class=\"n\">${p.teacher?`<span class=\"tpin\" aria-label=\"Pinned\">${ic('pin')}</span>`:''}",
+  "<span class=\"n\">${p.teacher||(S.pinned||[]).includes(id)?`<span class=\"tpin\" aria-label=\"Pinned\">${ic('pin')}</span>`:''}");
+change("press-and-hold menu stays open when the finger lifts",
+  "if(a==='close-veil'){ if(e.target===el){ UI.sheet=null; render(); } return; }",
+  "if(a==='close-veil'){ if(UI.lpFired&&e.isTrusted){ UI.lpFired=false; return; } if(e.target===el){ UI.sheet=null; render(); } return; }");
+change("correction card: no empty note line",
+  "<span class=\"muted\" style=\"font-size:12.5px\">${esc(m.note)}</span></div>`;",
+  "${m.note?`<span class=\"muted\" style=\"font-size:12.5px\">${esc(m.note)}</span>`:\"\"}</div>`;");
+change("chat fixes: texts in 8 languages",
+  "\nThe stage is full|La scène est pleine|El escenario está lleno|O palco está cheio|Die Bühne ist voll|Il palco è pieno|ステージは満席です|المنصة ممتلئة\n",
+  "\nThe stage is full|La scène est pleine|El escenario está lleno|O palco está cheio|Die Bühne ist voll|Il palco è pieno|ステージは満席です|المنصة ممتلئة\nCorrection sent|Correction envoyée|Corrección enviada|Correção enviada|Korrektur gesendet|Correzione inviata|添削を送りました|تم إرسال التصحيح\nYou blocked this person · Unblock them to send messages|Tu as bloqué cette personne · Débloque-la pour envoyer des messages|Bloqueaste a esta persona · Desbloquéala para enviar mensajes|Você bloqueou esta pessoa · Desbloqueie para enviar mensagens|Du hast diese Person blockiert · Hebe die Blockierung auf, um Nachrichten zu senden|Hai bloccato questa persona · Sbloccala per inviare messaggi|この人をブロック中です · メッセージを送るにはブロックを解除してください|لقد حظرت هذا الشخص · ألغِ الحظر لإرسال الرسائل\nYou blocked this person · Unblock them to call|Tu as bloqué cette personne · Débloque-la pour l’appeler|Bloqueaste a esta persona · Desbloquéala para llamar|Você bloqueou esta pessoa · Desbloqueie para ligar|Du hast diese Person blockiert · Hebe die Blockierung auf, um anzurufen|Hai bloccato questa persona · Sbloccala per chiamare|この人をブロック中です · 通話するにはブロックを解除してください|لقد حظرت هذا الشخص · ألغِ الحظر للاتصال\nYou blocked this person · Unblock them to send gifts|Tu as bloqué cette personne · Débloque-la pour envoyer des cadeaux|Bloqueaste a esta persona · Desbloquéala para enviar regalos|Você bloqueou esta pessoa · Desbloqueie para enviar presentes|Du hast diese Person blockiert · Hebe die Blockierung auf, um Geschenke zu senden|Hai bloccato questa persona · Sbloccala per inviare regali|この人をブロック中です · ギフトを送るにはブロックを解除してください|لقد حظرت هذا الشخص · ألغِ الحظر لإرسال الهدايا\nCalls are off for this chat · Turn them on in Chat settings|Les appels sont désactivés pour cette discussion · Active-les dans les réglages de la discussion|Las llamadas están desactivadas en este chat · Actívalas en los ajustes del chat|As chamadas estão desligadas nesta conversa · Ative nas configurações da conversa|Anrufe sind für diesen Chat aus · Schalte sie in den Chat-Einstellungen ein|Le chiamate sono disattivate per questa chat · Attivale nelle impostazioni della chat|このチャットでは通話がオフです · チャット設定でオンにしてください|المكالمات متوقفة في هذه المحادثة · فعّلها من إعدادات المحادثة\n");
+change("call lines in the chat: translated (rules)",
+  "[/^10 min left in this (room|live)$/,'w10a']",
+  "[/^📞 Voice call · (\\d+:\\d\\d)$/,'callLineA'],[/^📹 Video call · (\\d+:\\d\\d)$/,'callLineV'],[/^10 min left in this (room|live)$/,'w10a']");
+change("call lines in the chat: translated (texts)",
+  "w10a:{fr:'Plus que 10 min dans ce salon'",
+  "callLineA:{fr:'📞 Appel vocal · $1',es:'📞 Llamada de voz · $1',pt:'📞 Chamada de voz · $1',de:'📞 Sprachanruf · $1',it:'📞 Chiamata vocale · $1',ja:'📞 音声通話 · $1',ar:'📞 مكالمة صوتية · $1'},callLineV:{fr:'📹 Appel vidéo · $1',es:'📹 Videollamada · $1',pt:'📹 Chamada de vídeo · $1',de:'📹 Videoanruf · $1',it:'📹 Videochiamata · $1',ja:'📹 ビデオ通話 · $1',ar:'📹 مكالمة فيديو · $1'},w10a:{fr:'Plus que 10 min dans ce salon'");
+
+
+// ── Sign-up / Connect / profile audit fixes (25 Nov) ──
+change("only finished sign-ups count as accounts",
+  "return Object.values(o).filter(a=>a&&a.me&&a.me.handle&&a.lastAuth); }",
+  "return Object.values(o).filter(a=>a&&a.me&&a.me.handle&&a.lastAuth&&(a.acct==='demo'||!a.signupRec||a.signupRec.status==='finished')); }");
+change("log in with no account on this phone → create one",
+  "case 'auth-approve': if(!UI.auth) break; UI.auth.approved=true; authDone();",
+  "case 'auth-approve': if(!UI.auth) break; if(UI.auth.mode==='signin'&&!UI.auth.picked){ UI.auth.mode='create'; UI.auth.step=null; authDone(); setTimeout(()=>toast('No account with this log-in yet · Let’s create yours'),300); break; } UI.auth.approved=true; authDone();");
+change("new account: nothing left over from the previous one",
+  "UI.auth=null; UI.ob=true; UI.obStep=0;",
+  "UI.auth=null; UI.ob=true; UI.obStep=0; UI.promise=false; UI.natTouched=false; UI.obAddL=false; UI.bdOpen=false; UI.gq=''; UI.gsTab=null;");
+change("log out: clear the search",
+  "case 'logout': S.onboarded=false; S.stack=[]; UI.ob=false;",
+  "case 'logout': S.onboarded=false; S.stack=[]; UI.ob=false; UI.gq=''; UI.gsTab=null;");
+change("new accounts: no demo message requests (chats)",
+  "const reqList=REQS.filter(([id])=>!S.reqDone[id]);",
+  "const reqList=S.noActSeed?[]:REQS.filter(([id])=>!S.reqDone[id]);");
+change("usernames: reserved names, 20 max, not taken by another account on this phone",
+  "if(TAKEN.includes(u)) return {ok:false,taken:true,msg:'@'+u+' is taken. Try one of these:'}; return {ok:true,msg:'✓ @'+u+' is available'}; }",
+  "if(u.length>20) return {ok:false,msg:'20 characters max'}; if(TAKEN.includes(u)||/^(admin|administrator|moderator|mod|staff|team|help|support|root|system|security|official|talk_?amigo.*|.*talk_?amigo|teacher)$/.test(u)||(()=>{ try{ return Object.values(acctsLoad()).some(a=>a&&a.me&&a.me.handle===u&&a.acct!==S.acct); }catch(e){ return false; } })()) return {ok:false,taken:true,msg:'@'+u+' is taken. Try one of these:'}; return {ok:true,msg:'✓ @'+u+' is available'}; }");
+change("username can be changed once every 30 days",
+  "if(u!==S.me.handle){ if(!userCheck(u).ok){ toast('That username isn’t available'); return; } S.me.handle=u; }",
+  "if(u!==S.me.handle){ if(!userCheck(u).ok){ toast('That username isn’t available'); return; } if(S.unameAt&&Date.now()-S.unameAt<30*864e5){ toast('You can change your username once every 30 days'); return; } S.me.handle=u; S.unameAt=Date.now(); }");
+change("search: blocked people’s Flicks are hidden",
+  "const flicks=allFlicks().filter(m=>!hid('flick',m.id)&&(",
+  "const flicks=allFlicks().filter(m=>!hid('flick',m.id)&&!isBlocked(m.by)&&(");
+change("search: blocked people’s rooms are hidden",
+  "...planAll().map(r=>['lesson',r])].filter(([k,r])=>has(r.title)",
+  "...planAll().map(r=>['lesson',r])].filter(([k,r])=>!isBlocked(r.host)&&(has(r.title)");
+change("search: rooms filter bracket",
+  "||(P[r.host]&&has(P[r.host].name)));\n  const langs=",
+  "||(P[r.host]&&has(P[r.host].name))));\n  const langs=");
+change("block: unfollow both ways and leave close friends",
+  "case 'block': { S.blocked=[...new Set([...(S.blocked||[]),v])]; S.order=S.order.filter(x=>x!==v);",
+  "case 'block': { S.blocked=[...new Set([...(S.blocked||[]),v])]; S.order=S.order.filter(x=>x!==v); if(S.follows&&S.follows[v]){ delete S.follows[v]; } S.close=(S.close||[]).filter(x=>x!==v); if(Array.isArray(S.followsMe)) S.followsMe=S.followsMe.filter(x=>x!==v); else if(S.followsMe&&typeof S.followsMe==='object') delete S.followsMe[v];");
+change("follow lists: real followers only, never blocked people",
+  "list=(k==='followers'?(S.noActSeed?Object.keys(P).filter(followsMe):Object.keys(P)):Object.keys(P).filter(id=>S.follows[id])).filter(id=>P[id].name.toLowerCase().includes(q));",
+  "list=(k==='followers'?Object.keys(P).filter(followsMe):Object.keys(P).filter(id=>S.follows[id])).filter(id=>!isBlocked(id)&&P[id].name.toLowerCase().includes(q));");
+change("following list: no \"+ more\" under an empty list",
+  "${k==='following'&&!q&&(S.followBase==null?86:S.followBase)>0?",
+  "${k==='following'&&!q&&list.length&&(S.followBase==null?86:S.followBase)>0?");
+change("Duo: an invite, accepted after a moment (not started at once)",
+  "case 'duo': if(!S.duo[v]){ S.duo[v]=1; render(); toast('Duo invite sent to '+P[v].name); } break;",
+  "case 'duo': if(!S.duo[v]&&!(S.duoInv||{})[v]){ S.duoInv=S.duoInv||{}; S.duoInv[v]=Date.now(); render(); toast('Duo invite sent to '+P[v].name); setTimeout(()=>{ if(!S.duoInv||!S.duoInv[v]||isBlocked(v)) return; delete S.duoInv[v]; S.duo[v]=1; const c=S.chats[v]||(S.chats[v]={msgs:[],unread:0}); c.msgs.push({f:'tip',t:'🤝 '+P[v].name+' accepted your Duo invite · Day 1',at:Date.now()}); if(!S.order.includes(v)) S.order.unshift(v); render(); notify('msg','<b>'+P[v].name+'</b> accepted your Duo invite 🤝','chat:'+v,v); },6000); } else if((S.duoInv||{})[v]) toast('Invite already sent · '+P[v].name+' will answer soon'); break;");
+change("wave: real time, chat goes to the top",
+  "c.msgs.push({f:'me',t:'👋'}); if(!S.order.includes(v)) S.order.unshift(v);",
+  "c.msgs.push({f:'me',t:'👋',at:Date.now(),st:1}); S.order=[v,...S.order.filter(x=>x!==v)];");
+change("In a room now: 1 friend / N friends",
+  "${L.length?`<span style=\"color:var(--tint-text)\">${L.length} friends</span>`:''}",
+  "${L.length?`<span style=\"color:var(--tint-text)\">${L.length===1?TX('1 friend'):L.length+' friends'}</span>`:''}");
+change("tour: Coins card finds the coins in every language",
+  "{sel:'[aria-label=Coins]',t:'Coins'",
+  "{sel:'.coinbal:not([data-a=go-dia])',t:'Coins'");
+change("French: no guessed gender (welcome)",
+  "Just looking? Try the demo|Juste curieux ? Essaie la démo|",
+  "Just looking? Try the demo|Envie de jeter un œil ? Essaie la démo|");
+change("French: no guessed gender (promise)",
+  "|sois gentil et patient, reste respectueux, sois toi-même.|",
+  "|fais preuve de gentillesse et de patience, garde le respect, sois toi-même.|");
+change("sign-up/profile fixes: texts in 8 languages",
+  "\nThe stage is full|La scène est pleine|El escenario está lleno|O palco está cheio|Die Bühne ist voll|Il palco è pieno|ステージは満席です|المنصة ممتلئة\n",
+  "\nThe stage is full|La scène est pleine|El escenario está lleno|O palco está cheio|Die Bühne ist voll|Il palco è pieno|ステージは満席です|المنصة ممتلئة\nNo account with this log-in yet · Let’s create yours|Pas encore de compte avec cette connexion · Créons le tien|Aún no hay cuenta con este inicio de sesión · Vamos a crear la tuya|Ainda não há conta com este login · Vamos criar a sua|Noch kein Konto mit dieser Anmeldung · Lass uns deins erstellen|Nessun account con questo accesso · Creiamo il tuo|このログイン方法のアカウントはまだありません · 作成しましょう|لا يوجد حساب بهذا الدخول بعد · لننشئ حسابك\n20 characters max|20 caractères max|20 caracteres como máximo|No máximo 20 caracteres|Höchstens 20 Zeichen|Massimo 20 caratteri|20文字まで|20 حرفًا كحد أقصى\nYou can change your username once every 30 days|Tu peux changer ton nom d’utilisateur une fois tous les 30 jours|Puedes cambiar tu nombre de usuario una vez cada 30 días|Você pode mudar seu nome de usuário uma vez a cada 30 dias|Du kannst deinen Benutzernamen alle 30 Tage einmal ändern|Puoi cambiare il nome utente una volta ogni 30 giorni|ユーザー名の変更は30日に1回までです|يمكنك تغيير اسم المستخدم مرة كل 30 يومًا\n1 friend|1 ami·e|1 amigo|1 amigo|1 Freund|1 amico|友だち1人|صديق واحد\nAt least 3 characters|Au moins 3 caractères|Al menos 3 caracteres|Pelo menos 3 caracteres|Mindestens 3 Zeichen|Almeno 3 caratteri|3文字以上|3 أحرف على الأقل\nOnly lowercase letters, numbers, _ and .|Seulement des minuscules, des chiffres, _ et .|Solo minúsculas, números, _ y .|Só letras minúsculas, números, _ e .|Nur Kleinbuchstaben, Zahlen, _ und .|Solo lettere minuscole, numeri, _ e .|小文字・数字・_ と . のみ|أحرف إنجليزية صغيرة وأرقام و _ و . فقط\nCan’t start or end with _ or .|Ne peut pas commencer ni finir par _ ou .|No puede empezar ni terminar con _ o .|Não pode começar nem terminar com _ ou .|Darf nicht mit _ oder . beginnen oder enden|Non può iniziare o finire con _ o .|_ や . で始めたり終えたりできません|لا يبدأ ولا ينتهي بـ _ أو .\n");
+change("Duo accepted line + invite already sent: translated (rules)",
+  "[/^10 min left in this (room|live)$/,'w10a']",
+  "[/^🤝 (.+) accepted your Duo invite · Day 1$/,'duoAcc'],[/^Invite already sent · (.+) will answer soon$/,'duoWait'],[/^(.+) level set to (A1|A2|B1|B2|C1|C2)$/,'lvlSet'],[/^10 min left in this (room|live)$/,'w10a']");
+change("Duo accepted line + invite already sent: translated (texts)",
+  "w10a:{fr:'Plus que 10 min dans ce salon'",
+  "duoAcc:{fr:'🤝 $1 a accepté ton invitation Duo · Jour 1',es:'🤝 $1 aceptó tu invitación Duo · Día 1',pt:'🤝 $1 aceitou seu convite Duo · Dia 1',de:'🤝 $1 hat deine Duo-Einladung angenommen · Tag 1',it:'🤝 $1 ha accettato il tuo invito Duo · Giorno 1',ja:'🤝 $1さんがDuoの招待を承認しました · 1日目',ar:'🤝 قَبِل $1 دعوة الثنائي · اليوم 1'},duoWait:{fr:'Invitation déjà envoyée · $1 va bientôt répondre',es:'Invitación ya enviada · $1 responderá pronto',pt:'Convite já enviado · $1 vai responder em breve',de:'Einladung schon gesendet · $1 antwortet bald',it:'Invito già inviato · $1 risponderà presto',ja:'招待は送信済みです · $1さんからまもなく返事があります',ar:'تم إرسال الدعوة بالفعل · سيرد $1 قريبًا'},lvlSet:{fr:'Niveau en $1 : $2',es:'Nivel de $1: $2',pt:'Nível de $1: $2',de:'$1-Niveau: $2',it:'Livello di $1: $2',ja:'$1のレベル：$2',ar:'مستوى $1: $2'},w10a:{fr:'Plus que 10 min dans ce salon'");
+
+
+// ── Privacy settings applied + muted people (25 Nov audit) ──
+change("Who can send me gifts: People I follow is applied",
+  "function giftIn(from,gid,where,away){ const g=GIFTS.find(x=>x.id===gid); if(!g||!P[from]||isBlocked(from)) return;",
+  "function giftIn(from,gid,where,away){ const g=GIFTS.find(x=>x.id===gid); if(!g||!P[from]||isBlocked(from)) return; if(S.prefs.whoGift==='follow'&&!(S.follows||{})[from]) return;");
+change("Who can message me: message requests respect it",
+  "const reqList=S.noActSeed?[]:REQS.filter(([id])=>!S.reqDone[id]);",
+  "const reqList=S.noActSeed||S.prefs.whoMsg==='none'?[]:REQS.filter(([id])=>!S.reqDone[id]&&!isBlocked(id)&&(S.prefs.whoMsg!=='follow'||(S.follows||{})[id]));");
+change("In a room now: muted people are left out",
+  "let circle=new Set([...Object.keys(S.follows).filter(k=>S.follows[k]),...Object.keys(S.chats)].filter(k=>!isBlocked(k)));",
+  "let circle=new Set([...Object.keys(S.follows).filter(k=>S.follows[k]),...Object.keys(S.chats)].filter(k=>!isBlocked(k)&&!isMutedU(k)));");
+
+
+// ── Money fixes (25 Nov audit): renewal date, cash-out rules, Infinity while on Plus, frame confirm ──
+change("plans: real renewal date (helper)",
+  "function vProfile(){ actSync();",
+  "/* [app] the next renewal date of Plus, from the day it was bought (it was always \"30 Nov 2026\") */\nfunction renewOn(){ const per=S.planPer||'month', d=new Date(S.planAt||Date.now()), now=Date.now(); let g=0; const step=x=>{ if(per==='year') x.setFullYear(x.getFullYear()+1); else if(per==='week') x.setDate(x.getDate()+7); else x.setMonth(x.getMonth()+1); }; step(d); while(d.getTime()<=now&&g++<600) step(d); return dayFmt(d,{day:'numeric',month:'short',year:'numeric'}); }\nfunction vProfile(){ actSync();");
+change("plans: remember when it was bought; Infinity while on Plus → reminder to cancel Plus",
+  "S.owned=v; S.planPer=UI.plan; S.subCancelled=false; S.plan=v; S.vip=true;",
+  "const wasPlus=S.plan==='plus'&&!S.subCancelled&&v==='infinity'; S.owned=v; if(v==='plus'){ S.planPer=UI.plan; S.planAt=Date.now(); } S.subCancelled=false; S.plan=v; S.vip=true; if(wasPlus) setTimeout(()=>toast('Infinity is yours · Cancel your Plus subscription in your Apple ID settings so you’re not charged again',7000),2300);");
+change("manage subscription: real dates",
+  "${S.subCancelled?'Expires 30 Nov 2026':'Renews 30 Nov 2026 · '+(S.planPer==='year'",
+  "${S.subCancelled?TX('Expires')+' '+renewOn():TX('Renews')+' '+renewOn()+' · '+(S.planPer==='year'");
+change("cancel / renew messages: real dates",
+  "case 'subcancel': S.subCancelled=true; UI.sheet=null; render(); toast('Cancelled. You keep Plus until 30 Nov 2026.'); break;\n    case 'resub': S.subCancelled=false; UI.sheet=null; render(); toast('Plus will renew on 30 Nov 2026'); break;",
+  "case 'subcancel': S.subCancelled=true; UI.sheet=null; render(); toast('Cancelled. You keep Plus until '+renewOn()+'.'); break;\n    case 'resub': S.subCancelled=false; UI.sheet=null; render(); toast('Plus will renew on '+renewOn()); break;");
+change("cash-out: only Diamonds past the hold, 2 a month",
+  "case 'cash-ok': { const tr=TIERS.find(x=>x[0]===+v); if(S.diamonds<tr[0]) return;",
+  "case 'cash-ok': { const tr=TIERS.find(x=>x[0]===+v); const avail=Math.max(0,(S.diamonds||0)-(S.pending||0)); if(avail<tr[0]){ toast('Only Diamonds past the 14-day hold can be cashed out · '+n0(avail)+' available',5000); return; } const mk=new Date().getFullYear()+'-'+new Date().getMonth(); S.cashouts=(S.cashouts||[]).filter(x=>x.startsWith(mk)); if(S.cashouts.length>=2){ toast('2 cash-outs a month max · Next one from the 1st of next month',5000); return; } if(S.diamonds<tr[0]) return;");
+change("cash-out: count it for the month",
+  "S.diamonds-=tr[0]; hist('d','Cash-out '+tierCash(TIERS.indexOf(tr))+' (demo)',-tr[0]);",
+  "S.diamonds-=tr[0]; { const mk=new Date().getFullYear()+'-'+new Date().getMonth(); (S.cashouts=S.cashouts||[]).push(mk+'-'+Date.now()); } hist('d','Cash-out '+tierCash(TIERS.indexOf(tr))+' (demo)',-tr[0]);");
+change("Diamonds → coins: only Diamonds past the hold",
+  "case 'convert': if(S.diamonds<100){ toast('You need 100 Diamonds'); return; }",
+  "case 'convert': if(Math.max(0,(S.diamonds||0)-(S.pending||0))<100){ toast('You need 100 Diamonds past the 14-day hold'); return; }");
+change("frames: confirm before spending coins",
+  "if(S.coins<F[2]){ toast('Not enough coins'); return; } S.coins-=F[2];",
+  "if(S.coins<F[2]){ toast('Not enough coins'); return; } if(UI.frameOK!==v){ UI.frameOK=v; toast('Tap again to buy the '+F[1]+' frame · '+n0(F[2])+' coins',3500); clearTimeout(UI.frameT); UI.frameT=setTimeout(()=>{ UI.frameOK=null; },3500); break; } UI.frameOK=null; S.coins-=F[2];");
+change("money fixes: texts in 8 languages",
+  "\nThe stage is full|La scène est pleine|El escenario está lleno|O palco está cheio|Die Bühne ist voll|Il palco è pieno|ステージは満席です|المنصة ممتلئة\n",
+  "\nThe stage is full|La scène est pleine|El escenario está lleno|O palco está cheio|Die Bühne ist voll|Il palco è pieno|ステージは満席です|المنصة ممتلئة\nRenews|Renouvellement le|Se renueva el|Renova em|Verlängert sich am|Si rinnova il|更新日|يتجدد في\nExpires|Expire le|Vence el|Expira em|Läuft ab am|Scade il|期限|ينتهي في\nYou need 100 Diamonds past the 14-day hold|Il te faut 100 Diamants passés le délai de 14 jours|Necesitas 100 Diamantes que hayan pasado la espera de 14 días|Você precisa de 100 Diamantes após a espera de 14 dias|Du brauchst 100 Diamanten nach der 14-tägigen Wartezeit|Ti servono 100 Diamanti oltre l’attesa di 14 giorni|14日間の保留期間を過ぎたダイヤが100個必要です|تحتاج إلى 100 ماسة تجاوزت فترة الانتظار البالغة 14 يومًا\n2 cash-outs a month max · Next one from the 1st of next month|2 retraits par mois max · Le prochain à partir du 1er du mois prochain|Máximo 2 retiros al mes · El siguiente desde el día 1 del próximo mes|No máximo 2 saques por mês · O próximo a partir do dia 1 do mês que vem|Höchstens 2 Auszahlungen im Monat · Die nächste ab dem 1. des nächsten Monats|Massimo 2 prelievi al mese · Il prossimo dal 1° del mese prossimo|出金は月2回までです · 次回は来月1日から|سحبان كحد أقصى في الشهر · السحب التالي من أول الشهر القادم\nInfinity is yours · Cancel your Plus subscription in your Apple ID settings so you’re not charged again|Infinity est à toi · Annule ton abonnement Plus dans les réglages de ton identifiant Apple pour ne plus être débité|Infinity es tuyo · Cancela tu suscripción Plus en los ajustes de tu ID de Apple para que no te cobren otra vez|O Infinity é seu · Cancele a assinatura Plus nos ajustes do seu ID Apple para não ser cobrado de novo|Infinity gehört dir · Kündige dein Plus-Abo in deinen Apple-ID-Einstellungen, damit du nicht erneut zahlst|Infinity è tuo · Annulla l’abbonamento Plus nelle impostazioni dell’ID Apple per non pagare di nuovo|Infinityを購入しました · 再度請求されないよう、Apple IDの設定でPlusを解約してください|أصبح Infinity لك · ألغِ اشتراك Plus من إعدادات Apple ID حتى لا تُحاسَب مجددًا\n");
+change("money fixes: texts with numbers/dates (rules)",
+  "[/^10 min left in this (room|live)$/,'w10a']",
+  "[/^Cancelled\\. You keep Plus until (.+)\\.$/,'subC'],[/^Plus will renew on (.+)$/,'subR'],[/^Only Diamonds past the 14-day hold can be cashed out · (.+) available$/,'cashHold'],[/^Tap again to buy the (.+) frame · (.+) coins$/,'frameAgain'],[/^10 min left in this (room|live)$/,'w10a']");
+change("money fixes: texts with numbers/dates (8 languages)",
+  "w10a:{fr:'Plus que 10 min dans ce salon'",
+  "subC:{fr:'Annulé. Tu gardes Plus jusqu’au $1.',es:'Cancelado. Mantienes Plus hasta el $1.',pt:'Cancelado. Você mantém o Plus até $1.',de:'Gekündigt. Du behältst Plus bis $1.',it:'Annullato. Tieni Plus fino al $1.',ja:'解約しました。$1までPlusを使えます。',ar:'تم الإلغاء. يبقى Plus لك حتى $1.'},subR:{fr:'Plus sera renouvelé le $1',es:'Plus se renovará el $1',pt:'O Plus será renovado em $1',de:'Plus verlängert sich am $1',it:'Plus si rinnoverà il $1',ja:'Plusは$1に更新されます',ar:'سيتجدد Plus في $1'},cashHold:{fr:'Seuls les Diamants passés le délai de 14 jours peuvent être retirés · $1 disponibles',es:'Solo se pueden retirar los Diamantes que pasaron la espera de 14 días · $1 disponibles',pt:'Só os Diamantes após a espera de 14 dias podem ser sacados · $1 disponíveis',de:'Nur Diamanten nach der 14-tägigen Wartezeit können ausgezahlt werden · $1 verfügbar',it:'Solo i Diamanti oltre l’attesa di 14 giorni si possono prelevare · $1 disponibili',ja:'14日間の保留を過ぎたダイヤのみ出金できます · 利用可能 $1',ar:'لا يمكن سحب إلا الماس الذي تجاوز فترة الانتظار البالغة 14 يومًا · المتاح $1'},frameAgain:{fr:'Touche encore pour acheter le cadre $1 · $2 pièces',es:'Toca otra vez para comprar el marco $1 · $2 monedas',pt:'Toque de novo para comprar a moldura $1 · $2 moedas',de:'Nochmal tippen, um den Rahmen $1 zu kaufen · $2 Münzen',it:'Tocca di nuovo per comprare la cornice $1 · $2 monete',ja:'もう一度タップでフレーム「$1」を購入 · $2コイン',ar:'اضغط مرة أخرى لشراء إطار $1 · $2 عملة'},w10a:{fr:'Plus que 10 min dans ce salon'");
+
+
+// ── Flicks / Me fixes (25 Nov audit) ──
+change("new Flick: language and level you picked (not always your main language)",
+  "lang:ED.lang||S.me.learning,lvl:ED.lvl||'Beginner',",
+  "lang:ED.lang||S.me.learning,lvl:ED.lvl||({A1:'Beginner',A2:'Beginner',B1:'Intermediate',B2:'Intermediate',C1:'Advanced',C2:'Advanced'})[(S.me.levels||{})[ED.lang||S.me.learning]||S.me.level]||'Beginner',");
+change("new Flick caption: the language you wrote in",
+  "cap:'Learning '+S.me.learning+' '+S.me.level+' · corrections welcome'",
+  "cap:'Learning '+(ED.lang||S.me.learning)+' '+((S.me.levels||{})[ED.lang||S.me.learning]||S.me.level)+' · corrections welcome'");
+change("reactions after posting are real (likes and the comment show on the Flick; tapping opens it)",
+  "toast('Flick posted'); setTimeout(()=>notify('like','<b>Kenji</b> and 4 others liked your Flick','tab:moments','kenji',{more:['lucia','reem']}),6000); setTimeout(()=>notify('comment','<b>Camille</b> commented: “Trop bien ! 👏”','tab:moments','camille'),10000);",
+  "toast('Flick posted'); const nid=(S.myMoments[0]||{}).id; setTimeout(()=>{ const mm=S.myMoments.find(x=>x.id===nid); if(!mm) return; mm.likes=(mm.likes||0)+5; save(); notify('like','<b>Kenji</b> and 4 others liked your Flick','flick:'+nid,'kenji',{more:['lucia','reem']}); },6000); setTimeout(()=>{ const mm=S.myMoments.find(x=>x.id===nid); if(!mm||isBlocked('camille')) return; (S.extraComments[nid]=S.extraComments[nid]||[]).push(['camille','Trop bien ! 👏','']); save(); notify('comment','<b>Camille</b> commented: “Trop bien ! 👏”','flick:'+nid,'camille'); },10000);");
+change("Automatic translation asks for AI consent first",
+  "(a==='pref'&&v==='autoTr'&&!S.prefs.autoTr))){",
+  "(a==='pref'&&v==='autoTr'&&!S.prefs.autoTr)||(a==='prefv'&&el&&el.dataset&&el.dataset.k==='trMode'&&v==='auto'))){");
+change("profile completion: \"add a profile photo\" opens the photo picker",
+  "<button data-a=\"sheet\" data-v=\"intro\" style=\"border:0;background:none;padding:0;font-size:13px;font-weight:700;color:var(--tint-text)\">Profile ${st}% complete",
+  "<button data-a=\"${!me.photo?'go':'sheet'}\" data-v=\"${!me.photo?'editp':'intro'}\" style=\"border:0;background:none;padding:0;font-size:13px;font-weight:700;color:var(--tint-text)\">Profile ${st}% complete");
+
+
+// ── Wallet / Shop / purchase texts left in English (25 Nov audit) ──
+change("wallet, shop and purchase texts in 8 languages",
+  "\nThe stage is full|La scène est pleine|El escenario está lleno|O palco está cheio|Die Bühne ist voll|Il palco è pieno|ステージは満席です|المنصة ممتلئة\n",
+  "\nThe stage is full|La scène est pleine|El escenario está lleno|O palco está cheio|Die Bühne ist voll|Il palco è pieno|ステージは満席です|المنصة ممتلئة\nYour Diamonds|Tes Diamants|Tus Diamantes|Seus Diamantes|Deine Diamanten|I tuoi Diamanti|あなたのダイヤ|ماساتك\nNext tier|Palier suivant|Siguiente nivel|Próximo nível|Nächste Stufe|Livello successivo|次の段階|المستوى التالي\nFirst cash-out|Premier retrait|Primer retiro|Primeiro saque|Erste Auszahlung|Primo prelievo|初回出金|أول سحب\nYearly · renews automatically|Annuel · renouvellement automatique|Anual · se renueva automáticamente|Anual · renova automaticamente|Jährlich · verlängert sich automatisch|Annuale · si rinnova automaticamente|年額・自動更新|سنوي · يتجدد تلقائيًا\nMonthly · renews automatically|Mensuel · renouvellement automatique|Mensual · se renueva automáticamente|Mensal · renova automaticamente|Monatlich · verlängert sich automatisch|Mensile · si rinnova automaticamente|月額・自動更新|شهري · يتجدد تلقائيًا\nOne-time purchase|Achat unique|Compra única|Compra única|Einmalkauf|Acquisto unico|買い切り|شراء لمرة واحدة\nChoose a photo (demo)|Choisis une photo (démo)|Elige una foto (demo)|Escolha uma foto (demo)|Wähle ein Foto (Demo)|Scegli una foto (demo)|写真を選ぶ（デモ）|اختر صورة (تجريبي)\nFrames show around your photo everywhere: chats, rooms, Lives and Connect.|Les cadres entourent ta photo partout : discussions, salons, lives et Rencontrer.|Los marcos rodean tu foto en todas partes: chats, salas, directos y Conectar.|As molduras aparecem em volta da sua foto em todo lugar: conversas, salas, lives e Conectar.|Rahmen erscheinen überall um dein Foto: Chats, Räume, Lives und Verbinden.|Le cornici appaiono intorno alla tua foto ovunque: chat, stanze, live e Connetti.|フレームはチャット、ルーム、ライブ、つながるなど、どこでもあなたの写真を囲みます。|تظهر الإطارات حول صورتك في كل مكان: المحادثات والغرف والبث وتواصل.\nTurned into coins|Convertis en pièces|Convertidos en monedas|Convertidos em moedas|In Münzen umgewandelt|Convertiti in monete|コインに交換|تم تحويلها إلى عملات\nFrom 100 Diamonds|Depuis 100 Diamants|De 100 Diamantes|De 100 Diamantes|Aus 100 Diamanten|Da 100 Diamanti|ダイヤ100個から|من 100 ماسة\n");
+
 change('iPhone screen edges + flag styles (extra CSS)', '</style>', APP_CSS + '</style>');
 
 // Headers fit the phone in every language (founder, 23 Nov: in French the Connect bell went off the screen).
