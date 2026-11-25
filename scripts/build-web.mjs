@@ -737,6 +737,45 @@ change("round 2 (A) texts in 8 languages",
   "\nThe stage is full|La scène est pleine|El escenario está lleno|O palco está cheio|Die Bühne ist voll|Il palco è pieno|ステージは満席です|المنصة ممتلئة\n",
   "\nThe stage is full|La scène est pleine|El escenario está lleno|O palco está cheio|Die Bühne ist voll|Il palco è pieno|ステージは満席です|المنصة ممتلئة\nYou blocked this person · Unblock them from their profile|Tu as bloqué cette personne · Débloque-la depuis son profil|Bloqueaste a esta persona · Desbloquéala desde su perfil|Você bloqueou esta pessoa · Desbloqueie pelo perfil|Du hast diese Person blockiert · Hebe die Blockierung in ihrem Profil auf|Hai bloccato questa persona · Sbloccala dal suo profilo|この人をブロック中です · プロフィールからブロックを解除できます|لقد حظرت هذا الشخص · ألغِ الحظر من ملفه الشخصي\nYou blocked this person · Unblock them first|Tu as bloqué cette personne · Débloque-la d’abord|Bloqueaste a esta persona · Desbloquéala primero|Você bloqueou esta pessoa · Desbloqueie primeiro|Du hast diese Person blockiert · Hebe zuerst die Blockierung auf|Hai bloccato questa persona · Prima sbloccala|この人をブロック中です · 先にブロックを解除してください|لقد حظرت هذا الشخص · ألغِ الحظر أولًا\nReady to cash out up to|Prêt à retirer jusqu’à|Listo para retirar hasta|Pronto para sacar até|Bereit zur Auszahlung bis zu|Pronto per prelevare fino a|出金できる上限|جاهز لسحب ما يصل إلى\nOne payment, no subscription|Un seul paiement, sans abonnement|Un solo pago, sin suscripción|Um só pagamento, sem assinatura|Eine Zahlung, kein Abo|Un solo pagamento, nessun abbonamento|1回払い・サブスクなし|دفعة واحدة، بلا اشتراك\nMore options for this comment|Plus d’options pour ce commentaire|Más opciones para este comentario|Mais opções para este comentário|Weitere Optionen für diesen Kommentar|Altre opzioni per questo commento|このコメントのその他の操作|مزيد من الخيارات لهذا التعليق\nto re-gift|pour les offrir à nouveau|para volver a regalar|para presentear de novo|zum Weiterverschenken|per regalarli di nuovo|もう一度贈るために|لإهدائها مجددًا\n");
 
+
+// ── Sign-up: a language you speak can't be your only 'learning' language (founder, 25 Nov) ──
+change("sign-up: a language you speak can’t also be \"learning\" (and the reverse moves it across)",
+  "case 'ob-lang': { if(el.dataset.k==='speak') UI.natTouched=true; const k=el.dataset.k, key=k==='speak'?'natives':'langs', L=S.me[key]||[];",
+  "case 'ob-lang': { if(el.dataset.k==='speak') UI.natTouched=true; const k=el.dataset.k, key=k==='speak'?'natives':'langs', L=S.me[key]||[];\n      /* [app] (founder, 25 Nov: an account was created with no language to learn — English was both spoken and \"learning\") */\n      if(k==='learn'&&!L.includes(v)&&(S.me.natives||[]).includes(v)){ toast('You already speak '+TX(v)+' · Pick a language you’re learning'); return; }\n      if(k==='speak'&&!L.includes(v)&&(S.me.langs||[]).includes(v)){ S.me.langs=S.me.langs.filter(x=>x!==v); }");
+change("sign-up: Continue needs a language you don’t already speak (reason line)",
+  "if(st===3&&!(me.langs||[]).length) return 'Pick at least one language to learn';",
+  "if(st===3&&!(me.langs||[]).filter(l=>!(me.natives||[]).includes(l)).length) return 'Pick at least one language to learn';");
+change("sign-up: Continue needs a language you don’t already speak (check)",
+  "if(UI.obStep===3&&!(S.me.langs||[]).length){ toast('Pick at least one language to learn'); return; }",
+  "if(UI.obStep===3&&!(S.me.langs||[]).filter(l=>!(S.me.natives||[]).includes(l)).length){ toast('Pick at least one language to learn'); return; }");
+change("Language card: no language to learn → a button to add one",
+  "${langs.map(l=>{ const L6=['A1','A2','B1','B2','C1',",
+  "${langs.length?'':`<button class=\"btn small\" data-a=\"go\" data-v=\"mylangs\" style=\"align-self:flex-start;gap:6px\">${ic('plus')} <span>Add a language you’re learning</span></button>`}${langs.map(l=>{ const L6=['A1','A2','B1','B2','C1',");
+change("learning-language fix: texts",
+  "\nThe stage is full|La scène est pleine|El escenario está lleno|O palco está cheio|Die Bühne ist voll|Il palco è pieno|ステージは満席です|المنصة ممتلئة\n",
+  "\nThe stage is full|La scène est pleine|El escenario está lleno|O palco está cheio|Die Bühne ist voll|Il palco è pieno|ステージは満席です|المنصة ممتلئة\nAdd a language you’re learning|Ajoute une langue que tu apprends|Añade un idioma que estés aprendiendo|Adicione um idioma que você está aprendendo|Füge eine Sprache hinzu, die du lernst|Aggiungi una lingua che stai imparando|学習中の言語を追加|أضف لغة تتعلمها\n");
+change("\"You already speak …\" translated (rules)",
+  "[/^10 min left in this (room|live)$/,'w10a']",
+  "[/^You already speak (.+) · Pick a language you’re learning$/,'alrSpeak'],[/^10 min left in this (room|live)$/,'w10a']");
+change("\"You already speak …\" translated (texts)",
+  "w10a:{fr:'Plus que 10 min dans ce salon'",
+  "alrSpeak:{fr:'Tu parles déjà $1 · Choisis une langue que tu apprends',es:'Ya hablas $1 · Elige un idioma que estés aprendiendo',pt:'Você já fala $1 · Escolha um idioma que está aprendendo',de:'Du sprichst schon $1 · Wähle eine Sprache, die du lernst',it:'Parli già $1 · Scegli una lingua che stai imparando',ja:'$1はすでに話せます · 学習中の言語を選んでください',ar:'أنت تتحدث $1 بالفعل · اختر لغة تتعلمها'},w10a:{fr:'Plus que 10 min dans ce salon'");
+
+
+// ── An unfinished sign-up can't be logged into via "Continue as" (founder, 25 Nov: account with no language to learn) ──
+change("Welcome: \"Continue as\" only for a finished account",
+  "function vWelcome(){ const back=S.lastAuth&&S.me.handle;",
+  "function vWelcome(){ const back=S.lastAuth&&S.me.handle&&(S.acct==='demo'||!S.signupRec||S.signupRec.status==='finished');");
+change("Log in: \"Continue as\" only for a finished account",
+  "    const back=S.lastAuth&&S.me.handle;\n    return `<div class=\"screen pushed obx\">",
+  "    const back=S.lastAuth&&S.me.handle&&(S.acct==='demo'||!S.signupRec||S.signupRec.status==='finished');\n    return `<div class=\"screen pushed obx\">");
+change("quick log-in never skips an unfinished sign-up (it resumes it)",
+  "case 'auth-quick': UI.auth={mode:'signin',quick:true}; authDone(); break;",
+  "case 'auth-quick': if(S.signupRec&&S.signupRec.status!=='finished'&&S.acct!=='demo'){ UI.auth=null; UI.ob=true; UI.obStep=Math.min(S.obAt||0,6); render(); toast('Let’s finish your sign-up'); break; } UI.auth={mode:'signin',quick:true}; authDone(); break;");
+change("resume sign-up: text",
+  "\nThe stage is full|La scène est pleine|El escenario está lleno|O palco está cheio|Die Bühne ist voll|Il palco è pieno|ステージは満席です|المنصة ممتلئة\n",
+  "\nThe stage is full|La scène est pleine|El escenario está lleno|O palco está cheio|Die Bühne ist voll|Il palco è pieno|ステージは満席です|المنصة ممتلئة\nLet’s finish your sign-up|Terminons ton inscription|Terminemos tu registro|Vamos terminar seu cadastro|Lass uns deine Anmeldung abschließen|Completiamo la tua iscrizione|登録を完了しましょう|لنُكمل تسجيلك\n");
+
 change('iPhone screen edges + flag styles (extra CSS)', '</style>', APP_CSS + '</style>');
 
 // Headers fit the phone in every language (founder, 23 Nov: in French the Connect bell went off the screen).
