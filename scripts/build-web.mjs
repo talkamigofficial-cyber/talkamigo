@@ -167,6 +167,12 @@ const APP_CSS = `
 .stream.remo>.lcfeed{display:flex!important;bottom:312px!important;max-height:calc(100% - 312px - 190px)!important}
 /* the keyboard-down button steps aside while the @ list is open (it covered the names) */
 body:has(.atlist) .kbdone.ico{visibility:hidden}
+/* text people type follows its own direction (French in an Arabic app keeps its punctuation on the right side) */
+#corr-t,#corr-n,#cmt,#rc-input,#lc-input{unicode-bidi:plaintext}
+/* typing in a talk room on small phones: the stage keeps its size; if it doesn't all fit above the keyboard, the stage area scrolls instead of pushing the comment box under the keyboard */
+.troom.rtype>.ttop,.troom:has(>.emopan)>.ttop{flex-shrink:0}
+.troom.rtype>.tstage,.troom:has(>.emopan)>.tstage{flex:0 1 auto!important;min-height:0;overflow-y:auto;overscroll-behavior:contain;scrollbar-width:none}
+.troom.rtype>form.tbar,.troom:has(>.emopan)>form.tbar{flex-shrink:0}
 /* the minimised room card steps aside on the Open room screen (it covered the Open button) */
 #phone:has(.crs) > .mcard{display:none!important}
 /* pop-up messages, Dynamic Island style (founder's pick A, 25 Nov): black, grows out of the island, message under the camera */
@@ -572,13 +578,13 @@ change("cancel / renew messages: real dates",
   "case 'subcancel': S.subCancelled=true; UI.sheet=null; render(); toast('Cancelled. You keep Plus until '+renewOn()+'.'); break;\n    case 'resub': S.subCancelled=false; UI.sheet=null; render(); toast('Plus will renew on '+renewOn()); break;");
 change("cash-out: only Diamonds past the hold, 2 a month",
   "case 'cash-ok': { const tr=TIERS.find(x=>x[0]===+v); if(S.diamonds<tr[0]) return;",
-  "case 'cash-ok': { const tr=TIERS.find(x=>x[0]===+v); const avail=Math.max(0,(S.diamonds||0)-(S.pending||0)); if(avail<tr[0]){ toast('Only Diamonds past the 14-day hold can be cashed out · '+n0(avail)+' available',5000); return; } const mk=new Date().getFullYear()+'-'+new Date().getMonth(); S.cashouts=(S.cashouts||[]).filter(x=>x.startsWith(mk)); if(S.cashouts.length>=2){ toast('2 cash-outs a month max · Next one from the 1st of next month',5000); return; } if(S.diamonds<tr[0]) return;");
+  "case 'cash-ok': { const tr=TIERS.find(x=>x[0]===+v); pendSync(); const avail=Math.max(0,(S.diamonds||0)-(S.pending||0)); if(avail<tr[0]){ toast('Only Diamonds past the 14-day hold can be cashed out · '+n0(avail)+' available',5000); return; } const mk=new Date().getFullYear()+'-'+new Date().getMonth(); S.cashouts=(S.cashouts||[]).filter(x=>x.startsWith(mk)); if(S.cashouts.length>=2){ toast('2 cash-outs a month max · Next one from the 1st of next month',5000); return; } if(S.diamonds<tr[0]) return;");
 change("cash-out: count it for the month",
   "S.diamonds-=tr[0]; hist('d','Cash-out '+tierCash(TIERS.indexOf(tr))+' (demo)',-tr[0]);",
   "S.diamonds-=tr[0]; { const mk=new Date().getFullYear()+'-'+new Date().getMonth(); (S.cashouts=S.cashouts||[]).push(mk+'-'+Date.now()); } hist('d','Cash-out '+tierCash(TIERS.indexOf(tr))+' (demo)',-tr[0]);");
 change("Diamonds → coins: only Diamonds past the hold",
   "case 'convert': if(S.diamonds<100){ toast('You need 100 Diamonds'); return; }",
-  "case 'convert': if(Math.max(0,(S.diamonds||0)-(S.pending||0))<100){ toast('You need 100 Diamonds past the 14-day hold'); return; }");
+  "case 'convert': pendSync(); if(Math.max(0,(S.diamonds||0)-(S.pending||0))<100){ toast('You need 100 Diamonds past the 14-day hold'); return; }");
 change("frames: confirm before spending coins",
   "if(S.coins<F[2]){ toast('Not enough coins'); return; } S.coins-=F[2];",
   "if(S.coins<F[2]){ toast('Not enough coins'); return; } if(UI.frameOK!==v){ UI.frameOK=v; toast('Tap again to buy the '+F[1]+' frame · '+n0(F[2])+' coins',3500); clearTimeout(UI.frameT); UI.frameT=setTimeout(()=>{ UI.frameOK=null; },3500); break; } UI.frameOK=null; S.coins-=F[2];");
@@ -620,13 +626,13 @@ change("wallet, shop and purchase texts in 8 languages",
 // ── Rooms / lessons / teacher audit fixes (25 Nov) ──
 change("lessons become real rooms at their time (helpers + reminders)",
   "const planAll=()=>S.myLessons&&S.myLessons.length?PLAN.concat(S.myLessons):PLAN;",
-  "const planAll=()=>S.myLessons&&S.myLessons.length?PLAN.concat(S.myLessons):PLAN;\n/* [app] (25 Nov audit) a planned lesson becomes a real room at its time: students who reserved can join it, the teacher can start it.\n   Open from 5 minutes before the start until the end. Reminders: 10 minutes before (and at the start for the teacher). */\nfunction lessonNow(x){ const t=lessonDate(x).getTime(), n=Date.now(); return n>=t-5*60000&&n<t+(x.mins||45)*60000; }\nfunction lessonRoom(x){ const rid='pl_'+x.id, live=x.mode==='live', L=live?S.lives:S.rooms; let r=L.find(y=>y.id===rid);\n  if(!r){ const me=x.host==='me'; r=live?{id:rid,host:x.host,l:x.l,lang:x.lang,ls:[x.l],title:x.title,viewers:me?1:(x.booked||0)+4,price:.99,level:x.level,goal:x.goal,mins:x.mins,seats:x.seats,booked:x.booked||0,bg:'radial-gradient(90% 60% at 70% 20%,#FF8A5B,transparent 60%),radial-gradient(90% 70% at 10% 90%,#B4004E,transparent 60%),#3A0A1A',mine:me,lesson:x.id}\n      :{id:rid,l:x.l,lang:x.lang,topic:x.goal,teacher:true,price:.99,level:x.level,goal:x.goal,mins:x.mins,seats:x.seats,booked:x.booked||0,title:x.title,host:x.host,speakers:[],count:me?1:(x.booked||0)+4,mine:me,lesson:x.id};\n    L.unshift(r); }\n  S.paid[rid]=true; return (live?'live:':'room:')+rid; }\nsetInterval(()=>{ try{ if(!S.onboarded) return; const n=Date.now(); S.lrem=S.lrem||{};\n  planAll().forEach(x=>{ const mine=x.host==='me', res=(S.reserved||{})[x.id]; if(!mine&&!res) return; const t=lessonDate(x).getTime();\n    if(n>=t-10*60000&&n<t-60000&&!S.lrem[x.id+':10']){ S.lrem[x.id+':10']=1; notify('klass','<b>Starts in 10 min</b> “'+esc(x.title)+'” with '+(mine?esc(S.me.name):P[x.host].name)+'. Tap to get ready.',null,null,{chip:'10 min',act:['sheet','lres:'+x.id]}); }\n    if(n>=t&&n<t+(x.mins||45)*60000&&!S.lrem[x.id+':0']){ S.lrem[x.id+':0']=1; notify('klass','<b>'+(mine?'Time to start your lesson':'Your lesson is starting')+'</b> “'+esc(x.title)+'”',null,null,{chip:'Now',act:['lgo',x.id]}); } }); save(); }catch(e){} },20000);");
+  "const planAll=()=>S.myLessons&&S.myLessons.length?PLAN.concat(S.myLessons):PLAN;\n/* [app] (25 Nov audit) a planned lesson becomes a real room at its time: students who reserved can join it, the teacher can start it.\n   Open from 5 minutes before the start until the end. Reminders: 10 minutes before (and at the start for the teacher). */\nfunction lessonNow(x){ const t=lessonDate(x).getTime(), n=Date.now(); return n>=t-5*60000&&n<t+(x.mins||45)*60000; }\nfunction lessonRoom(x){ const rid='pl_'+x.id, live=x.mode==='live', L=live?S.lives:S.rooms; let r=L.find(y=>y.id===rid);\n  if(!r){ const me=x.host==='me'; r=live?{id:rid,host:x.host,l:x.l,lang:x.lang,ls:[x.l],title:x.title,viewers:me?1:(x.booked||0)+4,price:.99,level:x.level,goal:x.goal,mins:x.mins,seats:x.seats,booked:x.booked||0,bg:'radial-gradient(90% 60% at 70% 20%,#FF8A5B,transparent 60%),radial-gradient(90% 70% at 10% 90%,#B4004E,transparent 60%),#3A0A1A',mine:me,lesson:x.id}\n      :{id:rid,l:x.l,lang:x.lang,topic:x.goal,teacher:true,price:.99,level:x.level,goal:x.goal,mins:x.mins,seats:x.seats,booked:x.booked||0,title:x.title,host:x.host,speakers:[],count:me?1:(x.booked||0)+4,mine:me,lesson:x.id};\n    L.unshift(r); }\n  if(x.host==='me'||(S.reserved||{})[x.id]) S.paid[rid]=true; return (live?'live:':'room:')+rid; }\nfunction lessonEnded(x){ return Date.now()>lessonDate(x).getTime()+(x.mins||45)*60000; }\nsetInterval(()=>{ try{ if(!S.onboarded) return; const n=Date.now(); S.lrem=S.lrem||{};\n  /* a lesson that is on now is a real room (listed in Happening now); when it ends the room closes, the reservation and reminders are cleared (next week is a new booking) */\n  [...S.rooms,...S.lives].filter(r=>r.lesson).forEach(r=>{ const x=planAll().find(y=>y.id===r.lesson); const end=!x||n>lessonDate(x).getTime()+(x.mins||45)*60000||(n<lessonDate(x).getTime()-5*60000);\n    if(!end) return; const live=S.lives.includes(r); if(UI.room&&UI.room.id===r.id){ try{ stopRoom(); }catch(e){} UI.room=null; UI.mini=null; S.stack=S.stack.filter(z=>z.id!==r.id); toast(r.host==='me'?'Your lesson has ended · Thanks for teaching!':'The lesson has ended'); }\n    if(live) S.lives=S.lives.filter(z=>z!==r); else S.rooms=S.rooms.filter(z=>z!==r); delete S.paid[r.id]; if(x){ delete S.reserved[x.id]; delete S.lrem[x.id+':10']; delete S.lrem[x.id+':0']; } render(); });\n  planAll().forEach(x=>{ if(!isBlocked(x.host)&&lessonNow(x)&&!(UI.room&&UI.room.id==='pl_'+x.id)&&![...S.rooms,...S.lives].some(r=>r.id==='pl_'+x.id)) lessonRoom(x); });\n  planAll().forEach(x=>{ const mine=x.host==='me', res=(S.reserved||{})[x.id]; if((!mine&&!res)||isBlocked(x.host)) return; const t=lessonDate(x).getTime();\n    if(n>=t-10*60000&&n<t-60000&&!S.lrem[x.id+':10']){ S.lrem[x.id+':10']=1; notify('klass',mine?'<b>Your lesson starts in 10 min</b> “'+esc(x.title)+'”':'<b>Starts in 10 min</b> “'+esc(x.title)+'” with '+P[x.host].name+'. Tap to get ready.',null,null,{chip:'10 min',act:['sheet','lres:'+x.id]}); }\n    if(n>=t&&n<t+(x.mins||45)*60000&&!S.lrem[x.id+':0']){ S.lrem[x.id+':0']=1; notify('klass','<b>'+(mine?'Time to start your lesson':'Your lesson is starting')+'</b> “'+esc(x.title)+'”',null,null,{chip:'Now',act:['lgo',x.id]}); } }); save(); }catch(e){} },20000);");
 change("lesson sheet: Join / Start at the time",
   "${x.host==='me'?`<div class=\"tdone\" style=\"background:var(--chip);color:var(--ink)\">",
   "${lessonNow(x)&&(x.host==='me'||res)?`<button class=\"btn block\" data-a=\"lgo\" data-v=\"${x.id}\" style=\"gap:8px\">${ic(x.mode==='live'?'video':'mic')}<span>${x.host==='me'?'Start your lesson':'Join the lesson'}</span></button>`:x.host==='me'?`<div class=\"tdone\" style=\"background:var(--chip);color:var(--ink)\">");
 change("lesson: the join/start action",
   "case 'lpay': {",
-  "case 'lgo': { const x=planAll().find(y=>y.id===v); if(!x) break; if(!lessonNow(x)){ toast('It starts '+dayFmt(lessonDate(x),{weekday:'short'})+' '+x.time); break; } if(x.host!=='me'&&!(S.reserved||{})[x.id]){ UI.sheet={t:'lres',id:x.id}; render(); break; } UI.sheet=null; open(lessonRoom(x)); break; }\n    case 'lpay': {");
+  "case 'lgo': { const x=planAll().find(y=>y.id===v); if(!x) break; if(lessonEnded(x)){ toast('The lesson has ended'); break; } if(!lessonNow(x)){ toast('It starts '+dayFmt(lessonDate(x),{weekday:'short'})+' '+x.time); break; } if(x.host!=='me'&&!(S.reserved||{})[x.id]){ UI.sheet={t:'lres',id:x.id}; render(); break; } UI.sheet=null; open(lessonRoom(x)); break; }\n    case 'lpay': {");
 change("lesson reserved: reminder at the real time (not 9 s later)",
   "toast('Reserved! We’ll remind you 10 min before.'); setTimeout(()=>notify('klass','<b>Starts in 10 min</b> “'+esc(x.title)+'” with '+P[x.host].name+'. Tap to get ready.','livetab-go',null,{chip:'10 min'}),9000); }}); break; }",
   "toast('Reserved! We’ll remind you 10 min before.'); }}); break; }");
@@ -662,13 +668,13 @@ change("room settings: pinning a notice later completes the room task",
   "x.notice=v2; x.pin=d.pin; ch.push('notice'); if(v2&&d.pin!==false&&!LV) setTimeout(()=>rtask('notice'),600); } }");
 change("own room: demo gifts only with an audience, Diamonds on hold",
   "if(r.mine){ S.diamonds+=dia(g); R.earned+=dia(g);",
-  "if(r.mine&&(r.count||0)<5){ delete R.top[who]; } else if(r.mine){ S.diamonds+=dia(g); S.pending=(S.pending||0)+dia(g); R.earned+=dia(g);");
+  "if(r.mine&&(r.count||0)<5){ delete R.top[who]; } else if(r.mine){ S.diamonds+=dia(g); addPending(dia(g)); R.earned+=dia(g);");
 change("own live: demo gifts only with an audience, Diamonds on hold",
   "if(L.mine){ S.diamonds+=dia(g); R.earned+=dia(g);",
-  "if(L.mine&&(L.viewers||0)<5){ delete R.top[who]; } else if(L.mine){ S.diamonds+=dia(g); S.pending=(S.pending||0)+dia(g); R.earned+=dia(g);");
+  "if(L.mine&&(L.viewers||0)<5){ delete R.top[who]; } else if(L.mine){ S.diamonds+=dia(g); addPending(dia(g)); R.earned+=dia(g);");
 change("received gifts: Diamonds wait the 14-day hold",
   "S.diamonds=(S.diamonds||0)+dia(g); hist('d',P[from].name+' sent you a '+g.name+' '+g.e,dia(g));",
-  "S.diamonds=(S.diamonds||0)+dia(g); S.pending=(S.pending||0)+dia(g); hist('d',P[from].name+' sent you a '+g.name+' '+g.e,dia(g));");
+  "S.diamonds=(S.diamonds||0)+dia(g); addPending(dia(g)); hist('d',P[from].name+' sent you a '+g.name+' '+g.e,dia(g));");
 
 change("teacher application message: no beta promise (row)",
   "Application sent · we check every teacher, usually within 48 hours (beta: a few seconds)|Candidature envoyée · nous vérifions chaque prof, en général sous 48 h (bêta : quelques secondes)|Solicitud enviada · revisamos a cada profesor, normalmente en 48 horas (beta: unos segundos)|Inscrição enviada · verificamos cada professor, em geral em até 48 horas (beta: alguns segundos)|Bewerbung gesendet · wir prüfen jede Lehrkraft, meist innerhalb von 48 Stunden (Beta: ein paar Sekunden)|Candidatura inviata · controlliamo ogni insegnante, di solito entro 48 ore (beta: pochi secondi)|申請を送信しました・通常48時間以内に確認します（ベータ版：数秒）|تم إرسال الطلب · نراجع كل معلّم عادةً خلال 48 ساعة (النسخة التجريبية: بضع ثوانٍ)",
@@ -676,6 +682,60 @@ change("teacher application message: no beta promise (row)",
 change("teacher application message: no beta promise (code)",
   "'Application sent · we check every teacher, usually within 48 hours (beta: a few seconds)'",
   "'Application sent · we check every teacher, usually within 48 hours'");
+
+
+// ── Round 2 fixes (25 Nov): lessons close and reset, ended lessons, small-phone typing, login with no account ──
+change("lesson sheet: an ended lesson can’t be reserved",
+  "if(sh.t==='lres'){ const x=planAll().find(y=>y.id===sh.id), h=P[x.host], res=S.reserved[x.id];",
+  "if(sh.t==='lres'){ const x=planAll().find(y=>y.id===sh.id), h=P[x.host], res=S.reserved[x.id], ended=lessonEnded(x);");
+change("lesson sheet: ended message instead of Reserve",
+  "`:res?`<button class=\"btn block ghost\" data-a=\"close\">${ic('check')} Reserved · we’ll remind you</button>`:`<button class=\"btn block\" data-a=\"lpay\"",
+  "`:ended?`<div class=\"tdone\" style=\"background:var(--chip);color:var(--ink)\">${ic('clock')}<span><b>This lesson has ended</b><small style=\"color:var(--muted)\">It’s on again next week</small></span></div>`:res?`<button class=\"btn block ghost\" data-a=\"close\">${ic('check')} Reserved · we’ll remind you</button>`:`<button class=\"btn block\" data-a=\"lpay\"");
+change("reserving: refused after the end; honest message close to the start",
+  "case 'lpay': { const x=planAll().find(y=>y.id===v); UI.sheet=null;",
+  "case 'lpay': { const x=planAll().find(y=>y.id===v); if(!x||lessonEnded(x)){ toast('The lesson has ended'); break; } UI.sheet=null;");
+change("reserving: message that matches the time left",
+  "toast('Reserved! We’ll remind you 10 min before.'); }}); break; }",
+  "toast(lessonNow(x)?'Reserved! You can join now':lessonDate(x).getTime()-Date.now()<10*60000?'Reserved! It starts in a few minutes':'Reserved! We’ll remind you 10 min before.'); }}); break; }");
+change("log in with no account here: offer to create one straight away",
+  "else { A.step='approve'; render(); return; } }",
+  "else { A.mode='create'; A.step=null; setTimeout(()=>toast('No account with this log-in yet · Let’s create yours'),300); } }");
+change("username: the 30-day rule shows while typing",
+  "if(u.length>20) return {ok:false,msg:'20 characters max'};",
+  "if(u.length>20) return {ok:false,msg:'20 characters max'}; if(S.onboarded&&S.me&&u!==S.me.handle&&S.unameAt&&Date.now()-S.unameAt<30*864e5) return {ok:false,msg:'You can change your username once every 30 days'};");
+change("round 2 fixes: texts in 8 languages",
+  "\nThe stage is full|La scène est pleine|El escenario está lleno|O palco está cheio|Die Bühne ist voll|Il palco è pieno|ステージは満席です|المنصة ممتلئة\n",
+  "\nThe stage is full|La scène est pleine|El escenario está lleno|O palco está cheio|Die Bühne ist voll|Il palco è pieno|ステージは満席です|المنصة ممتلئة\nThis lesson has ended|Ce cours est terminé|Esta clase ha terminado|Esta aula terminou|Dieser Kurs ist vorbei|Questa lezione è finita|このレッスンは終了しました|انتهى هذا الدرس\nIt’s on again next week|Il revient la semaine prochaine|Vuelve la próxima semana|Volta na próxima semana|Nächste Woche wieder|Torna la prossima settimana|来週また開催されます|يُعاد الأسبوع القادم\nThe lesson has ended|Le cours est terminé|La clase ha terminado|A aula terminou|Der Kurs ist vorbei|La lezione è finita|レッスンは終了しました|انتهى الدرس\nYour lesson has ended · Thanks for teaching!|Ton cours est terminé · Merci d’avoir enseigné !|Tu clase ha terminado · ¡Gracias por enseñar!|Sua aula terminou · Obrigado por ensinar!|Dein Kurs ist vorbei · Danke fürs Unterrichten!|La tua lezione è finita · Grazie per aver insegnato!|レッスンが終了しました · ありがとうございました！|انتهى درسك · شكرًا على التدريس!\nYour lesson starts in 10 min|Ton cours commence dans 10 min|Tu clase empieza en 10 min|Sua aula começa em 10 min|Dein Kurs beginnt in 10 Min.|La tua lezione inizia tra 10 min|レッスンは10分後に始まります|يبدأ درسك بعد 10 دقائق\nReserved! You can join now|Réservé ! Tu peux rejoindre maintenant|¡Reservado! Ya puedes unirte|Reservado! Você já pode entrar|Reserviert! Du kannst jetzt teilnehmen|Prenotato! Puoi entrare ora|予約しました！今すぐ参加できます|تم الحجز! يمكنك الانضمام الآن\nReserved! It starts in a few minutes|Réservé ! Ça commence dans quelques minutes|¡Reservado! Empieza en unos minutos|Reservado! Começa em alguns minutos|Reserviert! Es geht in ein paar Minuten los|Prenotato! Inizia tra pochi minuti|予約しました！まもなく始まります|تم الحجز! يبدأ بعد دقائق\n");
+
+
+// ── Round 2 fixes (A, 25 Nov): pending Diamonds release, blocked chat/follow/Duo, Flick auto-translate consent ──
+change("pending Diamonds are released after the 14-day hold (helpers)",
+  "function vWallet(){\n  const W=UI.wtab||'coins', d=S.diamonds;",
+  "/* [app] Diamonds you receive wait 14 days (\"pending\"); each gift has its own release date, so pending goes down again (it used to only grow) */\nfunction pendSync(){ const n=Date.now(); if(!Array.isArray(S.pendL)) S.pendL=S.pending?[{n:S.pending,until:n+6*864e5}]:[]; S.pendL=S.pendL.filter(x=>x.until>n); S.pending=S.pendL.reduce((a,x)=>a+x.n,0); return S.pending; }\nfunction addPending(k){ pendSync(); S.pendL.push({n:k,until:Date.now()+14*864e5}); S.pending+=k; }\nfunction vWallet(){ pendSync();\n  const W=UI.wtab||'coins', d=Math.max(0,S.diamonds-(S.pending||0));");
+change("Wallet demo Rocket also waits the hold",
+  "case 'receive': S.diamonds+=250;",
+  "case 'receive': S.diamonds+=250; addPending(250);");
+change("blocked: their chat doesn’t open (profile instead, with Unblock)",
+  "function push(s){ if(s&&(s.s==='room'||s.s==='live')&&onCall()){ callBusy('open'); return; }",
+  "function push(s){ if(s&&s.s==='chat'&&P[s.id]&&isBlocked(s.id)){ toast('You blocked this person · Unblock them from their profile'); s={s:'user',id:s.id}; } if(s&&(s.s==='room'||s.s==='live')&&onCall()){ callBusy('open'); return; }");
+change("blocked: no corrections",
+  "if(f.dataset.f==='correct'){ const sh=UI.sheet, c=S.chats[sh.id],",
+  "if(f.dataset.f==='correct'&&UI.sheet&&isBlocked(UI.sheet.id)){ UI.sheet=null; render(); toast('You blocked this person · Unblock them to send messages'); return; }\n  if(f.dataset.f==='correct'){ const sh=UI.sheet, c=S.chats[sh.id],");
+change("blocked: can’t be followed",
+  "case 'follow': S.follows[v]=!S.follows[v];",
+  "case 'follow': if(!S.follows[v]&&isBlocked(v)){ toast('You blocked this person · Unblock them first'); break; } S.follows[v]=!S.follows[v];");
+change("blocked: the Duo ends",
+  "case 'block': { S.blocked=[...new Set([...(S.blocked||[]),v])];",
+  "case 'block': { S.blocked=[...new Set([...(S.blocked||[]),v])]; if(S.duo) delete S.duo[v]; if(S.duoInv) delete S.duoInv[v];");
+change("Flick captions: automatic translation only with AI consent",
+  "open=UI['mt'+m.id]??(S.prefs.trMode==='auto'&&m.by!=='me'",
+  "open=UI['mt'+m.id]??(S.prefs.trMode==='auto'&&S.aiOK===true&&m.by!=='me'");
+change("chat auto-reply after a correction has a time",
+  "c.msgs.push({f:'them',t:'Merci pour la correction ! 🙏',tr:'Thanks for the correction! 🙏'});",
+  "c.msgs.push({f:'them',t:'Merci pour la correction ! 🙏',tr:'Thanks for the correction! 🙏',at:Date.now()});");
+change("round 2 (A) texts in 8 languages",
+  "\nThe stage is full|La scène est pleine|El escenario está lleno|O palco está cheio|Die Bühne ist voll|Il palco è pieno|ステージは満席です|المنصة ممتلئة\n",
+  "\nThe stage is full|La scène est pleine|El escenario está lleno|O palco está cheio|Die Bühne ist voll|Il palco è pieno|ステージは満席です|المنصة ممتلئة\nYou blocked this person · Unblock them from their profile|Tu as bloqué cette personne · Débloque-la depuis son profil|Bloqueaste a esta persona · Desbloquéala desde su perfil|Você bloqueou esta pessoa · Desbloqueie pelo perfil|Du hast diese Person blockiert · Hebe die Blockierung in ihrem Profil auf|Hai bloccato questa persona · Sbloccala dal suo profilo|この人をブロック中です · プロフィールからブロックを解除できます|لقد حظرت هذا الشخص · ألغِ الحظر من ملفه الشخصي\nYou blocked this person · Unblock them first|Tu as bloqué cette personne · Débloque-la d’abord|Bloqueaste a esta persona · Desbloquéala primero|Você bloqueou esta pessoa · Desbloqueie primeiro|Du hast diese Person blockiert · Hebe zuerst die Blockierung auf|Hai bloccato questa persona · Prima sbloccala|この人をブロック中です · 先にブロックを解除してください|لقد حظرت هذا الشخص · ألغِ الحظر أولًا\nReady to cash out up to|Prêt à retirer jusqu’à|Listo para retirar hasta|Pronto para sacar até|Bereit zur Auszahlung bis zu|Pronto per prelevare fino a|出金できる上限|جاهز لسحب ما يصل إلى\nOne payment, no subscription|Un seul paiement, sans abonnement|Un solo pago, sin suscripción|Um só pagamento, sem assinatura|Eine Zahlung, kein Abo|Un solo pagamento, nessun abbonamento|1回払い・サブスクなし|دفعة واحدة، بلا اشتراك\nMore options for this comment|Plus d’options pour ce commentaire|Más opciones para este comentario|Mais opções para este comentário|Weitere Optionen für diesen Kommentar|Altre opzioni per questo commento|このコメントのその他の操作|مزيد من الخيارات لهذا التعليق\nto re-gift|pour les offrir à nouveau|para volver a regalar|para presentear de novo|zum Weiterverschenken|per regalarli di nuovo|もう一度贈るために|لإهدائها مجددًا\n");
 
 change('iPhone screen edges + flag styles (extra CSS)', '</style>', APP_CSS + '</style>');
 
