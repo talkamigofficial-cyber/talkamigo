@@ -167,6 +167,23 @@ const APP_CSS = `
 .stream.remo>.lcfeed{display:flex!important;bottom:312px!important;max-height:calc(100% - 312px - 190px)!important}
 /* the keyboard-down button steps aside while the @ list is open (it covered the names) */
 body:has(.atlist) .kbdone.ico{visibility:hidden}
+/* pop-up messages, Dynamic Island style (founder's pick A, 25 Nov): black, grows out of the island, message under the camera */
+.toast{background:#000!important;-webkit-backdrop-filter:none!important;backdrop-filter:none!important;box-shadow:0 12px 32px rgba(0,0,0,.32)!important;border-radius:26px!important;padding:9px 18px 9px 9px!important;max-width:min(360px,calc(100% - 24px))!important;gap:11px!important}
+.toast .tki{width:34px!important;height:34px!important;background:rgba(255,255,255,.16)}
+.toast .tki svg{width:18px!important;height:18px!important}
+.toast.tk-mute .tki,.toast.tk-red .tki{background:#E0101F!important}
+.toast .tkt b{font-size:15px!important}
+.toast .tkt small{font-size:13px!important;color:rgba(255,255,255,.62)!important}
+.toast.isl{padding-top:46px!important;border-radius:32px!important;min-width:min(250px,calc(100% - 24px));transform-origin:50% 18px;animation:islin .46s cubic-bezier(.2,1.15,.35,1) both!important}
+.toast.isl>*{animation:islc .26s .14s both}
+@keyframes islin{from{transform:translateX(-50%) scale(.42,.33)}to{transform:translateX(-50%) scale(1)}}
+@keyframes islc{from{opacity:0}to{opacity:1}}
+.toast.tout{animation:islout .22s cubic-bezier(.4,0,1,1) forwards!important}
+.toast.tout>*{animation:none;opacity:0;transition:opacity .1s}
+@keyframes islout{to{transform:translateX(-50%) scale(.42,.33);opacity:.6}}
+.toast:not(.isl).tout{animation-name:toastoutx!important}
+@keyframes toastoutx{to{transform:translateX(-50%) translateY(-10px);opacity:0}}
+@media (prefers-reduced-motion:reduce){.toast.isl,.toast.isl>*{animation:none!important}}
 .troom.rtype2 .tgrid{gap:4px 4px!important;padding-top:2px!important}
 .troom.rtype2 .tseat{gap:2px}
 .troom.rtype2 .tseat .tav{zoom:.7}
@@ -333,6 +350,18 @@ change('top layers start below the clock (stackTop)',
 change('helper: height of the clock / Dynamic Island area',
   "function stackTop(){",
   "/* [app] height of the iPhone's top safe area (clock / Dynamic Island), measured once per layout */\nlet APP_SAFE_TOP=null; window.addEventListener('resize',()=>{ APP_SAFE_TOP=null; });\nfunction appSafeTop(){ if(APP_SAFE_TOP===null){ const d=document.createElement('div'); d.style.cssText='position:fixed;top:0;left:0;width:1px;height:env(safe-area-inset-top,0px);visibility:hidden;pointer-events:none'; document.body.appendChild(d); APP_SAFE_TOP=d.offsetHeight||0; d.remove(); } return APP_SAFE_TOP; }\nfunction stackTop(){");
+
+// ── Pop-up messages: Dynamic Island style (founder picked A, 25 Nov) + gift stops when typing starts ──
+change("pop-ups: Dynamic Island position",
+  "if(t){ const pr=phone.getBoundingClientRect(); const scr=[...phone.children].filter(e=>e.classList&&e.classList.contains('screen')).pop(); const sheet=",
+  "/* [app] (founder's pick A, 25 Nov) pop-up messages always come out of the Dynamic Island at the top (or sit under the clock on iPhones\n     without one); banners, the offline bar and the call bar keep their place above them. The old placement below is no longer used. */\n  if(t){ const isl=appSafeTop()>=54, free=!off&&!nbs.length&&!phone.classList.contains('hascall'); t.classList.remove('tbot'); t.style.bottom=''; t.classList.toggle('isl',isl&&free); t.style.top=(isl&&free?11:y)+'px'; }\n  if(false){ const pr=phone.getBoundingClientRect(); const scr=[...phone.children].filter(e=>e.classList&&e.classList.contains('screen')).pop(); const sheet=");
+change("pop-ups: shrink back into the island when they go",
+  "function toast(t,ms){ UI.toast=t; render(); clearTimeout(toast.h); toast.h=setTimeout(()=>{UI.toast='';render();},ms||2000); }",
+  "function toast(t,ms){ UI.toast=t; render(); clearTimeout(toast.h); toast.h=setTimeout(()=>{ const el=phone.querySelector(':scope > .toast'); if(el&&!matchMedia('(prefers-reduced-motion: reduce)').matches){ el.classList.add('tout'); toast.h=setTimeout(()=>{ UI.toast=''; render(); },230); } else { UI.toast=''; render(); } },ms||2000); }");
+change("gift animation stops when you start typing",
+  "phone.classList.remove('kbopen','kbb'); phone.classList.add('kbstill'); UI.kbBlind=false;",
+  "if(!phone.classList.contains('kbstill')) phone.querySelectorAll(':scope > .giftfx').forEach(x=>x.remove());\n    phone.classList.remove('kbopen','kbb'); phone.classList.add('kbstill'); UI.kbBlind=false;");
+
 change('iPhone screen edges + flag styles (extra CSS)', '</style>', APP_CSS + '</style>');
 
 // Headers fit the phone in every language (founder, 23 Nov: in French the Connect bell went off the screen).
