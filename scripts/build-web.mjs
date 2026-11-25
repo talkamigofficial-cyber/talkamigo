@@ -167,11 +167,10 @@ const APP_CSS = `
 .stream.remo>.lcfeed{display:flex!important;bottom:312px!important;max-height:calc(100% - 312px - 190px)!important}
 /* the keyboard-down button steps aside while the @ list is open (it covered the names) */
 body:has(.atlist) .kbdone.ico{visibility:hidden}
-.troom.rtype2 .tgrid{display:flex!important;flex-wrap:nowrap!important;overflow-x:auto;overflow-y:hidden;scrollbar-width:none;gap:0!important;zoom:1!important}
-.troom.rtype2 .tgrid::-webkit-scrollbar{display:none}
-.troom.rtype2 .tseat{flex:0 0 16.666%!important;min-width:0;gap:3px}
-.troom.rtype2 .tseat .tav{zoom:.74}
-.troom.rtype2 .tnm{font-size:11.5px;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.troom.rtype2 .tgrid{gap:4px 4px!important;padding-top:2px!important}
+.troom.rtype2 .tseat{gap:2px}
+.troom.rtype2 .tseat .tav{zoom:.7}
+.troom.rtype2 .tnm{font-size:11.5px;line-height:14px;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .troom.rtype2 .tnm .eq{display:none}
 .troom.rtype3 .tl>span:last-child{display:none}
 .troom.rtype3 .tlis{padding:2px 0 0!important}
@@ -293,7 +292,7 @@ change("reply card: who and what you are replying to",
   "function rreBar(){ const q=UI.rre; return `<div class=\"rrbar\" role=\"status\"><span class=\"rrbi\">${ic('reply')}</span><span><b><span>Reply to</span> ${q.who==='me'?'<span>yourself</span>':P[q.who]?P[q.who].name:''}</b>");
 
 
-// ── Talk room seats (founder, 24 Nov): fixed seat numbers; with 5+ on stage, one row while typing ──
+// ── Talk room seats (founder, 24–25 Nov): fixed seat numbers; with 5+ on stage, same shape but smaller while typing ──
 change("stage seats: everyone keeps their seat number",
   "const stage=[r.host,...r.speakers,...(R.onStage&&!host?['me']:[])].slice(0,max);\n  const seatsN=Math.max(max,stage.length);",
   "/* [app] (founder, 24 Nov) fixed seats: whoever goes up gets the first free seat and keeps it until they leave the stage.\n     Someone joining never pushes anyone along; someone leaving leaves their seat empty (numbered) for the next person. */\n  const onSt=[r.host,...r.speakers,...(R.onStage&&!host?['me']:[])].filter((x,k,a)=>x&&a.indexOf(x)===k), seatOf=R.seatOf||(R.seatOf={});\n  Object.keys(seatOf).forEach(x=>{ if(!onSt.includes(x)||(x!==r.host&&seatOf[x]===0)) delete seatOf[x]; }); seatOf[r.host]=0;\n  onSt.forEach(x=>{ if(seatOf[x]==null){ const used=new Set(Object.values(seatOf)); let k=1; while(used.has(k)) k++; seatOf[x]=k; } });\n  const stage=[]; onSt.forEach(x=>{ if(seatOf[x]<max) stage[seatOf[x]]=x; });\n  const seatsN=Math.max(max,stage.length);");
@@ -302,10 +301,31 @@ change("stage seats: audience count uses the people on stage",
   "const lisN=Math.max(0,r.count-stage.filter(Boolean).length), pool=Object.keys(P).filter(x=>!stage.includes(x)&&x!==r.host&&!isBlocked(x))");
 change("typing with 5+ on stage: seats in one row",
   "if(c.kind==='room'){ const b=c.box, sTop=st?st.getBoundingClientRect().top:0, top=b.getBoundingClientRect().top-sTop; b.classList.add('rtype');",
-  "if(c.kind==='room'){ const b=c.box, sTop=st?st.getBoundingClientRect().top:0, top=b.getBoundingClientRect().top-sTop; b.classList.add('rtype');\n      /* more than 4 people on stage = two rows of seats: while typing they line up in one row (same order), so the chat keeps some room */\n      b.classList.toggle('rtype2', b.querySelectorAll('.tgrid .tseat:not(.empty)').length>4);");
+  "if(c.kind==='room'){ const b=c.box, sTop=st?st.getBoundingClientRect().top:0, top=b.getBoundingClientRect().top-sTop; b.classList.add('rtype');\n      /* more than 4 people on stage = two rows of seats: while typing they keep the same shape (4 on top, the rest under), only smaller, so the chat keeps some room */\n      b.classList.toggle('rtype2', b.querySelectorAll('.tgrid .tseat:not(.empty)').length>4);");
 change("typing with 5+ on stage: back to two rows after",
   "phone.querySelectorAll('.troom.rtype').forEach(b=>{ b.classList.remove('rtype');",
   "phone.querySelectorAll('.troom.rtype').forEach(b=>{ b.classList.remove('rtype','rtype2','rtype3','rtype4');");
+
+
+// ── Full stage (founder, 25 Nov): asking to go up when all seats are taken says so ──
+change("full stage: helper",
+  "function vRoom(id){",
+  "/* [app] (founder, 25 Nov) how many people are on stage right now, and whether every seat is taken */\nfunction stageFull(r,R){ if(!r) return false; const n=1+(r.speakers||[]).length+(R&&R.onStage&&r.host!=='me'?1:0); return n>=seatMax(r); }\nfunction vRoom(id){");
+change("full stage: asking to go up",
+  "case 'hand': { const R=UI.room; if(!R) return; if(R.onStage){ UI.sheet={t:'stage'}; render(); return; } R.hand=!R.hand; render();",
+  "case 'hand': { const R=UI.room; if(!R) return; if(R.onStage){ UI.sheet={t:'stage'}; render(); return; }\n      if(!R.hand&&stageFull(S.rooms.find(x=>x.id===R.id),R)){ toast('The stage is full · Try again when someone leaves the stage'); break; }\n      R.hand=!R.hand; render();");
+change("full stage: the host answers a raised hand only if a seat is free",
+  "if(UI.room&&UI.room.hand&&!UI.room.onStage){ const r=S.rooms.find(x=>x.id===UI.room.id); UI.room.inv=r?r.host:null; render(); }",
+  "if(UI.room&&UI.room.hand&&!UI.room.onStage){ const r=S.rooms.find(x=>x.id===UI.room.id); if(stageFull(r,UI.room)){ UI.room.hand=false; render(); toast('The stage is full · Try again when someone leaves the stage'); return; } UI.room.inv=r?r.host:null; render(); }");
+change("full stage: accepting an invitation",
+  "case 'inv-yes': if(UI.room) UI.room.onStageAt=UI.room.t; { const R=UI.room; if(!R) break;",
+  "case 'inv-yes': if(UI.room&&!UI.room.onStage&&stageFull(S.rooms.find(x=>x.id===UI.room.id),UI.room)){ UI.room.inv=null; UI.room.hand=false; render(); toast('The stage is full · Try again when someone leaves the stage'); break; } if(UI.room) UI.room.onStageAt=UI.room.t; { const R=UI.room; if(!R) break;");
+change("full stage: the host lets someone up",
+  "case 'req-ok': { const R=UI.room, r=S.rooms.find(x=>x.id===R.id); r.speakers.push(R.req);",
+  "case 'req-ok': { const R=UI.room, r=S.rooms.find(x=>x.id===R.id); if(stageFull(r,R)){ toast('The stage is full'); break; } r.speakers.push(R.req);");
+change("full stage: texts in 8 languages",
+  "\nThe stage is full|La scène est pleine|El escenario está lleno|O palco está cheio|Die Bühne ist voll|Il palco è pieno|ステージは満席です|المنصة ممتلئة\n",
+  "\nThe stage is full|La scène est pleine|El escenario está lleno|O palco está cheio|Die Bühne ist voll|Il palco è pieno|ステージは満席です|المنصة ممتلئة\nThe stage is full · Try again when someone leaves the stage|La scène est pleine · Réessaie quand quelqu’un en descend|El escenario está lleno · Inténtalo cuando alguien baje|O palco está cheio · Tente de novo quando alguém sair|Die Bühne ist voll · Versuch es, wenn jemand runtergeht|Il palco è pieno · Riprova quando qualcuno scende|ステージは満席です · 誰かが降りたらもう一度どうぞ|المنصة ممتلئة · حاول مجددًا عندما يغادرها أحد\n");
 
 change('top layers start below the clock (stackTop)',
   "let y=phone.classList.contains('hascall')?70:8;",
