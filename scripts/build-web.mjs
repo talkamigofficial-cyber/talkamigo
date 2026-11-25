@@ -167,6 +167,8 @@ const APP_CSS = `
 .stream.remo>.lcfeed{display:flex!important;bottom:312px!important;max-height:calc(100% - 312px - 190px)!important}
 /* the keyboard-down button steps aside while the @ list is open (it covered the names) */
 body:has(.atlist) .kbdone.ico{visibility:hidden}
+/* the minimised room card steps aside on the Open room screen (it covered the Open button) */
+#phone:has(.crs) > .mcard{display:none!important}
 /* pop-up messages, Dynamic Island style (founder's pick A, 25 Nov): black, grows out of the island, message under the camera */
 .toast{background:#000!important;-webkit-backdrop-filter:none!important;backdrop-filter:none!important;box-shadow:0 12px 32px rgba(0,0,0,.32)!important;border-radius:26px!important;padding:9px 18px 9px 9px!important;max-width:min(360px,calc(100% - 24px))!important;gap:11px!important}
 .toast .tki{width:34px!important;height:34px!important;background:rgba(255,255,255,.16)}
@@ -613,6 +615,67 @@ change("profile completion: \"add a profile photo\" opens the photo picker",
 change("wallet, shop and purchase texts in 8 languages",
   "\nThe stage is full|La scène est pleine|El escenario está lleno|O palco está cheio|Die Bühne ist voll|Il palco è pieno|ステージは満席です|المنصة ممتلئة\n",
   "\nThe stage is full|La scène est pleine|El escenario está lleno|O palco está cheio|Die Bühne ist voll|Il palco è pieno|ステージは満席です|المنصة ممتلئة\nYour Diamonds|Tes Diamants|Tus Diamantes|Seus Diamantes|Deine Diamanten|I tuoi Diamanti|あなたのダイヤ|ماساتك\nNext tier|Palier suivant|Siguiente nivel|Próximo nível|Nächste Stufe|Livello successivo|次の段階|المستوى التالي\nFirst cash-out|Premier retrait|Primer retiro|Primeiro saque|Erste Auszahlung|Primo prelievo|初回出金|أول سحب\nYearly · renews automatically|Annuel · renouvellement automatique|Anual · se renueva automáticamente|Anual · renova automaticamente|Jährlich · verlängert sich automatisch|Annuale · si rinnova automaticamente|年額・自動更新|سنوي · يتجدد تلقائيًا\nMonthly · renews automatically|Mensuel · renouvellement automatique|Mensual · se renueva automáticamente|Mensal · renova automaticamente|Monatlich · verlängert sich automatisch|Mensile · si rinnova automaticamente|月額・自動更新|شهري · يتجدد تلقائيًا\nOne-time purchase|Achat unique|Compra única|Compra única|Einmalkauf|Acquisto unico|買い切り|شراء لمرة واحدة\nChoose a photo (demo)|Choisis une photo (démo)|Elige una foto (demo)|Escolha uma foto (demo)|Wähle ein Foto (Demo)|Scegli una foto (demo)|写真を選ぶ（デモ）|اختر صورة (تجريبي)\nFrames show around your photo everywhere: chats, rooms, Lives and Connect.|Les cadres entourent ta photo partout : discussions, salons, lives et Rencontrer.|Los marcos rodean tu foto en todas partes: chats, salas, directos y Conectar.|As molduras aparecem em volta da sua foto em todo lugar: conversas, salas, lives e Conectar.|Rahmen erscheinen überall um dein Foto: Chats, Räume, Lives und Verbinden.|Le cornici appaiono intorno alla tua foto ovunque: chat, stanze, live e Connetti.|フレームはチャット、ルーム、ライブ、つながるなど、どこでもあなたの写真を囲みます。|تظهر الإطارات حول صورتك في كل مكان: المحادثات والغرف والبث وتواصل.\nTurned into coins|Convertis en pièces|Convertidos en monedas|Convertidos em moedas|In Münzen umgewandelt|Convertiti in monete|コインに交換|تم تحويلها إلى عملات\nFrom 100 Diamonds|Depuis 100 Diamants|De 100 Diamantes|De 100 Diamantes|Aus 100 Diamanten|Da 100 Diamanti|ダイヤ100個から|من 100 ماسة\n");
+
+
+// ── Rooms / lessons / teacher audit fixes (25 Nov) ──
+change("lessons become real rooms at their time (helpers + reminders)",
+  "const planAll=()=>S.myLessons&&S.myLessons.length?PLAN.concat(S.myLessons):PLAN;",
+  "const planAll=()=>S.myLessons&&S.myLessons.length?PLAN.concat(S.myLessons):PLAN;\n/* [app] (25 Nov audit) a planned lesson becomes a real room at its time: students who reserved can join it, the teacher can start it.\n   Open from 5 minutes before the start until the end. Reminders: 10 minutes before (and at the start for the teacher). */\nfunction lessonNow(x){ const t=lessonDate(x).getTime(), n=Date.now(); return n>=t-5*60000&&n<t+(x.mins||45)*60000; }\nfunction lessonRoom(x){ const rid='pl_'+x.id, live=x.mode==='live', L=live?S.lives:S.rooms; let r=L.find(y=>y.id===rid);\n  if(!r){ const me=x.host==='me'; r=live?{id:rid,host:x.host,l:x.l,lang:x.lang,ls:[x.l],title:x.title,viewers:me?1:(x.booked||0)+4,price:.99,level:x.level,goal:x.goal,mins:x.mins,seats:x.seats,booked:x.booked||0,bg:'radial-gradient(90% 60% at 70% 20%,#FF8A5B,transparent 60%),radial-gradient(90% 70% at 10% 90%,#B4004E,transparent 60%),#3A0A1A',mine:me,lesson:x.id}\n      :{id:rid,l:x.l,lang:x.lang,topic:x.goal,teacher:true,price:.99,level:x.level,goal:x.goal,mins:x.mins,seats:x.seats,booked:x.booked||0,title:x.title,host:x.host,speakers:[],count:me?1:(x.booked||0)+4,mine:me,lesson:x.id};\n    L.unshift(r); }\n  S.paid[rid]=true; return (live?'live:':'room:')+rid; }\nsetInterval(()=>{ try{ if(!S.onboarded) return; const n=Date.now(); S.lrem=S.lrem||{};\n  planAll().forEach(x=>{ const mine=x.host==='me', res=(S.reserved||{})[x.id]; if(!mine&&!res) return; const t=lessonDate(x).getTime();\n    if(n>=t-10*60000&&n<t-60000&&!S.lrem[x.id+':10']){ S.lrem[x.id+':10']=1; notify('klass','<b>Starts in 10 min</b> “'+esc(x.title)+'” with '+(mine?esc(S.me.name):P[x.host].name)+'. Tap to get ready.',null,null,{chip:'10 min',act:['sheet','lres:'+x.id]}); }\n    if(n>=t&&n<t+(x.mins||45)*60000&&!S.lrem[x.id+':0']){ S.lrem[x.id+':0']=1; notify('klass','<b>'+(mine?'Time to start your lesson':'Your lesson is starting')+'</b> “'+esc(x.title)+'”',null,null,{chip:'Now',act:['lgo',x.id]}); } }); save(); }catch(e){} },20000);");
+change("lesson sheet: Join / Start at the time",
+  "${x.host==='me'?`<div class=\"tdone\" style=\"background:var(--chip);color:var(--ink)\">",
+  "${lessonNow(x)&&(x.host==='me'||res)?`<button class=\"btn block\" data-a=\"lgo\" data-v=\"${x.id}\" style=\"gap:8px\">${ic(x.mode==='live'?'video':'mic')}<span>${x.host==='me'?'Start your lesson':'Join the lesson'}</span></button>`:x.host==='me'?`<div class=\"tdone\" style=\"background:var(--chip);color:var(--ink)\">");
+change("lesson: the join/start action",
+  "case 'lpay': {",
+  "case 'lgo': { const x=planAll().find(y=>y.id===v); if(!x) break; if(!lessonNow(x)){ toast('It starts '+dayFmt(lessonDate(x),{weekday:'short'})+' '+x.time); break; } if(x.host!=='me'&&!(S.reserved||{})[x.id]){ UI.sheet={t:'lres',id:x.id}; render(); break; } UI.sheet=null; open(lessonRoom(x)); break; }\n    case 'lpay': {");
+change("lesson reserved: reminder at the real time (not 9 s later)",
+  "toast('Reserved! We’ll remind you 10 min before.'); setTimeout(()=>notify('klass','<b>Starts in 10 min</b> “'+esc(x.title)+'” with '+P[x.host].name+'. Tap to get ready.','livetab-go',null,{chip:'10 min'}),9000); }}); break; }",
+  "toast('Reserved! We’ll remind you 10 min before.'); }}); break; }");
+change("teacher: can’t plan a lesson in the past",
+  "time:D.time||'19:00'}; S.myLessons=[...(S.myLessons||[]),x];",
+  "time:D.time||'19:00'}; if(lessonDate(x).getTime()<Date.now()+60000){ toast('Pick a time later today, or another day'); return; } S.myLessons=[...(S.myLessons||[]),x];");
+change("Schedule: your own lessons always show",
+  "const fil=base.filter(x=>langOk(x.l)&&",
+  "const fil=base.filter(x=>(x.host==='me'||langOk(x.l))&&");
+change("teacher asked to fix something: back to their own plan until approved again",
+  "if(k==='needs'){ T.status='needs';",
+  "if(k==='needs'){ if(S.me.teacher&&S.plan==='infinity'&&S.planBefore!=null){ S.plan=S.planBefore; S.vip=S.plan!=='standard'; } S.me.teacher=false; T.status='needs';");
+change("\"X is live\" alerts: once per room, not on repeat",
+  "const L=liveFriends().filter(x=>x.kind==='live'||x.kind==='room'); if(!L.length) return; const x=L[UI.liveTick%L.length];",
+  "S.liveSeen=S.liveSeen||{}; const L=liveFriends().filter(x=>(x.kind==='live'||x.kind==='room')&&!S.liveSeen[x.go]); if(!L.length) return; const x=L[0]; S.liveSeen[x.go]=Date.now();");
+change("Join a live: the sheet tells the truth about the camera",
+  "['mic','Voice only','Your camera stays off. Only the host is on camera.']",
+  "['mic','Mic first','Your camera stays off unless you turn it on.']");
+change("lessons/teacher fixes: texts in 8 languages",
+  "\nThe stage is full|La scène est pleine|El escenario está lleno|O palco está cheio|Die Bühne ist voll|Il palco è pieno|ステージは満席です|المنصة ممتلئة\n",
+  "\nThe stage is full|La scène est pleine|El escenario está lleno|O palco está cheio|Die Bühne ist voll|Il palco è pieno|ステージは満席です|المنصة ممتلئة\nStart your lesson|Commencer ton cours|Empezar tu clase|Começar sua aula|Deinen Kurs starten|Inizia la tua lezione|レッスンを始める|ابدأ درسك\nJoin the lesson|Rejoindre le cours|Unirse a la clase|Entrar na aula|Am Kurs teilnehmen|Partecipa alla lezione|レッスンに参加|انضم إلى الدرس\nTime to start your lesson|C’est l’heure de commencer ton cours|Es hora de empezar tu clase|Hora de começar sua aula|Zeit, deinen Kurs zu starten|È ora di iniziare la tua lezione|レッスン開始の時間です|حان وقت بدء درسك\nYour lesson is starting|Ton cours commence|Tu clase empieza|Sua aula está começando|Dein Kurs beginnt|La tua lezione sta iniziando|レッスンが始まります|درسك يبدأ الآن\nMic first|Micro d’abord|Primero el micro|Microfone primeiro|Erst das Mikro|Prima il microfono|まずはマイクで|الميكروفون أولًا\nYour camera stays off unless you turn it on.|Ta caméra reste coupée sauf si tu l’allumes.|Tu cámara se queda apagada salvo que la enciendas.|Sua câmera fica desligada a menos que você a ligue.|Deine Kamera bleibt aus, außer du schaltest sie ein.|La fotocamera resta spenta finché non la accendi.|自分でオンにしない限りカメラはオフのままです。|تبقى الكاميرا مطفأة إلا إذا شغّلتها.\nNow|Maintenant|Ahora|Agora|Jetzt|Ora|今|الآن\n");
+change("\"It starts …\" translated (rules)",
+  "[/^10 min left in this (room|live)$/,'w10a']",
+  "[/^It starts (.+)$/,'lstarts'],[/^10 min left in this (room|live)$/,'w10a']");
+change("\"It starts …\" translated (texts)",
+  "w10a:{fr:'Plus que 10 min dans ce salon'",
+  "lstarts:{fr:'Ça commence $1',es:'Empieza el $1',pt:'Começa $1',de:'Es beginnt $1',it:'Inizia $1',ja:'開始：$1',ar:'يبدأ $1'},w10a:{fr:'Plus que 10 min dans ce salon'");
+
+
+// ── Rooms audit fixes, part 2 (25 Nov) ──
+change("room settings: pinning a notice later completes the room task",
+  "x.notice=v2; x.pin=d.pin; ch.push('notice'); } }",
+  "x.notice=v2; x.pin=d.pin; ch.push('notice'); if(v2&&d.pin!==false&&!LV) setTimeout(()=>rtask('notice'),600); } }");
+change("own room: demo gifts only with an audience, Diamonds on hold",
+  "if(r.mine){ S.diamonds+=dia(g); R.earned+=dia(g);",
+  "if(r.mine&&(r.count||0)<5){ delete R.top[who]; } else if(r.mine){ S.diamonds+=dia(g); S.pending=(S.pending||0)+dia(g); R.earned+=dia(g);");
+change("own live: demo gifts only with an audience, Diamonds on hold",
+  "if(L.mine){ S.diamonds+=dia(g); R.earned+=dia(g);",
+  "if(L.mine&&(L.viewers||0)<5){ delete R.top[who]; } else if(L.mine){ S.diamonds+=dia(g); S.pending=(S.pending||0)+dia(g); R.earned+=dia(g);");
+change("received gifts: Diamonds wait the 14-day hold",
+  "S.diamonds=(S.diamonds||0)+dia(g); hist('d',P[from].name+' sent you a '+g.name+' '+g.e,dia(g));",
+  "S.diamonds=(S.diamonds||0)+dia(g); S.pending=(S.pending||0)+dia(g); hist('d',P[from].name+' sent you a '+g.name+' '+g.e,dia(g));");
+
+change("teacher application message: no beta promise (row)",
+  "Application sent · we check every teacher, usually within 48 hours (beta: a few seconds)|Candidature envoyée · nous vérifions chaque prof, en général sous 48 h (bêta : quelques secondes)|Solicitud enviada · revisamos a cada profesor, normalmente en 48 horas (beta: unos segundos)|Inscrição enviada · verificamos cada professor, em geral em até 48 horas (beta: alguns segundos)|Bewerbung gesendet · wir prüfen jede Lehrkraft, meist innerhalb von 48 Stunden (Beta: ein paar Sekunden)|Candidatura inviata · controlliamo ogni insegnante, di solito entro 48 ore (beta: pochi secondi)|申請を送信しました・通常48時間以内に確認します（ベータ版：数秒）|تم إرسال الطلب · نراجع كل معلّم عادةً خلال 48 ساعة (النسخة التجريبية: بضع ثوانٍ)",
+  "Application sent · we check every teacher, usually within 48 hours|Candidature envoyée · nous vérifions chaque prof, en général sous 48 h|Solicitud enviada · revisamos a cada profesor, normalmente en 48 horas|Inscrição enviada · verificamos cada professor, em geral em até 48 horas|Bewerbung gesendet · wir prüfen jede Lehrkraft, meist innerhalb von 48 Stunden|Candidatura inviata · controlliamo ogni insegnante, di solito entro 48 ore|申請を送信しました・通常48時間以内に確認します|تم إرسال الطلب · نراجع كل معلّم عادةً خلال 48 ساعة");
+change("teacher application message: no beta promise (code)",
+  "'Application sent · we check every teacher, usually within 48 hours (beta: a few seconds)'",
+  "'Application sent · we check every teacher, usually within 48 hours'");
 
 change('iPhone screen edges + flag styles (extra CSS)', '</style>', APP_CSS + '</style>');
 
