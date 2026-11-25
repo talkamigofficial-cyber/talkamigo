@@ -193,6 +193,9 @@ body:has(.atlist) .kbdone.ico{visibility:hidden}
 #phone.hasisl .cqual{top:11px;padding-top:46px!important;border-radius:32px!important;min-width:min(250px,calc(100% - 24px));transform-origin:50% 18px;animation:islin .46s cubic-bezier(.2,1.15,.35,1) both!important}
 .cqual svg{width:34px!important;height:34px!important;padding:8px;border-radius:50%;background:#F29A0C;stroke:#fff!important;box-sizing:border-box}
 @media (prefers-reduced-motion:reduce){.offbar,.offbar.isl,.offbar.isl>*,.cqual{animation:none!important}}
+/* behind the keyboard: the keyboard's own colour (never a white or black gap while it slides) — follows the iPhone's light/dark setting like the keyboard does */
+#phone:has(.troom.rtype){background:#CED1D8!important}
+@media (prefers-color-scheme:dark){#phone:has(.troom.rtype){background:#2A2A2D!important}}
 .troom.rtype2 .tgrid{gap:4px 4px!important;padding-top:2px!important}
 .troom.rtype2 .tseat{gap:2px}
 .troom.rtype2 .tseat .tav{zoom:.7}
@@ -376,6 +379,15 @@ change("gift animation stops when you start typing",
 change("offline notice: Dynamic Island too",
   "if(off){ off.style.top=y+'px'; y+=off.offsetHeight+8; }",
   "phone.classList.toggle('hasisl',appSafeTop()>=54);\n  if(off){ const oi=appSafeTop()>=54&&!phone.classList.contains('hascall'); off.classList.toggle('isl',oi); off.style.top=(oi?11:y)+'px'; y=(oi?11:y)+off.offsetHeight+8; }");
+
+
+// ── Talk room typing: room glides with the keyboard; keyboard colour behind it (founder, 25 Nov) ──
+change("typing in a talk room: the room glides with the keyboard (opening)",
+  "const h=Math.max(220,Math.round(ln.V-top)); if(b.style.height!==h+'px'){ b.style.height=h+'px'; b.style.maxHeight=h+'px'; }",
+  "const h=Math.max(220,Math.round(ln.V-top)); if(b.style.height!==h+'px'){ const first=!b.style.height, rm=matchMedia('(prefers-reduced-motion: reduce)').matches;\n        /* [app] (founder, 25 Nov) the room shrinks at the keyboard's own speed and curve, so the two move together (it used to snap, then the keyboard arrived) */\n        if(first&&!rm){ b.style.height=b.getBoundingClientRect().height+'px'; b.style.maxHeight=b.style.height; void b.offsetHeight; b.style.transition='height .34s cubic-bezier(.2,.85,.25,1),max-height .34s cubic-bezier(.2,.85,.25,1)'; clearTimeout(b._kbT); b._kbT=setTimeout(()=>{ b.style.transition=''; },380); }\n        b.style.height=h+'px'; b.style.maxHeight=h+'px'; }");
+change("typing in a talk room: the room glides back when the keyboard closes",
+  "phone.querySelectorAll('.troom.rtype').forEach(b=>{ b.classList.remove('rtype','rtype2','rtype3','rtype4'); b.style.height=''; b.style.maxHeight='';",
+  "phone.querySelectorAll('.troom.rtype').forEach(b=>{ b.classList.remove('rtype','rtype2','rtype3','rtype4');\n      if(!matchMedia('(prefers-reduced-motion: reduce)').matches&&b.style.height){ const to=(b.parentElement||phone).getBoundingClientRect().bottom-b.getBoundingClientRect().top; b.style.transition='height .32s cubic-bezier(.2,.85,.25,1),max-height .32s cubic-bezier(.2,.85,.25,1)'; b.style.height=to+'px'; b.style.maxHeight=to+'px'; clearTimeout(b._kbT); b._kbT=setTimeout(()=>{ b.style.transition=''; b.style.height=''; b.style.maxHeight=''; },340); }\n      else { b.style.height=''; b.style.maxHeight=''; }");
 
 change('iPhone screen edges + flag styles (extra CSS)', '</style>', APP_CSS + '</style>');
 
