@@ -147,13 +147,13 @@ const APP_CSS = `
 .lsplit .ltvid svg{width:14px;height:14px;fill:none;stroke:#fff;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
 .lb3.lgnocam{opacity:.5}
 /* [app] typing in a talk room (class rtype, set while the keyboard is up): the room ends at the keyboard; extras hide so messages show */
-.troom.rtype .tdock,.troom:has(>.emopan) .tdock,.troom.rtype .trules,.troom:has(>.emopan) .trules,.troom.rtype .tnotice:not(.tpin),.troom:has(>.emopan) .tnotice:not(.tpin),.troom.rtype .ttools,.troom:has(>.emopan) .ttools,.troom.rtype .tsub,.troom:has(>.emopan) .tsub,.troom.rtype .tseat.empty,.troom:has(>.emopan) .tseat.empty,.troom.rtype .tadots,.troom:has(>.emopan) .tadots{display:none!important}
+.troom.rtype .tdock,.troom:has(>.emopan) .tdock,.troom.rtype .trules,.troom:has(>.emopan) .trules,.troom.rtype .tnotice:not(.tpin),.troom:has(>.emopan) .tnotice:not(.tpin),.troom.rtype .ttools,.troom:has(>.emopan) .ttools,.troom.rtype .tsub,.troom:has(>.emopan) .tsub,.troom.rtype .tadots,.troom:has(>.emopan) .tadots{display:none!important}
 .troom.rtype form.tbar,.troom:has(>.emopan) form.tbar{padding-bottom:8px!important}
 .troom.rtype .rgame,.troom:has(>.emopan) .rgame{margin-top:6px;padding:6px 12px;gap:2px}
 .troom.rtype .rgame:not(.col) .rgh,.troom:has(>.emopan) .rgame:not(.col) .rgh,.troom.rtype .rgame .rgsub,.troom:has(>.emopan) .rgame .rgsub{display:none!important}
 .troom.rtype .rgame .rgnext,.troom:has(>.emopan) .rgame .rgnext{height:30px}
 .troom.rtype #roomscroll,.troom:has(>.emopan) #roomscroll{min-height:0;flex:1 1 auto!important;height:auto!important}
-.troom.rtype .tgrid,.troom:has(>.emopan) .tgrid{zoom:1!important}
+/* (the stage keeps whatever size it had before typing) */
 .troom.rtype #roomscroll,.troom:has(>.emopan) #roomscroll{display:flex!important;flex-direction:column}
 .troom.rtype #roomscroll::before,.troom:has(>.emopan) #roomscroll::before{content:'';flex:1 1 auto}
 .troom>.atlist{position:absolute;left:0;right:0;z-index:12;max-height:46vh;overflow-y:auto}
@@ -196,14 +196,11 @@ body:has(.atlist) .kbdone.ico{visibility:hidden}
 /* behind the keyboard: the keyboard's own colour (never a white or black gap while it slides) — follows the iPhone's light/dark setting like the keyboard does */
 #phone:has(.troom.rtype){background:#CED1D8!important}
 @media (prefers-color-scheme:dark){#phone:has(.troom.rtype){background:#2A2A2D!important}}
-.troom.rtype2 .tgrid{gap:4px 4px!important;padding-top:2px!important}
-.troom.rtype2 .tseat{gap:2px}
-.troom.rtype2 .tseat .tav{zoom:.7}
-.troom.rtype2 .tnm{font-size:11.5px;line-height:14px;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.troom.rtype2 .tnm .eq{display:none}
+/* (25 Nov, founder) the stage never changes while typing: same seat size, same shape, empty seats stay. Only what is under it makes room: */
 .troom.rtype3 .tl>span:last-child{display:none}
 .troom.rtype3 .tlis{padding:2px 0 0!important}
-.troom.rtype4 .tlis{display:none!important}
+.troom.rtype4 .rgame .rgh2{display:none!important}
+.troom.rtype5 .tlis{display:none!important}
 /* reply card (talk rooms and lives): sits right above the box, red edge, name in red, the message on one line, × to cancel */
 .rrbar{animation:rrin .18s cubic-bezier(.2,.8,.2,1)}
 @keyframes rrin{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
@@ -285,7 +282,7 @@ change("typing in a talk room: nothing is lifted (the room fits above the keyboa
   "const stillEls=(c)=>c.kind==='sheet'?[c.box]:c.kind==='room'?[]:c.kind==='live'?[...c.box.querySelectorAll(':scope > .lcfeed, :scope > .lrail, :scope > form.lbar, :scope > .atlist, :scope > .trcard, :scope > .rrbar')]:[c.f];");
 change("typing in a talk room: the room ends at the keyboard",
   "phone.classList.remove('kbopen','kbb'); phone.classList.add('kbstill'); UI.kbBlind=false;",
-  "phone.classList.remove('kbopen','kbb'); phone.classList.add('kbstill'); UI.kbBlind=false;\n    /* [app] (founder, 23 Nov) typing in a talk room: the top of the room never moves, the room simply ends where the keyboard starts.\n       Extras hide (quick replies, rules, mode row, empty seats, subtitles; the game card shows only the word/blanks and hint), so the\n       latest messages stay visible right above the bar. Before, only the bar was lifted: it covered the game card and hid the chat. */\n    if(c.kind==='room'){ const b=c.box, sTop=st?st.getBoundingClientRect().top:0, top=b.getBoundingClientRect().top-sTop; b.classList.add('rtype');\n      const h=Math.max(220,Math.round(ln.V-top)); if(b.style.height!==h+'px'){ b.style.height=h+'px'; b.style.maxHeight=h+'px'; }\n      const sc=document.getElementById('roomscroll'); if(sc&&(anim||sc.scrollHeight-sc.scrollTop-sc.clientHeight<80)) sc.scrollTop=sc.scrollHeight;\n      const al=b.querySelector(':scope > .atlist'), fb=b.querySelector(':scope > form.tbar'); if(al&&fb) al.style.bottom=(b.getBoundingClientRect().bottom-fb.getBoundingClientRect().top)+'px';\n      /* tiny phones (iPhone SE): if the chat still has no room, first the audience row drops its names, then it hides while typing */\n      b.classList.remove('rtype3','rtype4'); const chatH=()=>{ const q=document.getElementById('roomscroll'); return q?q.getBoundingClientRect().height:999; };\n      if(chatH()<70){ b.classList.add('rtype3'); if(chatH()<56) b.classList.add('rtype4'); }\n      UI.kbLift=0; UI.kbStillK='room'; return; }");
+  "phone.classList.remove('kbopen','kbb'); phone.classList.add('kbstill'); UI.kbBlind=false;\n    /* [app] (founder, 23 Nov) typing in a talk room: the top of the room never moves, the room simply ends where the keyboard starts.\n       Extras hide (quick replies, rules, mode row, empty seats, subtitles; the game card shows only the word/blanks and hint), so the\n       latest messages stay visible right above the bar. Before, only the bar was lifted: it covered the game card and hid the chat. */\n    if(c.kind==='room'){ const b=c.box, sTop=st?st.getBoundingClientRect().top:0, top=b.getBoundingClientRect().top-sTop; b.classList.add('rtype');\n      const h=Math.max(220,Math.round(ln.V-top)); if(b.style.height!==h+'px'){ b.style.height=h+'px'; b.style.maxHeight=h+'px'; }\n      const sc=document.getElementById('roomscroll'); if(sc&&(anim||sc.scrollHeight-sc.scrollTop-sc.clientHeight<80)) sc.scrollTop=sc.scrollHeight;\n      const al=b.querySelector(':scope > .atlist'), fb=b.querySelector(':scope > form.tbar'); if(al&&fb) al.style.bottom=(b.getBoundingClientRect().bottom-fb.getBoundingClientRect().top)+'px';\n      /* if the chat has less than ~80 pt: the audience row drops its names → the game card drops its hint line → the audience row hides (only as far as needed) */\n      b.classList.remove('rtype3','rtype4','rtype5'); const chatH=()=>{ const q=document.getElementById('roomscroll'); return q?q.getBoundingClientRect().height:999; };\n      for(const k of ['rtype3','rtype4','rtype5']){ if(chatH()>=80) break; b.classList.add(k); }\n      UI.kbLift=0; UI.kbStillK='room'; return; }");
 change("typing in a talk room: back to normal when the keyboard closes",
   "phone.querySelectorAll('.kbsp').forEach(e=>e.remove());",
   "phone.querySelectorAll('.kbsp').forEach(e=>e.remove());\n    phone.querySelectorAll('.troom.rtype').forEach(b=>{ b.classList.remove('rtype'); b.style.height=''; b.style.maxHeight=''; const al=b.querySelector(':scope > .atlist'); if(al) al.style.bottom=''; });\n    if(UI.fxQ&&UI.fxQ.length) setTimeout(fxNext,400);");
@@ -321,7 +318,7 @@ change("reply card: who and what you are replying to",
   "function rreBar(){ const q=UI.rre; return `<div class=\"rrbar\" role=\"status\"><span class=\"rrbi\">${ic('reply')}</span><span><b><span>Reply to</span> ${q.who==='me'?'<span>yourself</span>':P[q.who]?P[q.who].name:''}</b>");
 
 
-// ── Talk room seats (founder, 24–25 Nov): fixed seat numbers; with 5+ on stage, same shape but smaller while typing ──
+// ── Talk room seats (founder, 24–25 Nov): fixed seat numbers; the stage never changes while typing ──
 change("stage seats: everyone keeps their seat number",
   "const stage=[r.host,...r.speakers,...(R.onStage&&!host?['me']:[])].slice(0,max);\n  const seatsN=Math.max(max,stage.length);",
   "/* [app] (founder, 24 Nov) fixed seats: whoever goes up gets the first free seat and keeps it until they leave the stage.\n     Someone joining never pushes anyone along; someone leaving leaves their seat empty (numbered) for the next person. */\n  const onSt=[r.host,...r.speakers,...(R.onStage&&!host?['me']:[])].filter((x,k,a)=>x&&a.indexOf(x)===k), seatOf=R.seatOf||(R.seatOf={});\n  Object.keys(seatOf).forEach(x=>{ if(!onSt.includes(x)||(x!==r.host&&seatOf[x]===0)) delete seatOf[x]; }); seatOf[r.host]=0;\n  onSt.forEach(x=>{ if(seatOf[x]==null){ const used=new Set(Object.values(seatOf)); let k=1; while(used.has(k)) k++; seatOf[x]=k; } });\n  const stage=[]; onSt.forEach(x=>{ if(seatOf[x]<max) stage[seatOf[x]]=x; });\n  const seatsN=Math.max(max,stage.length);");
@@ -330,10 +327,10 @@ change("stage seats: audience count uses the people on stage",
   "const lisN=Math.max(0,r.count-stage.filter(Boolean).length), pool=Object.keys(P).filter(x=>!stage.includes(x)&&x!==r.host&&!isBlocked(x))");
 change("typing with 5+ on stage: seats in one row",
   "if(c.kind==='room'){ const b=c.box, sTop=st?st.getBoundingClientRect().top:0, top=b.getBoundingClientRect().top-sTop; b.classList.add('rtype');",
-  "if(c.kind==='room'){ const b=c.box, sTop=st?st.getBoundingClientRect().top:0, top=b.getBoundingClientRect().top-sTop; b.classList.add('rtype');\n      /* more than 4 people on stage = two rows of seats: while typing they keep the same shape (4 on top, the rest under), only smaller, so the chat keeps some room */\n      b.classList.toggle('rtype2', b.querySelectorAll('.tgrid .tseat:not(.empty)').length>4);");
+  "if(c.kind==='room'){ const b=c.box, sTop=st?st.getBoundingClientRect().top:0, top=b.getBoundingClientRect().top-sTop; b.classList.add('rtype');\n      /* the stage itself never changes while typing (founder, 25 Nov); what is under it makes room, see the steps below */");
 change("typing with 5+ on stage: back to two rows after",
   "phone.querySelectorAll('.troom.rtype').forEach(b=>{ b.classList.remove('rtype');",
-  "phone.querySelectorAll('.troom.rtype').forEach(b=>{ b.classList.remove('rtype','rtype2','rtype3','rtype4');");
+  "phone.querySelectorAll('.troom.rtype').forEach(b=>{ b.classList.remove('rtype','rtype2','rtype3','rtype4','rtype5');");
 
 
 // ── Full stage (founder, 25 Nov): asking to go up when all seats are taken says so ──
@@ -386,8 +383,8 @@ change("typing in a talk room: the room glides with the keyboard (opening)",
   "const h=Math.max(220,Math.round(ln.V-top)); if(b.style.height!==h+'px'){ b.style.height=h+'px'; b.style.maxHeight=h+'px'; }",
   "const h=Math.max(220,Math.round(ln.V-top)); if(b.style.height!==h+'px'){ const first=!b.style.height, rm=matchMedia('(prefers-reduced-motion: reduce)').matches;\n        /* [app] (founder, 25 Nov) the room shrinks at the keyboard's own speed and curve, so the two move together (it used to snap, then the keyboard arrived) */\n        if(first&&!rm){ b.style.height=b.getBoundingClientRect().height+'px'; b.style.maxHeight=b.style.height; void b.offsetHeight; b.style.transition='height .34s cubic-bezier(.2,.85,.25,1),max-height .34s cubic-bezier(.2,.85,.25,1)'; clearTimeout(b._kbT); b._kbT=setTimeout(()=>{ b.style.transition=''; },380); }\n        b.style.height=h+'px'; b.style.maxHeight=h+'px'; }");
 change("typing in a talk room: the room glides back when the keyboard closes",
-  "phone.querySelectorAll('.troom.rtype').forEach(b=>{ b.classList.remove('rtype','rtype2','rtype3','rtype4'); b.style.height=''; b.style.maxHeight='';",
-  "phone.querySelectorAll('.troom.rtype').forEach(b=>{ b.classList.remove('rtype','rtype2','rtype3','rtype4');\n      if(!matchMedia('(prefers-reduced-motion: reduce)').matches&&b.style.height){ const to=(b.parentElement||phone).getBoundingClientRect().bottom-b.getBoundingClientRect().top; b.style.transition='height .32s cubic-bezier(.2,.85,.25,1),max-height .32s cubic-bezier(.2,.85,.25,1)'; b.style.height=to+'px'; b.style.maxHeight=to+'px'; clearTimeout(b._kbT); b._kbT=setTimeout(()=>{ b.style.transition=''; b.style.height=''; b.style.maxHeight=''; },340); }\n      else { b.style.height=''; b.style.maxHeight=''; }");
+  "phone.querySelectorAll('.troom.rtype').forEach(b=>{ b.classList.remove('rtype','rtype2','rtype3','rtype4','rtype5'); b.style.height=''; b.style.maxHeight='';",
+  "phone.querySelectorAll('.troom.rtype').forEach(b=>{ b.classList.remove('rtype','rtype2','rtype3','rtype4','rtype5');\n      if(!matchMedia('(prefers-reduced-motion: reduce)').matches&&b.style.height){ const to=(b.parentElement||phone).getBoundingClientRect().bottom-b.getBoundingClientRect().top; b.style.transition='height .32s cubic-bezier(.2,.85,.25,1),max-height .32s cubic-bezier(.2,.85,.25,1)'; b.style.height=to+'px'; b.style.maxHeight=to+'px'; clearTimeout(b._kbT); b._kbT=setTimeout(()=>{ b.style.transition=''; b.style.height=''; b.style.maxHeight=''; },340); }\n      else { b.style.height=''; b.style.maxHeight=''; }");
 
 change('iPhone screen edges + flag styles (extra CSS)', '</style>', APP_CSS + '</style>');
 
