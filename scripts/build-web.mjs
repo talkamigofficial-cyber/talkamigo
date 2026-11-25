@@ -167,6 +167,10 @@ const APP_CSS = `
 .stream.remo>.lcfeed{display:flex!important;bottom:312px!important;max-height:calc(100% - 312px - 190px)!important}
 /* the keyboard-down button steps aside while the @ list is open (it covered the names) */
 body:has(.atlist) .kbdone.ico{visibility:hidden}
+/* someone's local time on their profile */
+.ltime{display:inline-flex;align-items:center;gap:4px;font-size:13px;color:var(--muted);font-weight:600}
+.ltime svg{width:13px;height:13px;fill:none;stroke:currentColor;stroke-width:2.2}
+.ltime small{font-size:11.5px;opacity:.8}
 /* text people type follows its own direction (French in an Arabic app keeps its punctuation on the right side) */
 #corr-t,#corr-n,#cmt,#rc-input,#lc-input{unicode-bidi:plaintext}
 /* typing in a talk room on small phones: the stage keeps its size; if it doesn't all fit above the keyboard, the stage area scrolls instead of pushing the comment box under the keyboard */
@@ -775,6 +779,28 @@ change("quick log-in never skips an unfinished sign-up (it resumes it)",
 change("resume sign-up: text",
   "\nThe stage is full|La scène est pleine|El escenario está lleno|O palco está cheio|Die Bühne ist voll|Il palco è pieno|ステージは満席です|المنصة ممتلئة\n",
   "\nThe stage is full|La scène est pleine|El escenario está lleno|O palco está cheio|Die Bühne ist voll|Il palco è pieno|ステージは満席です|المنصة ممتلئة\nLet’s finish your sign-up|Terminons ton inscription|Terminemos tu registro|Vamos terminar seu cadastro|Lass uns deine Anmeldung abschließen|Completiamo la tua iscrizione|登録を完了しましょう|لنُكمل تسجيلك\n");
+
+
+// ── Someone's profile: local time; tap Followers / Following to see the lists (founder, 25 Nov) ──
+change("profile: local time + follower lists (helpers)",
+  "function vUser(id){",
+  "/* [app] (founder, 25 Nov) someone's local time on their profile, and their Followers / Following lists */\nconst TZ_CITY={Chicago:'America/Chicago','Montréal':'America/Toronto',Sydney:'Australia/Sydney',Guadalajara:'America/Mexico_City','Mexico City':'America/Mexico_City'};\nconst TZ_CC={AR:'America/Argentina/Buenos_Aires',AU:'Australia/Sydney',BE:'Europe/Brussels',CA:'America/Toronto',CH:'Europe/Zurich',CL:'America/Santiago',CO:'America/Bogota',ES:'Europe/Madrid',FR:'Europe/Paris',GB:'Europe/London',IE:'Europe/Dublin',JP:'Asia/Tokyo',MA:'Africa/Casablanca',MX:'America/Mexico_City',NG:'Africa/Lagos',PT:'Europe/Lisbon',US:'America/New_York',DE:'Europe/Berlin',IT:'Europe/Rome',BR:'America/Sao_Paulo',KR:'Asia/Seoul',CN:'Asia/Shanghai',IN:'Asia/Kolkata',NL:'Europe/Amsterdam'};\nfunction localTime(p){ const tz=TZ_CITY[p.city]||TZ_CC[p.cc]; if(!tz) return ''; try{ const now=new Date(), t=now.toLocaleTimeString(LOC(),{hour:'2-digit',minute:'2-digit',timeZone:tz});\n  const off=z=>{ const d=new Date(now.toLocaleString('en-US',{timeZone:z})); return d.getTime(); }; const mine=Intl.DateTimeFormat().resolvedOptions().timeZone; const h=Math.round((off(tz)-off(mine))/36e5);\n  return `<span class=\"ltime\" aria-label=\"${TX('Local time')} ${t}\">${ic('clock')} ${t}${h?` <small>${h>0?'+':'−'}${Math.abs(h)} h</small>`:''}</span>`; }catch(e){ return ''; } }\nfunction uFolList(id,k){ const h=s=>{ let n=0; for(const c of s) n=(n*31+c.charCodeAt(0))>>>0; return n; };\n  let L=Object.keys(P).filter(x=>x!==id&&!isBlocked(x)&&h(id+'|'+k+'|'+x)%3!==0); if(k==='followers'&&S.follows[id]) L=['me',...L]; if(k==='following'&&followsMe(id)) L=['me',...L]; return L; }\nfunction vUFollows(v){ const [id,k0]=String(v).split('|'), k=k0==='following'?'following':'followers', p=P[id]; if(!p) return vProfile();\n  const total=k==='followers'?800+p.name.length*211+(S.follows[id]?1:0):120+p.age*3, L=uFolList(id,k);\n  const row=x=>x==='me'?`<button class=\"srow\" data-a=\"tab\" data-v=\"profile\" style=\"border:0;background:none;width:100%;text-align:start;padding:0;display:flex;align-items:center;gap:12px\">${av('me',44)}<span style=\"flex:1;min-width:0\"><b>${esc(S.me.name)}</b> <span class=\"muted\">· <span>You</span></span></span></button>`\n    :`<div style=\"display:flex;align-items:center;gap:12px\"><button data-a=\"go\" data-v=\"user:${x}\" style=\"border:0;background:none;padding:0;display:flex;align-items:center;gap:12px;flex:1;min-width:0;text-align:start;color:inherit\">${av(x,44)}<span style=\"min-width:0\"><b>${P[x].name}</b><span class=\"muted\" style=\"display:block;font-size:12.5px\">${flagDot(P[x].cc,13)} ${P[x].city}</span></span></button><button class=\"btn small ${S.follows[x]?'glass':''}\" style=\"height:34px;padding:0 14px\" data-a=\"follow\" data-v=\"${x}\">${S.follows[x]?'Following ✓':'Follow'}</button></div>`;\n  return `<div class=\"screen pushed\" data-swipe>${topBar(p.name)}\n    <div class=\"pad\"><div class=\"seg\">${[['followers',fmt(800+p.name.length*211+(S.follows[id]?1:0))+' followers'],['following',(120+p.age*3)+' following']].map(([x,l])=>`<button class=\"${k===x?'on':''}\" data-a=\"ufol-tab\" data-v=\"${id}|${x}\">${l}</button>`).join('')}</div></div>\n    <div class=\"scroll\" data-sk=\"ufol-${id}-${k}\"><div class=\"pad\" style=\"display:flex;flex-direction:column;gap:14px;padding-top:16px;padding-bottom:24px\">${L.map(row).join('')}${total>L.length?`<span class=\"muted\" style=\"font-size:13px;text-align:center\">+ ${n0(total-L.length)} more</span>`:''}</div></div></div>`; }\nfunction vUser(id){");
+change("profile: Followers / Following can be tapped",
+  "<div class=\"stat\"><b>${fmt(800+p.name.length*211)}</b><span>Followers</span></div><div class=\"stat\"><b>${120+p.age*3}</b><span>Following</span></div>",
+  "<button class=\"stat\" data-a=\"go\" data-v=\"ufol:${id}|followers\" style=\"border:0;background:none;padding:0;color:inherit;font:inherit\"><b>${fmt(800+p.name.length*211+(f?1:0))}</b><span>Followers</span></button><button class=\"stat\" data-a=\"go\" data-v=\"ufol:${id}|following\" style=\"border:0;background:none;padding:0;color:inherit;font:inherit\"><b>${120+p.age*3}</b><span>Following</span></button>");
+change("profile: their local time next to the city",
+  "${flagDot(p.cc,15)} ${p.city}${p.online?' · <span style=\"color:var(--good);font-weight:700\">online</span>':''}</span>",
+  "${flagDot(p.cc,15)} ${p.city}${p.online?' · <span style=\"color:var(--good);font-weight:700\">online</span>':''}</span>${localTime(p)}");
+change("route for the follower lists",
+  "follows:()=>vFollows(c.id),",
+  "follows:()=>vFollows(c.id),ufol:()=>vUFollows(c.id),");
+change("profile: texts",
+  "\nThe stage is full|La scène est pleine|El escenario está lleno|O palco está cheio|Die Bühne ist voll|Il palco è pieno|ステージは満席です|المنصة ممتلئة\n",
+  "\nThe stage is full|La scène est pleine|El escenario está lleno|O palco está cheio|Die Bühne ist voll|Il palco è pieno|ステージは満席です|المنصة ممتلئة\nLocal time|Heure locale|Hora local|Hora local|Ortszeit|Ora locale|現地時間|التوقيت المحلي\n");
+
+change("follower lists: switch between Followers and Following",
+  "case 'follow':",
+  "case 'ufol-tab': { const c=cur(); if(c&&c.s==='ufol'){ c.id=v; render(); } break; }\n    case 'follow':");
 
 change('iPhone screen edges + flag styles (extra CSS)', '</style>', APP_CSS + '</style>');
 
