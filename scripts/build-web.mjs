@@ -184,6 +184,15 @@ body:has(.atlist) .kbdone.ico{visibility:hidden}
 .toast:not(.isl).tout{animation-name:toastoutx!important}
 @keyframes toastoutx{to{transform:translateX(-50%) translateY(-10px);opacity:0}}
 @media (prefers-reduced-motion:reduce){.toast.isl,.toast.isl>*{animation:none!important}}
+/* every pop-up-style notice uses the same Dynamic Island look (founder, 25 Nov): offline / reconnecting, weak connection in calls */
+.offbar{left:50%!important;right:auto!important;transform:translateX(-50%);width:max-content;max-width:min(360px,calc(100% - 24px));background:#000!important;border-radius:26px!important;padding:10px 18px 10px 10px!important;gap:11px!important;font-size:14.5px!important;box-shadow:0 12px 32px rgba(0,0,0,.32)!important;animation:toastin .34s cubic-bezier(.2,1.1,.35,1)!important}
+.offbar svg{width:34px!important;height:34px!important;padding:8px;border-radius:50%;background:#F29A0C;stroke:#fff!important;box-sizing:border-box}
+.offbar.isl{padding-top:46px!important;border-radius:32px!important;min-width:min(250px,calc(100% - 24px));transform-origin:50% 18px;animation:islin .46s cubic-bezier(.2,1.15,.35,1) both!important}
+.offbar.isl>*{animation:islc .26s .14s both}
+.cqual{position:absolute;left:50%;top:calc(var(--sa-top,0px) + 8px);transform:translateX(-50%);z-index:30;margin:0!important;width:max-content;max-width:min(360px,calc(100% - 24px));background:#000!important;border-radius:26px!important;padding:10px 18px 10px 10px!important;gap:11px!important;font-size:14.5px!important;box-shadow:0 12px 32px rgba(0,0,0,.35);animation:toastin .34s cubic-bezier(.2,1.1,.35,1)!important}
+#phone.hasisl .cqual{top:11px;padding-top:46px!important;border-radius:32px!important;min-width:min(250px,calc(100% - 24px));transform-origin:50% 18px;animation:islin .46s cubic-bezier(.2,1.15,.35,1) both!important}
+.cqual svg{width:34px!important;height:34px!important;padding:8px;border-radius:50%;background:#F29A0C;stroke:#fff!important;box-sizing:border-box}
+@media (prefers-reduced-motion:reduce){.offbar,.offbar.isl,.offbar.isl>*,.cqual{animation:none!important}}
 .troom.rtype2 .tgrid{gap:4px 4px!important;padding-top:2px!important}
 .troom.rtype2 .tseat{gap:2px}
 .troom.rtype2 .tseat .tav{zoom:.7}
@@ -361,6 +370,12 @@ change("pop-ups: shrink back into the island when they go",
 change("gift animation stops when you start typing",
   "phone.classList.remove('kbopen','kbb'); phone.classList.add('kbstill'); UI.kbBlind=false;",
   "if(!phone.classList.contains('kbstill')) phone.querySelectorAll(':scope > .giftfx').forEach(x=>x.remove());\n    phone.classList.remove('kbopen','kbb'); phone.classList.add('kbstill'); UI.kbBlind=false;");
+
+
+// ── Offline and weak-connection notices in the same Dynamic Island style (founder, 25 Nov) ──
+change("offline notice: Dynamic Island too",
+  "if(off){ off.style.top=y+'px'; y+=off.offsetHeight+8; }",
+  "phone.classList.toggle('hasisl',appSafeTop()>=54);\n  if(off){ const oi=appSafeTop()>=54&&!phone.classList.contains('hascall'); off.classList.toggle('isl',oi); off.style.top=(oi?11:y)+'px'; y=(oi?11:y)+off.offsetHeight+8; }");
 
 change('iPhone screen edges + flag styles (extra CSS)', '</style>', APP_CSS + '</style>');
 
