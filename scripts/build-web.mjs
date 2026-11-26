@@ -842,6 +842,32 @@ change("Nearby: translations",
   "المنصة ممتلئة · حاول مجددًا عندما يغادرها أحد\n",
   "المنصة ممتلئة · حاول مجددًا عندما يغادرها أحد\nNo one near you yet|Personne près de toi pour l’instant|Aún no hay nadie cerca de ti|Ainda não há ninguém perto de você|Noch niemand in deiner Nähe|Ancora nessuno vicino a te|近くにはまだ誰もいません|لا أحد بالقرب منك بعد\nOnly people within about 500 km show here.|Seules les personnes à moins de 500 km environ s’affichent ici.|Aquí solo aparecen personas a unos 500 km como máximo.|Aqui só aparecem pessoas a até uns 500 km.|Hier erscheinen nur Leute im Umkreis von etwa 500 km.|Qui compaiono solo persone entro circa 500 km.|ここには約500km以内の人だけが表示されます。|تظهر هنا فقط الأشخاص على بعد 500 كم تقريبًا.\nSee everyone|Voir tout le monde|Ver a todos|Ver todo mundo|Alle ansehen|Vedi tutti|全員を見る|عرض الجميع\n");
 
+// ── Flick comments and corrections show when they were sent (founder, 26 Nov: "no date and time on comments") ──
+// Today: 14:32 · yesterday: Yesterday 14:32 · older: 20 Nov 14:32. Sample comments get a fixed past time the first time they show.
+change("comment time: helper",
+  "function dayFmt(d,o){",
+  "function cmtWhen(ts){ const d=new Date(ts), n=new Date(), p=x=>String(x).padStart(2,'0'), hm=p(d.getHours())+':'+p(d.getMinutes()), day=x=>new Date(x.getFullYear(),x.getMonth(),x.getDate()).getTime(), dd=Math.round((day(n)-day(d))/864e5);\n  if(dd<=0) return hm; if(dd===1) return '<span>Yesterday</span> '+hm; let ds; try{ const L=appLang()==='en'?'en-GB':appLang()==='ar'?'ar-u-nu-latn':appLang(); ds=new Intl.DateTimeFormat(L,{day:'numeric',month:'short',...(d.getFullYear()!==n.getFullYear()?{year:'numeric'}:{})}).format(d); }catch(e){ ds=d.toDateString(); } return ds+' '+hm; }\nfunction cmtAt(id,by,t0,fix,j){ const k=id+'|'+by+'|'+t0+'|'+(fix||''), A=(S.cmtAt=S.cmtAt||{}); if(!A[k]){ A[k]=Date.now()-(((by.length*53+j*97+(t0||'').length*7)%2800)+25)*60000; save(); } return A[k]; }\nfunction dayFmt(d,o){");
+change("comment time: stored when you post a comment",
+  "(S.extraComments[v]=S.extraComments[v]||[]).unshift(['me',t,'']);",
+  "(S.extraComments[v]=S.extraComments[v]||[]).unshift(['me',t,'']); (S.cmtAt=S.cmtAt||{})[v+'|me|'+t+'|']=Date.now();");
+change("comment time: stored when you post a correction",
+  "(S.extraComments[v]=S.extraComments[v]||[]).unshift(['me',m.text,t]); practiceAdd(0,null,1);",
+  "(S.extraComments[v]=S.extraComments[v]||[]).unshift(['me',m.text,t]); (S.cmtAt=S.cmtAt||{})[v+'|me|'+m.text+'|'+t]=Date.now(); practiceAdd(0,null,1);");
+change("comment time: shown first in the comment's action row",
+  "<div class=\"cact\"><button data-a=\"clike\" data-v=\"${sh.id}-${j}\">",
+  "<div class=\"cact\"><time class=\"cwhen\">${cmtWhen(cmtAt(sh.id,by,t0,fix,j))}</time><button data-a=\"clike\" data-v=\"${sh.id}-${j}\">");
+change("comment time: style",
+  "</style>",
+  ".cwhen{font-size:12px;color:var(--muted);align-self:center;white-space:nowrap;margin-right:2px;font-variant-numeric:tabular-nums}\n</style>");
+
+// "French native" badge on comments: the language name was left in English ("Natif french", Arabic doubled "بالـالفرنسية").
+change("native badge: language name in the app language",
+  'class="natb">${m.lang} native',
+  'class="natb">${natBadge(m.lang)}');
+change("native badge: helper",
+  "function cmtWhen(ts){",
+  "function natBadge(lg){ const L=appLang(); if(L==='en') return lg+' native'; const n=lname(lg,L)||lg, lo=/^(fr|es|pt|it)$/.test(L)?n.toLowerCase():n; return ({fr:'Natif · '+lo,es:'Nativo · '+lo,pt:'Nativo · '+lo,de:'Muttersprache '+n,it:'Madrelingua '+lo,ja:n+'ネイティブ',ar:'ناطق أصلي ب'+n})[L]||lg+' native'; }\nfunction cmtWhen(ts){");
+
 const FIT_JS = `<script>
 /* [app] make header rows fit the screen (.top = page headers, .sheethead = pop-up titles) */
 (function(){

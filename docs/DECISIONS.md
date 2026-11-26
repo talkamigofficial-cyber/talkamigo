@@ -96,3 +96,8 @@ Date · decision · why. Newest at the bottom.
 - Bug (founder): Sam in London saw Pablo in Mexico City first, "≈ 0 km". Most cities had no map position, so the distance fell back to your own position (0 km) and those people went to the top; Nearby also never left anyone out.
 - Now: every city has a position (capital of the country as a fallback, never 0 km by mistake), the distance is measured from your own city, and Nearby only lists people within 500 km (`NEAR_KM`; app_config in the real app). For London: Noah (Bristol 170 km), Léa and Hugo (Brussels 320 km), Marc (Paris 340 km), James (Dublin 460 km).
 - City and distance sit on their own line under "Online now" (French wrapped badly). If no one is close: "No one near you yet · Only people within about 500 km show here · See everyone". 8 languages.
+
+## 26 Nov 2026 — Flick comments show when they were sent
+- Founder: comments had no date or time. Each comment and correction now shows it first in its action row (before Like / Reply): today "14:32", yesterday "Yesterday 14:32", older "20 Nov 14:32" (year added if not this year), in the app language, Western digits in Arabic.
+- Sample comments get a fixed past time the first time they show (stored, so it never changes). Real app: `moment_comments.created_at`.
+- Also fixed: the "French native" badge was left half in English ("Natif french", Arabic "بالـالفرنسية"); now "Natif · français", "ناطق أصلي بالفرنسية", etc.
