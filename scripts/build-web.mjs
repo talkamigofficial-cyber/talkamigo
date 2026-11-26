@@ -134,9 +134,9 @@ const APP_CSS = `
 .cwrap{padding-bottom:calc(22px + env(safe-area-inset-bottom,0px))}
 .epreview,.sndbar{padding-bottom:calc(26px + env(safe-area-inset-bottom,0px))}
 /* nothing under the bottom bar: the bar is 68 px + the home bar */
-.withtabs{padding-bottom:calc(96px + env(safe-area-inset-bottom,0px))!important}
-.mcard{bottom:calc(96px + env(safe-area-inset-bottom,0px))}
-.mini{bottom:calc(90px + env(safe-area-inset-bottom,0px))}
+.withtabs{padding-bottom:calc(64px + env(safe-area-inset-bottom,0px))!important}
+.mcard{bottom:calc(62px + env(safe-area-inset-bottom,0px))}
+.mini{bottom:calc(58px + env(safe-area-inset-bottom,0px))}
 .mini.hi{bottom:calc(150px + env(safe-area-inset-bottom,0px))}
 .vprog{bottom:calc(82px + env(safe-area-inset-bottom,0px))}
 .vlen2{bottom:calc(92px + env(safe-area-inset-bottom,0px))}
@@ -167,6 +167,11 @@ const APP_CSS = `
 .stream.remo>.lcfeed{display:flex!important;bottom:312px!important;max-height:calc(100% - 312px - 190px)!important}
 /* the keyboard-down button steps aside while the @ list is open (it covered the names) */
 body:has(.atlist) .kbdone.ico{visibility:hidden}
+/* tab bar: the standard iPhone size like HelloTalk (founder, 26 Nov) — 50 pt + the home-bar area, icons and labels just above the home bar */
+.tabs{height:calc(50px + max(var(--sa-bottom,0px),4px))!important;padding:3px 2px max(var(--sa-bottom,0px),4px)!important;align-items:start!important}
+.tab{height:47px!important;gap:2px!important;justify-content:center}
+.tab svg{width:26px!important;height:26px!important}
+.tab .tlab{font-size:10.5px}
 /* someone's local time on their profile */
 .ltime{display:inline-flex;align-items:center;gap:4px;font-size:13px;color:var(--muted);font-weight:600}
 .ltime svg{width:13px;height:13px;fill:none;stroke:currentColor;stroke-width:2.2}
