@@ -111,3 +111,10 @@ Date · decision · why. Newest at the bottom.
 - Typing suggests cities and ignores accents and local spellings ("sevil" → Seville, "montreal" → Montréal, "bruxelles" → Brussels, "Londres" → London). Tap a chip to pick it, tap × on it to clear.
 - Each person's row shows "City, Country" (country in the app language). No match: "No one in this city yet · Try another city, or see everyone in All".
 - The last city is remembered. 8 languages. Real app: city search on the server with a proper places list.
+
+## 26 Nov 2026 — Talk room typing: the stage stays whole (founder's 7:24 video, all 4 fixes)
+- Cause: while typing, the stage was allowed to shrink and scroll; as co-host the room clock redraws the room every second and that undid the "make room" steps, so the stage was squashed to a thin strip with the chat over it.
+1. The stage never shrinks or scrolls while typing (same seats, same 4+2 shape, empty seats stay); only the chat gets shorter. Last resort, only on very small phones (iPhone SE size with a 3-row header): the stage area scrolls and the chat keeps 72 pt.
+2. The make-room steps (audience names → game hint → audience row) are worked out on every redraw while typing, so the co-host clock no longer undoes them.
+3. While the keyboard is open in a talk room or live, a tap on the room only closes the keyboard; the next tap opens what you tap (no more person cards opening by accident).
+4. Gifts that arrive while you type: only the latest one plays after the keyboard closes.
