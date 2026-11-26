@@ -814,6 +814,34 @@ change('iPhone screen edges + flag styles (extra CSS)', '</style>', APP_CSS + '<
 // Headers fit the phone in every language (founder, 23 Nov: in French the Connect bell went off the screen).
 // Measured on the phone itself, with its real font: first the title gets a little smaller (down to 20 px),
 // then the "Plus" word next to the crown hides, then the gaps tighten, then the side margins. Never cuts the title with "…" if it can fit.
+// ── Connect → Nearby really shows people near you (founder, 26 Nov: Sam in London saw Mexico City "≈ 0 km") ──
+// Most cities had no map position, so the distance fell back to your own position (0 km) and they went to the top.
+// Now: every city has a position, your own city is used, and Nearby only lists people within NEAR_KM (app_config in the real app).
+change("Nearby: map positions for every city",
+  "const COORD={Lyon:[45.76,4.84],",
+  "const NEAR_KM=500;\nconst COORD={London:[51.51,-0.13],Bristol:[51.45,-2.59],Bordeaux:[44.84,-0.58],Marseille:[43.3,5.37],Seville:[37.39,-5.98],Brussels:[50.85,4.35],Geneva:[46.2,6.14],Dublin:[53.35,-6.26],Chicago:[41.88,-87.63],'Mexico City':[19.43,-99.13],Guadalajara:[20.67,-103.35],'Buenos Aires':[-34.6,-58.38],Santiago:[-33.45,-70.67],'Medellín':[6.24,-75.58],Sydney:[-33.87,151.21],Lyon:[45.76,4.84],");
+change("Nearby: capitals for the missing countries",
+  "const CAP={GB:[51.51,-0.13],",
+  "const CAP={MX:[19.43,-99.13],AR:[-34.6,-58.38],AU:[-35.28,149.13],CO:[4.71,-74.07],CL:[-33.45,-70.67],GB:[51.51,-0.13],");
+change("Nearby: from your own city, unknown places never count as 0 km",
+  "const a=CAP[S.me.cc]||CAP.GB, b=COORD[P[id].city]||CAP[P[id].cc]||a,",
+  "const a=COORD[S.me.city]||CAP[S.me.cc]||CAP.GB, b=COORD[P[id].city]||CAP[P[id].cc]; if(!b) return 99999; const");
+change("Nearby: only people within NEAR_KM",
+  "if(f==='online'&&!p.online) return false; if(f==='teachers'",
+  "if(f==='online'&&!p.online) return false; if(f==='nearby'&&kmTo(id)>NEAR_KM) return false; if(f==='teachers'");
+change("Nearby: city and distance on their own line",
+  "${f==='nearby'?' · '+esc(p.city)+' · ≈ '+n0(kmTo(id))+' km':''}</span>",
+  "</span>${f==='nearby'?'<span class=\"pnear\">'+esc(p.city)+' · ≈ '+n0(kmTo(id))+' km</span>':''}");
+change("Nearby: message when no one is close",
+  "<button class=\"btn small\" data-a=\"pref\" data-v=\"nearby\">Turn on Nearby</button></div></div>`:''}",
+  "<button class=\"btn small\" data-a=\"pref\" data-v=\"nearby\">Turn on Nearby</button></div></div>`:''}\n    ${f==='nearby'&&S.prefs.nearby&&!list.length?`<div class=\"pad\" style=\"padding-top:12px\"><div class=\"glass\" style=\"padding:20px;text-align:center;display:flex;flex-direction:column;gap:10px;align-items:center\"><b>No one near you yet</b><span class=\"muted\" style=\"font-size:13.5px;line-height:1.45\">Only people within about 500 km show here.</span><button class=\"btn small\" data-a=\"discf\" data-v=\"all\">See everyone</button></div></div>`:''}");
+change("Nearby: style of the city line",
+  "</style>",
+  ".pnear{display:block;font-size:13px;color:var(--muted);margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}\n</style>");
+change("Nearby: translations",
+  "المنصة ممتلئة · حاول مجددًا عندما يغادرها أحد\n",
+  "المنصة ممتلئة · حاول مجددًا عندما يغادرها أحد\nNo one near you yet|Personne près de toi pour l’instant|Aún no hay nadie cerca de ti|Ainda não há ninguém perto de você|Noch niemand in deiner Nähe|Ancora nessuno vicino a te|近くにはまだ誰もいません|لا أحد بالقرب منك بعد\nOnly people within about 500 km show here.|Seules les personnes à moins de 500 km environ s’affichent ici.|Aquí solo aparecen personas a unos 500 km como máximo.|Aqui só aparecem pessoas a até uns 500 km.|Hier erscheinen nur Leute im Umkreis von etwa 500 km.|Qui compaiono solo persone entro circa 500 km.|ここには約500km以内の人だけが表示されます。|تظهر هنا فقط الأشخاص على بعد 500 كم تقريبًا.\nSee everyone|Voir tout le monde|Ver a todos|Ver todo mundo|Alle ansehen|Vedi tutti|全員を見る|عرض الجميع\n");
+
 const FIT_JS = `<script>
 /* [app] make header rows fit the screen (.top = page headers, .sheethead = pop-up titles) */
 (function(){
