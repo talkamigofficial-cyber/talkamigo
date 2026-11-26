@@ -868,6 +868,20 @@ change("native badge: helper",
   "function cmtWhen(ts){",
   "function natBadge(lg){ const L=appLang(); if(L==='en') return lg+' native'; const n=lname(lg,L)||lg, lo=/^(fr|es|pt|it)$/.test(L)?n.toLowerCase():n; return ({fr:'Natif · '+lo,es:'Nativo · '+lo,pt:'Nativo · '+lo,de:'Muttersprache '+n,it:'Madrelingua '+lo,ja:n+'ネイティブ',ar:'ناطق أصلي ب'+n})[L]||lg+' native'; }\nfunction cmtWhen(ts){");
 
+// Room and live chat: no time on each line (keeps the chat clean); pressing and holding a message shows when it was sent (founder, 26 Nov).
+change("room chat: remember when each message arrived (talk rooms)",
+  "function chatHtml(){ if(UI.room.chat.length>120)",
+  "function rcStamp(){ const n=Date.now(); (UI.room&&UI.room.chat||[]).forEach(c=>{ if(c&&!c.ts) c.ts=n; }); }\nfunction chatHtml(){ rcStamp(); if(UI.room.chat.length>120)");
+change("room chat: remember when each message arrived (lives)",
+  "function liveChatHtml(){ return UI.room.chat",
+  "function liveChatHtml(){ rcStamp(); return UI.room.chat");
+change("room chat: time in the press-and-hold bubble",
+  "<div class=\"hbub\"><b>${mine?esc(S.me.name):P[who]?P[who].name:''}</b>",
+  "<div class=\"hbub\"><b>${mine?esc(S.me.name):P[who]?P[who].name:''}${(()=>{ const c=[...R.chat].reverse().find(c=>c[0]===who&&c[1]===sh.txt); return c&&c.ts?`<time class=\"hwhen\">${cmtWhen(c.ts)}</time>`:''; })()}</b>");
+change("room chat: style of the time",
+  "</style>",
+  ".hbub .hwhen{font-weight:500;font-size:11.5px;opacity:.6;margin-inline-start:8px;font-variant-numeric:tabular-nums}\n</style>");
+
 const FIT_JS = `<script>
 /* [app] make header rows fit the screen (.top = page headers, .sheethead = pop-up titles) */
 (function(){

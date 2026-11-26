@@ -101,3 +101,7 @@ Date · decision · why. Newest at the bottom.
 - Founder: comments had no date or time. Each comment and correction now shows it first in its action row (before Like / Reply): today "14:32", yesterday "Yesterday 14:32", older "20 Nov 14:32" (year added if not this year), in the app language, Western digits in Arabic.
 - Sample comments get a fixed past time the first time they show (stored, so it never changes). Real app: `moment_comments.created_at`.
 - Also fixed: the "French native" badge was left half in English ("Natif french", Arabic "بالـالفرنسية"); now "Natif · français", "ناطق أصلي بالفرنسية", etc.
+
+## 26 Nov 2026 — Room and live chat: time only when you press and hold
+- Founder chose: no time on every line of talk room / live chat (keeps it clean, like HelloTalk and TikTok Live); pressing and holding a message shows when it was sent next to the name in the lifted bubble (today "18:55", yesterday "Yesterday 18:55", older "20 Nov 18:55").
+- Real app: each room message carries its server time.
