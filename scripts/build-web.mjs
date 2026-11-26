@@ -167,6 +167,8 @@ const APP_CSS = `
 .stream.remo>.lcfeed{display:flex!important;bottom:312px!important;max-height:calc(100% - 312px - 190px)!important}
 /* the keyboard-down button steps aside while the @ list is open (it covered the names) */
 body:has(.atlist) .kbdone.ico{visibility:hidden}
+/* live, Framed look with guests: the split screen fills the video box under the LIVE row (it used to keep the full-screen spacing and was squashed into a strip) */
+.stream.framed .lsplit{top:57px!important;bottom:8px!important;left:8px;right:8px;border-radius:16px;overflow:hidden}
 /* tab bar: the standard iPhone size like HelloTalk (founder, 26 Nov) — 50 pt + the home-bar area, icons and labels just above the home bar */
 .tabs{height:calc(50px + max(var(--sa-bottom,0px),4px))!important;padding:3px 2px max(var(--sa-bottom,0px),4px)!important;align-items:start!important}
 .tab{height:47px!important;gap:2px!important;justify-content:center}
