@@ -882,6 +882,51 @@ change("room chat: style of the time",
   "</style>",
   ".hbub .hwhen{font-weight:500;font-size:11.5px;opacity:.6;margin-inline-start:8px;font-variant-numeric:tabular-nums}\n</style>");
 
+// ── Connect → City (Plus): pick a city, suggestions, city on each row, remembered (founder, 26 Nov) ──
+// Before: until you typed, it showed everyone (same as All), rows didn't say where people live, and the spelling had to be exact.
+change("City: helpers (accents ignored, local spellings, city chips)",
+  "function vDiscover(){",
+  `const nrmC=s=>String(s||'').normalize('NFD').replace(/[\\u0300-\\u036f]/g,'').toLowerCase().trim();
+const CITY_ALIAS={londres:'London',londra:'London',sevilla:'Seville',siviglia:'Seville',bruxelles:'Brussels',brussel:'Brussels',bruselas:'Brussels',lisboa:'Lisbon',lissabon:'Lisbon',geneve:'Geneva',genf:'Geneva',ginevra:'Geneva','ciudad de mexico':'Mexico City','cdmx':'Mexico City','mexico':'Mexico City',tokio:'Tokyo',dublino:'Dublin',parigi:'Paris','osaka':'Osaka',lione:'Lyon','marsella':'Marseille','marsiglia':'Marseille','montreal':'Montréal','medellin':'Medellín','santiago de chile':'Santiago'};
+function cityMatch(city,q){ const c=nrmC(city), n=nrmC(q); if(!n) return true; if(c.includes(n)) return true; const al=Object.keys(CITY_ALIAS).filter(k=>k.startsWith(n)||n.startsWith(k)&&n.length>=k.length).map(k=>CITY_ALIAS[k]); return al.some(a=>nrmC(a)===c); }
+function ctryName(cc){ try{ const L=appLang()==='en'?'en-GB':appLang(); return (DNC['r'+L]||(DNC['r'+L]=new Intl.DisplayNames([L],{type:'region'}))).of(cc)||cc; }catch(e){ return cc; } }
+function cityChips(ll){ const q=UI.cityQ||'', cnt={}; Object.keys(P).forEach(id=>{ const p=P[id]; if(id==='me'||!p.city||p.city==='You'||isBlocked(id)) return; if(ll==='mine'&&!myLangs().includes(p.native)) return; if(ll&&ll!=='mine'&&ll!=='all'&&p.native!==ll) return; cnt[p.city]=cnt[p.city]||{n:0,cc:p.cc}; cnt[p.city].n++; });
+  let cs=Object.keys(cnt).filter(c=>cityMatch(c,q)).sort((a,b)=>cnt[b].n-cnt[a].n||a.localeCompare(b)); const exact=cs.find(c=>nrmC(c)===nrmC(q)); if(exact) cs=[exact];
+  const chip=c=>\`<button class="\${exact===c?'on':''}" data-a="cityq" data-v="\${esc(exact===c?'':c)}">\${flagDot(cnt[c].cc,18)}<span>\${esc(c)}</span><i>\${cnt[c].n}</i>\${exact===c?ic('close'):''}</button>\`;
+  return \`<div class="pad citypk">\${q?'':'<p class="muted citynote">Find partners in a city you’re visiting or moving to.</p>'}\${cs.length?\`<div class="citych">\${cs.slice(0,q?8:20).map(chip).join('')}</div>\`:''}</div>\`; }
+function vDiscover(){ if(UI.cityQ==null&&S.cityQ) UI.cityQ=S.cityQ;`);
+change("City: accents and local spellings ignored",
+  "if(f==='city'&&UI.cityQ&&!p.city.toLowerCase().includes(UI.cityQ.toLowerCase())) return false;",
+  "if(f==='city'&&UI.cityQ&&!cityMatch(p.city,UI.cityQ)) return false;");
+change("City: nobody listed until a city is picked or typed",
+  "const list=(f==='nearby'&&!S.prefs.nearby?[]:ids);",
+  "const list=(f==='nearby'&&!S.prefs.nearby)||(f==='city'&&!(UI.cityQ||'').trim())?[]:ids;");
+change("City: chips under the search box, and a message when no one lives there",
+  `placeholder="Search by city" style="border:0;background:none;outline:none;width:100%;font-size:16px"></label></div>\`:''}`,
+  `placeholder="Search by city" style="border:0;background:none;outline:none;width:100%;font-size:16px"></label></div>\${cityChips(ll)}\${(UI.cityQ||'').trim()&&!list.length?\`<div class="pad" style="padding-top:4px"><div class="glass" style="padding:20px;text-align:center;display:flex;flex-direction:column;gap:10px;align-items:center;box-shadow:none"><b>No one in this city yet</b><span class="muted" style="font-size:13.5px;line-height:1.45">Try another city, or see everyone in All.</span><button class="btn small" data-a="discf" data-v="all">See everyone</button></div></div>\`:''}\`:''}`);
+change("City: the city is remembered",
+  "if(e.target.id==='city-q'){ UI.cityQ=e.target.value; render(); }",
+  "if(e.target.id==='city-q'){ UI.cityQ=e.target.value; S.cityQ=UI.cityQ; render(); }");
+change("City: tapping a city chip",
+  "case 'discf': UI.discFilter=v; render(); break;",
+  "case 'discf': UI.discFilter=v; render(); break;\n    case 'cityq': UI.cityQ=v; S.cityQ=v; save(); render(); break;");
+change("City: city and country on each row",
+  "${f==='nearby'?'<span class=\"pnear\">'+esc(p.city)+' · ≈ '+n0(kmTo(id))+' km</span>':''}",
+  "${f==='nearby'?'<span class=\"pnear\">'+esc(p.city)+' · ≈ '+n0(kmTo(id))+' km</span>':f==='city'?'<span class=\"pnear\">'+esc(p.city)+', '+esc(ctryName(p.cc))+'</span>':''}");
+change("City: chip style",
+  "</style>",
+  `.citypk{padding-top:10px!important}.citynote{margin:0 0 10px;font-size:13.5px;line-height:1.4}
+.citych{display:flex;flex-wrap:wrap;gap:8px}
+.citych button{display:inline-flex;align-items:center;gap:6px;height:36px;padding:0 12px;border-radius:18px;border:1px solid var(--line);background:var(--card,#fff);color:var(--ink);font-size:14px;font-weight:600}
+.citych button i{font-style:normal;font-size:12px;font-weight:700;color:var(--muted);background:var(--chip);border-radius:9px;padding:1px 7px}
+.citych button.on{background:var(--ink);color:var(--bg,#fff);border-color:var(--ink)}.citych button.on i{background:rgba(255,255,255,.2);color:inherit}
+.citych button svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:2.4}
+.citych .flagc,.citych img{width:18px;height:18px;border-radius:50%}
+</style>`);
+change("City: translations",
+  "See everyone|Voir tout le monde|Ver a todos|Ver todo mundo|Alle ansehen|Vedi tutti|全員を見る|عرض الجميع\n",
+  "See everyone|Voir tout le monde|Ver a todos|Ver todo mundo|Alle ansehen|Vedi tutti|全員を見る|عرض الجميع\nFind partners in a city you’re visiting or moving to.|Trouve des partenaires dans une ville où tu vas voyager ou t’installer.|Encuentra compañeros en una ciudad que vas a visitar o a la que te mudas.|Encontre parceiros numa cidade que você vai visitar ou para onde vai se mudar.|Finde Partner in einer Stadt, die du besuchst oder in die du ziehst.|Trova partner in una città che visiterai o dove ti trasferisci.|旅行や引っ越しで行く街のパートナーを探そう。|اعثر على شركاء في مدينة ستزورها أو ستنتقل إليها.\nNo one in this city yet|Personne dans cette ville pour l’instant|Aún no hay nadie en esta ciudad|Ainda não há ninguém nesta cidade|Noch niemand in dieser Stadt|Ancora nessuno in questa città|この街にはまだ誰もいません|لا أحد في هذه المدينة بعد\nTry another city, or see everyone in All.|Essaie une autre ville, ou vois tout le monde dans Tout.|Prueba otra ciudad o mira a todos en Todos.|Tente outra cidade ou veja todo mundo em Todos.|Versuch eine andere Stadt oder sieh dir alle unter Alle an.|Prova un’altra città o vedi tutti in Tutti.|別の街を試すか、「すべて」で全員を見てね。|جرّب مدينة أخرى، أو اعرض الجميع في الكل.\n");
+
 const FIT_JS = `<script>
 /* [app] make header rows fit the screen (.top = page headers, .sheethead = pop-up titles) */
 (function(){

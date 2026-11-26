@@ -105,3 +105,9 @@ Date · decision · why. Newest at the bottom.
 ## 26 Nov 2026 — Room and live chat: time only when you press and hold
 - Founder chose: no time on every line of talk room / live chat (keeps it clean, like HelloTalk and TikTok Live); pressing and holding a message shows when it was sent next to the name in the lifted bubble (today "18:55", yesterday "Yesterday 18:55", older "20 Nov 18:55").
 - Real app: each room message carries its server time.
+
+## 26 Nov 2026 — Connect → City (Plus) redone
+- Before you type: a line "Find partners in a city you're visiting or moving to." and chips of the cities people are really in (flag, name, how many), following the language chips (My languages / a language / All). No list until a city is picked, so it no longer looks the same as All.
+- Typing suggests cities and ignores accents and local spellings ("sevil" → Seville, "montreal" → Montréal, "bruxelles" → Brussels, "Londres" → London). Tap a chip to pick it, tap × on it to clear.
+- Each person's row shows "City, Country" (country in the app language). No match: "No one in this city yet · Try another city, or see everyone in All".
+- The last city is remembered. 8 languages. Real app: city search on the server with a proper places list.
