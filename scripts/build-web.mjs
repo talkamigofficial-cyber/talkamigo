@@ -1035,6 +1035,9 @@ change("r4: CSS", "</style>", `/* r4: City chips readable in dark mode */
 /* r4: big text Flicks stop above the name and caption, and shrink on small phones */
 .ptext .ptxt{bottom:calc(230px + var(--sa-bottom,0px));overflow:hidden}
 .ptext .ptxt .big{font-size:clamp(22px,7.4vw,34px)!important;line-height:1.18}
+/* r4: "Tap for sound" sits on the right, clear of the post-type tag (and below the Learn language chips) */
+.muteh{left:auto!important;inset-inline-start:auto!important;inset-inline-end:68px}
+.post.lx .muteh{top:166px!important}
 /* r4: Learn cards use the space down to the tab bar (they have no caption or comment bar) */
 .post.lx .lxin{bottom:calc(78px + var(--sa-bottom,0px))!important}
 /* r4: Plans on short phones: the whole page scrolls, only the Start button stays pinned at the bottom */
@@ -1153,7 +1156,21 @@ const FIT_JS = `<script>
   soon();
 })();
 </script>`;
-html += FIT_JS; applied.push('headers fit the screen in every language'); // the beta has no </body>: added at the very end
+html += FIT_JS; applied.push('headers fit the screen in every language');
+// r4: big-text Flicks fit between the top tags and the caption on every phone (measured, so long captions and small screens never overlap)
+html += `<script>
+(function(){
+  var q=false;
+  function fit(){ q=false; document.querySelectorAll('.post.ptext').forEach(function(p){ var t=p.querySelector('.ptxt'), c0=p.querySelector('.mcap'), c=c0&&c0.parentElement; if(!t||!c||!p.offsetParent) return;
+    var pr=p.getBoundingClientRect(), cr=c.getBoundingClientRect(); if(!pr.height) return;
+    var lim=Math.max(60, Math.round(pr.bottom-cr.top+10)); if(t.style.bottom!==lim+'px') t.style.setProperty('bottom',lim+'px','important');
+    var big=t.querySelector('.big'); if(!big) return; big.style.removeProperty('font-size'); var fs=parseFloat(getComputedStyle(big).fontSize)||30, n=0;
+    while(t.scrollHeight>t.clientHeight+2 && fs>16 && n<12){ fs-=2; n++; big.style.setProperty('font-size',fs+'px','important'); } }); }
+  function soon(){ if(!q){ q=true; requestAnimationFrame(fit); } }
+  new MutationObserver(soon).observe(document.documentElement,{childList:true,subtree:true}); window.addEventListener('resize',soon); soon();
+})();
+</script>`; applied.push('r4: big-text Flicks fit above the caption');
+ // the beta has no </body>: added at the very end
 
 // iPhone top and bottom space: the app hands the page the real sizes (--sa-top, --sa-bottom…, set in src/web/BetaApp.tsx).
 // The web view's own env(safe-area-inset-…) was wrong on the founder's iPhone (page pushed ~59 pt down, tab labels cut).
