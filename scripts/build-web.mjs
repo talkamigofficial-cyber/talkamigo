@@ -1038,6 +1038,10 @@ change("r4: CSS", "</style>", `/* r4: City chips readable in dark mode */
 /* r4: "Tap for sound" sits on the right, clear of the post-type tag (and below the Learn language chips) */
 .muteh{left:auto!important;inset-inline-start:auto!important;inset-inline-end:68px}
 .post.lx .muteh{top:166px!important}
+/* r4: group call buttons: labels may use two short lines instead of being cut ("Haut…"), smaller circles on small phones, every tile has a background */
+.fbar small{white-space:normal!important;overflow:visible!important;text-overflow:clip!important;line-height:1.15;font-size:10px!important;hyphens:auto;overflow-wrap:anywhere}
+@media (max-width:380px){.fbar button>svg,.fbar button>b{width:40px!important;height:40px!important;padding:10px!important}}
+.ftile{background-color:rgba(255,255,255,.08)}
 /* r4: Learn cards use the space down to the tab bar (they have no caption or comment bar) */
 .post.lx .lxin{bottom:calc(78px + var(--sa-bottom,0px))!important}
 /* r4: Plans on short phones: the whole page scrolls, only the Start button stays pinned at the bottom */
@@ -1128,6 +1132,8 @@ change("r4c: translations", "Add a short bio|", [
   "Yesterday|Hier|Ayer|Ontem|Gestern|Ieri|昨日|أمس",
   ].join("\n") + "\nAdd a short bio|");
 
+// r4: search boxes keep their own keyboard "Search" key; the white "Done" pill sat on top of the filter chips
+change("r4: no top Done on search boxes", "const barPlace=(a,pr)=>{ bx.hidden=true;", "const barPlace=(a,pr)=>{ bx.hidden=true; if(a.getAttribute('enterkeyhint')==='search'||/^(gq|fq|shq|city-q)$/.test(a.id)){ tpOff(); return; }");
 const FIT_JS = `<script>
 /* [app] make header rows fit the screen (.top = page headers, .sheethead = pop-up titles) */
 (function(){
