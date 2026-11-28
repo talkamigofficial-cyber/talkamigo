@@ -1195,6 +1195,27 @@ change("r4r: translations", "Add a short bio|", [
 change("r4r: empty list second line", "<span class=\"muted\" style=\"font-size:14px\">Be the first to start a ${what}.</span>", "<span class=\"muted\" style=\"font-size:14px\">${what==='live'?'Be the first to go live.':'Be the first to open a room.'}</span>");
 change("r4r: translations 2", "Add a short bio|", "Be the first to go live.|Sois le premier ou la première à lancer un live.|Sé la primera persona en hacer un directo.|Seja a primeira pessoa a fazer uma live.|Starte das erste Live.|Sii il primo a andare in live.|最初のライブを始めよう。|كن أول من يبدأ بثًا.\nBe the first to open a room.|Ouvre le premier salon.|Abre la primera sala.|Abra a primeira sala.|Öffne den ersten Raum.|Apri la prima stanza.|最初のルームを開こう。|افتح أول غرفة.\nAdd a short bio|");
 
+// ── Founder, 27 Nov: while you host a live, calls don't interrupt it ──
+// Incoming calls become a quiet "Missed call" in that chat (no ringing over your live); starting a call asks you to end the live first.
+const liveHostJs = "(()=>{ const R0=UI.room; if(!R0||R0.kind!=='live') return false; const L0=S.lives.find(x=>x.id===R0.id); return !!(L0&&L0.mine&&!L0.away); })()";
+change("busy while hosting a live: incoming calls",
+  "function incomingCall(who,type){ if(!who||!P[who]||UI.call||UI.gcall||UI.inCall||isBlocked(who)) return false;",
+  "function incomingCall(who,type){ if(!who||!P[who]||UI.call||UI.gcall||UI.inCall||isBlocked(who)) return false; if(" + liveHostJs + "){ const c=S.chats[who]||(S.chats[who]={msgs:[],unread:0}); c.msgs.push({f:'tip',t:'📞 Missed '+(type==='video'?'video':'voice')+' call',at:Date.now()}); c.unread=(c.unread||0)+1; save(); return false; }");
+change("busy while hosting a live: outgoing calls",
+  "stopSnd(); callPauseRoom(); UI.call={id,type,sec:0,",
+  "if(" + liveHostJs + "){ toast('You’re live · End your live to call'); break; } stopSnd(); callPauseRoom(); UI.call={id,type,sec:0,");
+// ── Founder, 27 Nov: keep the demo activity in your own new room or live, but make it believable ──
+// a new room starts with no top gifters; chat lines and gifts only once people are there, at a calmer pace, mostly small gifts
+change("own room demo: no top gifters at the start", "top:{tunde:120,lucia:40}", "top:((S.rooms.find(x=>x.id===id)||{}).mine?{}:{tunde:120,lucia:40})");
+change("own room demo: calmer chat", "if(R.t%3===0){ R.line++; if(r.mine", "if(R.t%3===0){ if(!r.mine||(r.count>1&&R.t%9===0)) R.line++; if(r.mine");
+change("own room demo: fewer, smaller gifts", "if(R.t%8===0){ const k=(R.t/8)%5, g=GIFTS[[1,2,3,1,4][k]]",
+  "if(r.mine?R.t%45===0:R.t%8===0){ const k=(r.mine?R.t/45:R.t/8)%5, g=GIFTS[(r.mine?[1,2,1,2,3]:[1,2,3,1,4])[k]]");
+change("own live demo: comments only once people watch", "if(R.t%4===0) R.chat.push(LIVECHAT[(R.t/4)%LIVECHAT.length]);",
+  "if(L.mine?(L.viewers>1&&R.t%9===0):R.t%4===0) R.chat.push(LIVECHAT[Math.floor(R.t/(L.mine?9:4))%LIVECHAT.length]);");
+change("own live demo: fewer, smaller gifts", "if(R.t%7===0){ const k=(R.t/7)%5, g=GIFTS[[1,2,6,3,5][k]]",
+  "if(L.mine?R.t%40===0:R.t%7===0){ const k=(L.mine?R.t/40:R.t/7)%5, g=GIFTS[(L.mine?[1,2,1,2,3]:[1,2,6,3,5])[k]]");
+change("busy while live: translations", "Add a short bio|", "You’re live · End your live to call|Tu es en live · Termine ton live pour appeler|Estás en directo · Termina el directo para llamar|Você está ao vivo · Encerre a live para ligar|Du bist live · Beende dein Live, um anzurufen|Sei in live · Termina la live per chiamare|配信中です · 通話するには配信を終了してね|أنت في بث مباشر · أنهِ البث لتتصل\nYou’re live|Tu es en live|Estás en directo|Você está ao vivo|Du bist live|Sei in live|配信中です|أنت في بث مباشر\nEnd your live to call|Termine ton live pour appeler|Termina el directo para llamar|Encerre a live para ligar|Beende dein Live, um anzurufen|Termina la live per chiamare|通話するには配信を終了してね|أنهِ البث لتتصل\nAdd a short bio|");
+
 const FIT_JS = `<script>
 /* [app] make header rows fit the screen (.top = page headers, .sheethead = pop-up titles) */
 (function(){

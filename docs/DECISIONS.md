@@ -126,3 +126,7 @@ Date · decision · why. Newest at the bottom.
 - Rooms/lives: one host banner at a time (raised hand before the boost bar — together they pushed the comment box off small screens); live "No one here yet" card sits under the LIVE row and leaves when viewers arrive; Host tag visible in full-screen lives with guests; the "room is running" bar no longer hides the last item of a tab; own empty room gift no longer says "To Camille"; one co-host request at a time; End-your-live sheet, empty Live list and viewers sheet translated/updated (up to 3 guests); Arabic subtitles keep their direction; comment hints end with "…"; French "tu".
 - Checked after: all earlier regression scripts, 1,320 random taps in EN/FR/AR at 393/375/320 light+dark: 0 errors.
 - Not changed (founder decision needed): calls while hosting your own live; filler activity in brand-new rooms (the app is still the demo); real photo picker in chat.
+
+## 27 Nov 2026 — Calls while you host a live; calmer demo activity
+- Founder agreed: while you host a live, incoming calls don't ring or pause it; they become "📞 Missed voice/video call" in that chat (with an unread badge). Starting a call while live says "You're live · End your live to call".
+- Founder: keep the demo activity in your own new room/live for now (until the real backend), but make it believable: a new room starts with no top gifters; chat lines and live comments only once someone is there, about every 9 s; gifts about every 40–45 s and mostly small (Rose, Café), still only with 5+ people and Diamonds on the 14-day hold.
