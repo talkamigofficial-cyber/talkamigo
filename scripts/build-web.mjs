@@ -850,7 +850,7 @@ change("Nearby: translations",
 // Today: 14:32 · yesterday: Yesterday 14:32 · older: 20 Nov 14:32. Sample comments get a fixed past time the first time they show.
 change("comment time: helper",
   "function dayFmt(d,o){",
-  "function cmtWhen(ts){ const d=new Date(ts), n=new Date(), p=x=>String(x).padStart(2,'0'), hm=p(d.getHours())+':'+p(d.getMinutes()), day=x=>new Date(x.getFullYear(),x.getMonth(),x.getDate()).getTime(), dd=Math.round((day(n)-day(d))/864e5);\n  if(dd<=0) return hm; if(dd===1) return '<span>Yesterday</span> '+hm; let ds; try{ const L=appLang()==='en'?'en-GB':appLang()==='ar'?'ar-u-nu-latn':appLang(); ds=new Intl.DateTimeFormat(L,{day:'numeric',month:'short',...(d.getFullYear()!==n.getFullYear()?{year:'numeric'}:{})}).format(d); }catch(e){ ds=d.toDateString(); } return ds+' '+hm; }\nfunction cmtAt(id,by,t0,fix,j){ const k=id+'|'+by+'|'+t0+'|'+(fix||''), A=(S.cmtAt=S.cmtAt||{}); if(!A[k]){ A[k]=Date.now()-(((by.length*53+j*97+(t0||'').length*7)%2800)+25)*60000; save(); } return A[k]; }\nfunction dayFmt(d,o){");
+  "function cmtWhen(ts){ const d=new Date(ts), n=new Date(), p=x=>String(x).padStart(2,'0'), hm=p(d.getHours())+':'+p(d.getMinutes()), day=x=>new Date(x.getFullYear(),x.getMonth(),x.getDate()).getTime(), dd=Math.round((day(n)-day(d))/864e5);\n  if(dd<=0) return hm; if(dd===1) return '<span>Yesterday</span> '+hm; let ds; try{ const L=appLang()==='en'?'en-GB':appLang()==='ar'?'ar-u-nu-latn':appLang(); ds=new Intl.DateTimeFormat(L,{day:'numeric',month:'short',...(d.getFullYear()!==n.getFullYear()?{year:'numeric'}:{})}).format(d); }catch(e){ ds=d.toDateString(); } return ds+' '+hm; }\nfunction cmtAt(id,by,t0,fix,j){ const k=id+'|'+by+'|'+t0+'|'+(fix||''), A=(S.cmtAt=S.cmtAt||{}); if(!A[k]||isNaN(A[k])){ const jn=+String(j).replace(/\D/g,'')||0; A[k]=Date.now()-(((by.length*53+jn*97+(t0||'').length*7)%2800)+25)*60000; save(); } return A[k]; }\nfunction dayFmt(d,o){");
 change("comment time: stored when you post a comment",
   "(S.extraComments[v]=S.extraComments[v]||[]).unshift(['me',t,'']);",
   "(S.extraComments[v]=S.extraComments[v]||[]).unshift(['me',t,'']); (S.cmtAt=S.cmtAt||{})[v+'|me|'+t+'|']=Date.now();");
@@ -1134,6 +1134,67 @@ change("r4c: translations", "Add a short bio|", [
 
 // r4: search boxes keep their own keyboard "Search" key; the white "Done" pill sat on top of the filter chips
 change("r4: no top Done on search boxes", "const barPlace=(a,pr)=>{ bx.hidden=true;", "const barPlace=(a,pr)=>{ bx.hidden=true; if(a.getAttribute('enterkeyhint')==='search'||/^(gq|fq|shq|city-q)$/.test(a.id)){ tpOff(); return; }");
+// ── Round 4 audit fixes, batch C (27 Nov): Rooms and lives ──
+// host banners one at a time: a raised hand comes first, the "Only N here · Boost" bar waits (together they pushed the comment box off small screens)
+change("r4r: one host banner at a time", "${host&&r.count>1&&r.count<10&&!boostLeft('room',r.id)", "${host&&!R.req&&r.count>1&&r.count<10&&!boostLeft('room',r.id)");
+// live host: the "No one here yet" card sits under the LIVE row and goes away as soon as people arrive
+change("r4r: live empty card below the LIVE row", "<div style=\"position:absolute;left:0;right:0;top:110px;z-index:6\">${emptyCard('live',L.id)}</div>", "<div style=\"position:absolute;left:0;right:0;top:158px;z-index:6\">${emptyCard('live',L.id)}</div>");
+change("r4r: live empty card leaves when viewers arrive", "const tp=document.getElementById('ltops'); if(tp) tp.innerHTML=topsHtml();",
+  "const tp=document.getElementById('ltops'); if(tp) tp.innerHTML=topsHtml(); if(L.viewers>1) document.querySelectorAll('.stream .emptycard').forEach(e=>{ const w=e.parentElement; (w&&w.style.position==='absolute'?w:e).remove(); });");
+// own room with nobody on stage: the gift button no longer says "To Camille"
+change("r4r: gift in your own empty room", "data-a=\"gift-open\" data-v=\"${host?(r.speakers[0]||'camille'):r.host}\"",
+  "${host&&!r.speakers[0]?'data-a=\"toast\" data-v=\"No one on stage to gift yet\"':'data-a=\"gift-open\" data-v=\"'+(host?r.speakers[0]:r.host)+'\"'}");
+// co-host requests: one at a time (a second one silently cancelled the first)
+change("r4r: co-host request one at a time (talk)", "if(coList(r).length>=2){ toast('2 co-hosts max · remove one first'); break; }\n        R.coPend=id;",
+  "if(coList(r).length>=2){ toast('2 co-hosts max · remove one first'); break; }\n        if(R.coPend&&R.coPend!==id&&P[R.coPend]){ toast('Wait for '+P[R.coPend].name+' to answer first'); break; }\n        R.coPend=id;");
+change("r4r: co-host request one at a time (live)", "if(R.coPend===v){ toast('Waiting for '+P[v].name+' to accept'); break; }\n      R.coPend=v;",
+  "if(R.coPend===v){ toast('Waiting for '+P[v].name+' to accept'); break; }\n      if(R.coPend&&P[R.coPend]){ toast('Wait for '+P[R.coPend].name+' to answer first'); break; }\n      R.coPend=v;");
+// viewers sheet: guests can now use their camera
+{ const rows = [["Invite one viewer to talk with you. Voice only, they have to accept.","Invite up to 3 viewers to talk with you. They have to accept first."],
+  ["Invite une personne à parler avec toi. Voix seulement, elle doit accepter.","Invite jusqu’à 3 personnes à parler avec toi. Elles doivent d’abord accepter."],
+  ["Invita a una persona a hablar contigo. Solo voz, tiene que aceptar.","Invita hasta a 3 personas a hablar contigo. Primero tienen que aceptar."],
+  ["Convide uma pessoa para falar com você. Só voz, ela precisa aceitar.","Convide até 3 pessoas para falar com você. Elas precisam aceitar antes."],
+  ["Lade eine Person ein, mit dir zu sprechen. Nur Stimme, sie muss zustimmen.","Lade bis zu 3 Personen ein, mit dir zu sprechen. Sie müssen zuerst zustimmen."],
+  ["Invita una persona a parlare con te. Solo voce, deve accettare.","Invita fino a 3 persone a parlare con te. Prima devono accettare."],
+  ["視聴者を1人招待して話せます。音声のみで、相手の承認が必要です。","視聴者を最大3人招待して話せます。相手の承認が必要です。"],
+  ["ادعُ شخصًا واحدًا للتحدث معك. صوت فقط، ويجب أن يوافق.","ادعُ حتى 3 أشخاص للتحدث معك. يجب أن يوافقوا أولًا."]];
+  for (const [a,b] of rows) { const n = html.split(a).length - 1; if (n < 1) throw new Error('r4r viewers text: ' + a); html = html.split(a).join(b); }
+  applied.push('r4r: viewers sheet wording (guests, camera allowed)'); }
+// French: "tu" everywhere
+change("r4r fr: notice", "|Dites à quoi sert ce salon. Débutants bienvenus ? On parle lentement ?|", "|Dis à quoi sert ce salon. Débutants bienvenus ? On parle lentement ?|");
+change("r4r fr: 2 min", "|Plus que 2 min · dites au revoir 👋|", "|Plus que 2 min · dis au revoir 👋|");
+change("r4r fr: check in", "|Pointez chaque jour|", "|Pointe chaque jour|");
+change("r4r fr: tasks", "|Faites les missions du salon pour monter de niveau|", "|Fais les missions du salon pour monter de niveau|");
+change("r4r fr: rate", "|TalkAmigo vous plaît ?|", "|TalkAmigo te plaît ?|");
+change("r4r fr: star", "|Touchez une étoile pour la noter dans l’App Store.|", "|Touche une étoile pour noter l’app dans l’App Store.|");
+change("r4r fr: 5 languages", "|Apprenez jusqu’à 5 langues|", "|Apprends jusqu’à 5 langues|");
+change("r4r fr: mute", "Vous pouvez toujours discuter, et la personne n’est pas prévenue.|", "Tu peux toujours discuter, et la personne n’est pas prévenue.|");
+// CSS
+change("r4r: CSS", "</style>", `/* r4r: the Host tag in a full-screen live with guests sits at the bottom of the tile (the LIVE chip covered it) */
+.stream:not(.framed) .lthost{top:auto!important;bottom:8px}
+/* r4r: the "Your room is running" bar never hides the last item of a tab */
+#phone:has(.awaybar) .withtabs{padding-bottom:calc(150px + var(--sa-bottom,0px))!important}
+/* r4r: subtitles keep their own text direction (Arabic cut them at the wrong end) */
+.tcc,.tcc *,.lsub,#lsub{unicode-bidi:plaintext}
+/* r4r: long comment-box hints end with "…" instead of being cut mid-word */
+#lc-input,#rc-input,#cmt{text-overflow:ellipsis}
+</style>`);
+change("r4r: RX", "[/^10 min left in this (room|live)$/,'w10a']", "[/^Wait for (\\S+) to answer first$/,'waitans'],[/^10 min left in this (room|live)$/,'w10a']");
+change("r4r: PAT", "w10a:{fr:'Plus que 10 min dans ce salon'", "waitans:{fr:'Attends la réponse de $1 d’abord',es:'Espera primero la respuesta de $1',pt:'Espere a resposta de $1 primeiro',de:'Warte zuerst auf die Antwort von $1',it:'Aspetta prima la risposta di $1',ja:'まず$1の返事を待ってね',ar:'انتظر رد $1 أولًا'},w10a:{fr:'Plus que 10 min dans ce salon'");
+change("r4r: translations", "Add a short bio|", [
+  "End your live?|Terminer ton live ?|¿Terminar tu directo?|Encerrar sua live?|Live beenden?|Terminare la tua live?|ライブを終了しますか？|إنهاء البث؟",
+  "Live time|Durée du live|Duración del directo|Tempo de live|Live-Dauer|Durata della live|配信時間|مدة البث",
+  "Viewers|Spectateurs|Espectadores|Espectadores|Zuschauer|Spettatori|視聴者|المشاهدون",
+  "Diamonds earned|Diamants gagnés|Diamantes ganados|Diamantes ganhos|Verdiente Diamanten|Diamanti guadagnati|獲得したダイヤ|الماسات المكتسبة",
+  "Keep going|Continuer|Seguir|Continuar|Weitermachen|Continua|続ける|تابع",
+  "It’s quiet in here… for now|C’est calme ici… pour l’instant|Esto está tranquilo… por ahora|Está tranquilo por aqui… por enquanto|Hier ist es ruhig… noch|È tutto tranquillo… per ora|今はまだ静かです…|الهدوء يعمّ هنا… حتى الآن",
+  "No one on stage to gift yet|Personne sur scène à qui offrir un cadeau pour l’instant|Aún no hay nadie en el escenario para regalar|Ainda não há ninguém no palco para presentear|Noch niemand auf der Bühne zum Beschenken|Ancora nessuno sul palco a cui regalare|ギフトを贈れる人がまだステージにいません|لا أحد على المنصة لإهدائه بعد",
+  "They have to accept first.|La personne doit d’abord accepter.|Primero tiene que aceptar.|A pessoa precisa aceitar primeiro.|Die Person muss zuerst zustimmen.|Prima deve accettare.|相手の承認が必要です。|يجب أن يوافق الشخص أولًا.",
+  ].join("\n") + "\nAdd a short bio|");
+// "Be the first to start a room/live." was one English string with a variable
+change("r4r: empty list second line", "<span class=\"muted\" style=\"font-size:14px\">Be the first to start a ${what}.</span>", "<span class=\"muted\" style=\"font-size:14px\">${what==='live'?'Be the first to go live.':'Be the first to open a room.'}</span>");
+change("r4r: translations 2", "Add a short bio|", "Be the first to go live.|Sois le premier ou la première à lancer un live.|Sé la primera persona en hacer un directo.|Seja a primeira pessoa a fazer uma live.|Starte das erste Live.|Sii il primo a andare in live.|最初のライブを始めよう。|كن أول من يبدأ بثًا.\nBe the first to open a room.|Ouvre le premier salon.|Abre la primera sala.|Abra a primeira sala.|Öffne den ersten Raum.|Apri la prima stanza.|最初のルームを開こう。|افتح أول غرفة.\nAdd a short bio|");
+
 const FIT_JS = `<script>
 /* [app] make header rows fit the screen (.top = page headers, .sheethead = pop-up titles) */
 (function(){
