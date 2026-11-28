@@ -937,6 +937,194 @@ change("typing in a room: first tap outside only closes the keyboard",
   "phone.addEventListener('contextmenu',(e)=>{ if(e.target.closest('#roomchat [data-rh],#livechat [data-rh]')) e.preventDefault(); });",
   "phone.addEventListener('contextmenu',(e)=>{ if(e.target.closest('#roomchat [data-rh],#livechat [data-rh]')) e.preventDefault(); });\nlet kbEat=false;\nphone.addEventListener('pointerdown',(e)=>{ const a=document.activeElement; kbEat=!!(a&&(a.id==='rc-input'||a.id==='lc-input')&&!e.target.closest('form.tbar,form.lbar,.atlist,.emopan,.rrbar,.kbtop,.veil,.trcard,.lbar,.tbar')); },true);\nphone.addEventListener('click',(e)=>{ if(!kbEat) return; kbEat=false; e.preventDefault(); e.stopPropagation(); const a=document.activeElement; if(a&&/^(INPUT|TEXTAREA)$/.test(a.tagName)) a.blur(); },true);");
 
+// ── Round 4 audit fixes, batch A (27 Nov): Me / money / sign-up and Connect / Flicks / profiles ──
+// keyboard "Done" never in the clock area (phone-number and SMS-code screens had it at the very top)
+change("r4: keyboard Done stays below the clock",
+  "x=Math.max(pr.left+6,Math.min(pr.right-w-6,x)); y=Math.max(pr.top+6,y);",
+  "x=Math.max(pr.left+6,Math.min(pr.right-w-6,x)); y=Math.max(pr.top+Math.max(6,(parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--sa-top'))||0)+6),y);");
+// one profile-completion number everywhere (Me used a different formula than Edit profile)
+change("r4: Me uses the same profile completion as Edit profile",
+  "mine=S.myMoments, st=strength(), W=S.week",
+  "mine=S.myMoments, st=strength2(), W=S.week");
+change("r4: profile completion hint",
+  "${!me.photo?'add a profile photo':!me.video?'add a 30s intro video':'post 5 Flicks'}",
+  "${!me.photo?'add a profile photo':!me.video?'add a 30s intro video':'add more about you'}");
+// Wallet: the "Turn 100 Diamonds into coins" button was three broken pieces of text
+change("r4: Diamonds to coins button is one sentence",
+  "<button class=\"btn small glass\" data-a=\"convert\">Turn 100 ${GEM(15)} into 100 ${COIN(14)} to re-gift</button>",
+  "<button class=\"btn small glass\" data-a=\"convert\" style=\"gap:8px\">${GEM(15)}<span>Turn 100 Diamonds into 100 coins</span></button>");
+// Plans: savings worked out from the prices you actually see
+change("r4: Plans savings from local prices",
+  "['year','Yearly','≈ '+money(79.99/12,1)+' a month',money(79.99),'Save 33%']",
+  "['year','Yearly','≈ '+fmtCur(Math.round(priceV(79.99)/12*100)/100,ccy())+' a month',money(79.99),'Save '+Math.round((1-priceV(79.99)/(priceV(9.99)*12))*100)+'%']");
+change("r4: priceV helper",
+  "function money(eur,exact){",
+  "function priceV(eur){ const c=ccy(); let v=eur*FX[c]; if(NODEC.includes(c)){ const s=c==='JPY'?10:100; return Math.round(v/s)*s; } return eur%1?Math.max(.99,Math.round(v)-0.01):Math.round(v); }\nfunction money(eur,exact){");
+// teacher sign-up: a reason line under every greyed Continue, and a teacher version of the video tip
+change("r4: reason line fallback", "<span class=\"obwhy\" id=\"ob-why\" ${ok?'hidden':''}>${obWhy()}</span>",
+  "<span class=\"obwhy\" id=\"ob-why\" ${ok?'hidden':''}>${obWhy()||(ok?'':UI._why||'')}</span>");
+change("r4: why country", "; ok=!!me.cc;", "; ok=!!me.cc; UI._why='Pick your country';");
+change("r4: why interests", "; ok=sel.length>=1;", "; ok=sel.length>=1; UI._why='Pick at least one interest';");
+change("r4: why video", "; ok=!!me.video;", "; ok=!!me.video; UI._why='Record your intro to continue';");
+change("r4: why teach", "; ok=TA.langs.length>0&&TA.levels.length>0&&TA.types.length>0;", "; ok=TA.langs.length>0&&TA.levels.length>0&&TA.types.length>0; UI._why='Pick what you teach, the levels and the lesson types';");
+change("r4: why experience", "; ok=!!TA.years&&TA.quals.length>0;", "; ok=!!TA.years&&TA.quals.length>0; UI._why='Add your years of teaching and a qualification';");
+change("r4: why id", "; ok=!!TA.id;", "; ok=!!TA.id; UI._why='Confirm your identity to continue';");
+change("r4: why pay", "; ok=!!TA.pay;", "; ok=!!TA.pay; UI._why='Add your payout account to continue';");
+change("r4: why promise", "; ok=['real','inapp','kind','tax','terms'].every(k=>TA.promise[k]);", "; ok=['real','inapp','kind','tax','terms'].every(k=>TA.promise[k]); UI._why='Tick every promise to send your application';");
+change("r4: teacher video tip", "💡 Say your name, where you’re from and what you’re learning</span>",
+  "💡 ${UI.tapp?'Say your name, where you’re from and what you teach':'Say your name, where you’re from and what you’re learning'}</span>");
+// My languages: Done with nothing changed just goes back
+change("r4: My languages Done with no change", "case 'lg-save': { if(!UI.lgd) break", "case 'lg-save': { if(!UI.lgd){ pop(); break; }");
+// "46m this week" instead of "0h 46m this week"
+change("r4: minutes only under an hour", "${m?Math.floor(m/60)+'h '+String(m%60).padStart(2,'0')+'m':'No practice yet'} this week",
+  "${m?(m>=60?Math.floor(m/60)+'h '+String(m%60).padStart(2,'0')+'m':m+'m'):'No practice yet'} this week");
+change("r4: this-week translation for minutes only", "const wk=x0.match(/^(\\d+h \\d+m) this week$/);", "const wk=x0.match(/^((?:\\d+h )?\\d+m) this week$/);");
+// German: big numbers keep their thousands separator (compact format gave "1284")
+change("r4: number format", "try{ return new Intl.NumberFormat(LOC(),{notation:'compact',maximumFractionDigits:1}).format(n); }",
+  "try{ const r=new Intl.NumberFormat(LOC(),{notation:'compact',maximumFractionDigits:1}).format(n); return /\\d{4}/.test(r)?n0(n):r; }");
+// Storage rows: a useful message instead of "Kept"
+{ const f = "'toast','Kept'"; const n = html.split(f).length - 1; if (n !== 3) throw new Error('r4 Kept: ' + n);
+  html = html.split(f).join("'toast','Use “Clear cache” below to free up space'"); applied.push('r4: storage rows explain how to free space'); }
+// Delete account: only tell people to cash out when they really can
+change("r4: delete account cash-out hint", "${S.diamonds>=1000?' Cash out first if you want the money.':''}", "${(S.diamonds-(S.pending||0))>=1000?' Cash out first if you want the money.':''}");
+
+// ── Flicks comments: likes / hides / saves stay on the comment you acted on (they used the list position) ──
+change("r4: comments keep a stable key", "list=[...(S.extraComments[sh.id]||[]),...m.comments].map((c,j)=>[...c,j])",
+  "list=[...(S.extraComments[sh.id]||[]),...m.comments].map((c,j,a)=>[...c,'r'+(a.length-1-j)]).filter(c=>!isBlocked(c[0]))");
+change("r4: own new comments start at 0 likes", "${((by.length*7+j*5)%30)+((S.cliked||{})[sh.id+'-'+j]?1:0)}",
+  "${(by==='me'?0:((by.length*7+(+String(j).slice(1))*5)%30))+((S.cliked||{})[sh.id+'-'+j]?1:0)}");
+change("r4: notebook save uses the stable key", "c=[...(S.extraComments[mid]||[]),...m.comments][+j];",
+  "c=(Lc=>Lc[String(j)[0]==='r'?Lc.length-1-(+String(j).slice(1)):+j])([...(S.extraComments[mid]||[]),...m.comments]);");
+// Correction mode always starts from the original sentence, even with the keyboard open
+change("r4: correction mode prefills", "case 'cmode': UI.cmode=v; render(); break;",
+  "case 'cmode': { UI.cmode=v; UI.cmtTouched=false; render(); const i2=document.getElementById('cmt'), sh=UI.sheet, m=sh&&[...S.myMoments,...MOMENTS0].find(x=>x.id===sh.id); if(i2&&m) i2.value=v==='fix'?m.text:''; break; }");
+// a new Flick starts at your own level for that language (tags and caption agree)
+change("r4: Flick editor level from your profile", "UI.ed={lang:S.me.learning,lvl:'Beginner',",
+  "UI.ed={lang:S.me.learning,lvl:(l=>/^C/.test(l)?'Advanced':/^B/.test(l)?'Intermediate':'Beginner')((S.me.levels||{})[S.me.learning]||S.me.level||'A1'),");
+// a new account doesn't show the demo bio or demo supporters
+{ const f = "${esc(me.bio||'Londoner learning French and Spanish. Happy to help with your English!')}"; const n = html.split(f).length - 1; if (n !== 2) throw new Error('r4 bio: ' + n);
+  html = html.split(f).join("${me.bio?esc(me.bio):S.acct==='demo'?'Londoner learning French and Spanish. Happy to help with your English!':'<button class=\"lnk\" data-a=\"go\" data-v=\"editp\">Add a short bio</button>'}"); applied.push('r4: no demo bio on new accounts'); }
+change("r4: no demo supporters on new accounts", "${suppRow(SUPP.me)}`}</div>", "${S.acct==='demo'?suppRow(SUPP.me):'<p class=\"muted\" style=\"margin:0;font-size:13.5px\">No gifts yet this month</p>'}`}</div>");
+// other people's profiles: only their real Flicks (the placeholder tiles opened the wrong feed)
+change("r4: no placeholder tiles on profiles", "momGrid([...mom,...fakeGrid(id)],false)", "(mom.length?momGrid(mom,false):'<p class=\"muted\" style=\"text-align:center;margin:20px 0\">No Flicks yet</p>')");
+change("r4: real Flick count on profiles", "<b>${mom.length+4}</b><span>Flicks</span>", "<b>${mom.length}</b><span>Flicks</span>");
+change("r4: a missing or blocked Flick says so", "function vFlick(id){ const m=allFlicks().find(x=>x.id===id); if(!m) return vMoments();",
+  "function vFlick(id){ const m=allFlicks().find(x=>x.id===id); if(!m||isBlocked(m.by)) return `<div class=\"screen pushed\" data-swipe>${topBar('Flick')}<div class=\"scroll\"><p class=\"muted\" style=\"text-align:center;padding:60px 24px\">This Flick isn’t available.</p></div></div>`;");
+// Learn: nothing from blocked or muted people
+change("r4: Learn hides blocked and muted people", "const items=(LEARN[L]||[]).filter(x=>!hid('post',x.id)&&!(x.by&&isBlocked(x.by)));",
+  "const items=(LEARN[L]||[]).filter(x=>!hid('post',x.id)&&!(x.by&&isBlocked(x.by))&&!(x.from&&(f=>f&&(isBlocked(f.by)||(typeof isMutedU==='function'&&isMutedU(f.by))))(allFlicks().find(y=>y.id===x.from))));");
+// Learn "N done today": each exercise counts once, and it starts again every day
+change("r4: Learn done today counts once per exercise per day", "if(UI.ex[id]==null){ UI.ex[id]=+i; S.exDone=(S.exDone||0)+1; }",
+  "if(UI.ex[id]==null){ UI.ex[id]=+i; const d=new Date().toDateString(); if(S.exDay!==d){ S.exDay=d; S.exIds=[]; } S.exIds=S.exIds||[]; if(!S.exIds.includes(id)) S.exIds.push(id); S.exDone=S.exIds.length; }");
+change("r4: Learn done today shows today only", "<span>${S.exDone||0} done today</span>", "<span>${S.exDay===new Date().toDateString()?S.exDone||0:0} done today</span>");
+// French: no guessed gender
+change("r4 fr: get seen first", "|Sois vu en premier|", "|Passe en tête|");
+change("r4 fr: only you", "|Toi seul peux voir ceci|", "|Visible uniquement par toi|");
+change("r4 fr: collections", "Toi seul vois tes collections.|", "Tes collections ne sont visibles que par toi.|");
+change("r4 fr: tour", "Touche Suivant quand tu es prêt.", "Touche Suivant quand tu veux.");
+change("r4 fr: stuck", "|Bloqué ? Touche Traduire sous la légende.|", "|Un doute ? Touche Traduire sous la légende.|");
+change("r4 fr: paid", "Enseigne ta langue et sois payé pour tes cours", "Enseigne ta langue et reçois un paiement pour tes cours");
+change("r4 fr: experience", "|Ton expérience d’enseignant|", "|Ton expérience d’enseignement|");
+// CSS
+change("r4: CSS", "</style>", `/* r4: City chips readable in dark mode */
+.citych button{background:var(--chip)!important;color:var(--ink)!important;border-color:var(--line)!important}
+.citych button.on{background:var(--ink)!important;color:var(--bg)!important;border-color:var(--ink)!important}
+/* r4: comment action row never breaks words letter by letter */
+.cact{flex-wrap:wrap;row-gap:4px}.cact>*{white-space:nowrap;flex-shrink:0;word-break:normal!important;overflow-wrap:normal!important}
+.cact svg{flex-shrink:0}.cmt>.ibtn{flex-shrink:0;white-space:nowrap}
+/* r4: big text Flicks stop above the name and caption, and shrink on small phones */
+.ptext .ptxt{bottom:calc(230px + var(--sa-bottom,0px));overflow:hidden}
+.ptext .ptxt .big{font-size:clamp(22px,7.4vw,34px)!important;line-height:1.18}
+/* r4: Learn cards use the space down to the tab bar (they have no caption or comment bar) */
+.post.lx .lxin{bottom:calc(78px + var(--sa-bottom,0px))!important}
+/* r4: Plans on short phones: the whole page scrolls, only the Start button stays pinned at the bottom */
+@media (max-height:740px){
+.screen:has(> .pad [data-a=restore]){overflow-y:auto;scrollbar-width:none}
+.screen:has(> .pad [data-a=restore])>.scroll{flex:none!important;overflow:visible!important}
+.screen:has(> .pad [data-a=restore])>.pad{display:contents}
+.screen:has(> .pad [data-a=restore])>.pad>.btn{position:sticky;bottom:calc(10px + var(--sa-bottom,0px));z-index:3;margin:0 16px;width:auto}
+.screen:has(> .pad [data-a=restore])>.pad>.finep,.screen:has(> .pad [data-a=restore])>.pad>.linkrow{margin-left:16px!important;margin-right:16px!important}
+.screen:has(> .pad [data-a=restore])>.pad>.linkrow{padding-bottom:calc(16px + var(--sa-bottom,0px))}
+.screen:has(> .pad [data-a=restore])>.top{position:sticky;top:0;z-index:4;background:var(--bg)}
+}
+@media (max-width:359px){.screen:has(> .pad [data-a=restore]) .golive>span:last-child{display:none}}
+</style>`);
+// dynamic texts (RX + PAT)
+change("r4: RX", "[/^10 min left in this (room|live)$/,'w10a']",
+  "[/^([\\d.,\\s\\u202f\\u00a0]+) more to your first cash-out$/,'mfc'],[/^([\\d.,\\s\\u202f\\u00a0]+) pending · gifts unlock after 14 days$/,'pnd'],[/^(\\S+) sent you an? (.+)$/,'sentu'],[/^Cash-out (.+) \\(demo\\)$/,'cashd'],[/^Save (\\d+)%$/,'savep'],[/^(\\S+) is calling$/,'iscall'],[/^10 min left in this (room|live)$/,'w10a']");
+change("r4: PAT", "w10a:{fr:'Plus que 10 min dans ce salon'",
+  "mfc:{fr:'Encore $1 avant ton premier retrait',es:'Te faltan $1 para tu primer retiro',pt:'Faltam $1 para o primeiro saque',de:'Noch $1 bis zur ersten Auszahlung',it:'Ancora $1 per il primo prelievo',ja:'初回の換金まであと$1',ar:'تبقّى \\u2068$1\\u2069 على أول سحب'},pnd:{fr:'$1 en attente · les cadeaux se débloquent après 14 jours',es:'$1 pendientes · los regalos se liberan a los 14 días',pt:'$1 pendentes · os presentes liberam após 14 dias',de:'$1 ausstehend · Geschenke werden nach 14 Tagen frei',it:'$1 in attesa · i regali si sbloccano dopo 14 giorni',ja:'保留中 $1 · ギフトは14日後に使えます',ar:'\\u2068$1\\u2069 قيد الانتظار · تُتاح الهدايا بعد 14 يومًا'},sentu:{fr:'$1 t’a offert : $2',es:'$1 te regaló: $2',pt:'$1 te deu: $2',de:'$1 hat dir geschenkt: $2',it:'$1 ti ha regalato: $2',ja:'$1から$2が届きました',ar:'هدية من $1: $2'},cashd:{fr:'Retrait $1 (démo)',es:'Retiro $1 (demo)',pt:'Saque $1 (demo)',de:'Auszahlung $1 (Demo)',it:'Prelievo $1 (demo)',ja:'換金 $1（デモ）',ar:'سحب $1 (تجريبي)'},savep:{fr:'Économise $1 %',es:'Ahorra $1 %',pt:'Economize $1%',de:'Spare $1 %',it:'Risparmia $1%',ja:'$1%お得',ar:'وفّر $1%'},iscall:{fr:'$1 t’appelle',es:'$1 te está llamando',pt:'$1 está ligando',de:'$1 ruft an',it:'$1 ti sta chiamando',ja:'$1から着信',ar:'$1 يتصل بك'},w10a:{fr:'Plus que 10 min dans ce salon'");
+change("r4: gift name translated in 'sent you a'", "if(k==='sentg') b=trs(b,LIDX[L])||b;",
+  "if(k==='sentg') b=trs(b,LIDX[L])||b; if(k==='sentu'){ const mm=b.match(/^(.*?)(\\s*[\\p{Extended_Pictographic}].*)?$/u); b=(trs(mm[1],LIDX[L])||mm[1])+(mm[2]||''); }");
+change("r4: translations", "See everyone|Voir tout le monde|Ver a todos|Ver todo mundo|Alle ansehen|Vedi tutti|全員を見る|عرض الجميع\n",
+  "See everyone|Voir tout le monde|Ver a todos|Ver todo mundo|Alle ansehen|Vedi tutti|全員を見る|عرض الجميع\n" + [
+  "Turn 100 Diamonds into 100 coins|Convertir 100 Diamants en 100 pièces|Convertir 100 Diamantes en 100 monedas|Converter 100 Diamantes em 100 moedas|100 Diamanten in 100 Münzen tauschen|Converti 100 Diamanti in 100 monete|ダイヤ100を100コインに交換|حوّل 100 ماسة إلى 100 عملة",
+  "18+ · up to 2 cash-outs a month · EU, UK and Switzerland · paid by our payout partner|18+ · jusqu’à 2 retraits par mois · UE, Royaume-Uni et Suisse · payé par notre partenaire de paiement|18+ · hasta 2 retiros al mes · UE, Reino Unido y Suiza · lo paga nuestro socio de pagos|18+ · até 2 saques por mês · UE, Reino Unido e Suíça · pago pelo nosso parceiro de pagamentos|18+ · bis zu 2 Auszahlungen im Monat · EU, Großbritannien und Schweiz · über unseren Zahlungspartner|18+ · fino a 2 prelievi al mese · UE, Regno Unito e Svizzera · pagato dal nostro partner di pagamento|18歳以上 · 月2回まで換金可 · EU・英国・スイス · 決済パートナーが支払い|18+ · حتى سحبين في الشهر · الاتحاد الأوروبي والمملكة المتحدة وسويسرا · يدفعها شريك الدفع لدينا",
+  "Demo: Kenji sends you a Rocket 🚀 (+250)|Démo : Kenji t’offre une Fusée 🚀 (+250)|Demo: Kenji te regala un Cohete 🚀 (+250)|Demo: Kenji te dá um Foguete 🚀 (+250)|Demo: Kenji schenkt dir eine Rakete 🚀 (+250)|Demo: Kenji ti regala un Razzo 🚀 (+250)|デモ：Kenjiからロケット 🚀（+250）|تجريبي: Kenji يهديك صاروخًا 🚀 (+250)",
+  "Beta demo · no money is paid out|Démo bêta · aucun argent n’est versé|Demo beta · no se paga dinero|Demo beta · nenhum dinheiro é pago|Beta-Demo · es wird kein Geld ausgezahlt|Demo beta · nessun pagamento reale|ベータ版デモ · 実際の支払いはありません|نسخة تجريبية · لا تُدفع أي أموال",
+  "Welcome tour reward|Récompense de la visite guidée|Premio del tour de bienvenida|Recompensa do tour de boas-vindas|Belohnung für die Tour|Premio del tour di benvenuto|ウェルカムツアーの特典|مكافأة الجولة الترحيبية",
+  "Boost now|Booster maintenant|Impulsar ahora|Impulsionar agora|Jetzt boosten|Metti in evidenza ora|今すぐブースト|عزّز الآن",
+  "Photo added|Photo ajoutée|Foto añadida|Foto adicionada|Foto hinzugefügt|Foto aggiunta|写真を追加しました|تمت إضافة الصورة",
+  "we check every photo|nous vérifions chaque photo|revisamos cada foto|verificamos cada foto|wir prüfen jedes Foto|controlliamo ogni foto|すべての写真を確認しています|نراجع كل صورة",
+  "We check every photo|Nous vérifions chaque photo|Revisamos cada foto|Verificamos cada foto|Wir prüfen jedes Foto|Controlliamo ogni foto|すべての写真を確認しています|نراجع كل صورة",
+  "Apple purchase|Achat Apple|Compra de Apple|Compra Apple|Apple-Kauf|Acquisto Apple|Appleでの購入|شراء عبر Apple",
+  "Invite to Duo|Inviter en Duo|Invitar a Duo|Convidar para Duo|Zum Duo einladen|Invita al Duo|Duoに招待|ادعُ إلى Duo",
+  "Say your name, where you’re from and what you teach|Dis ton prénom, d’où tu viens et ce que tu enseignes|Di tu nombre, de dónde eres y qué enseñas|Diga seu nome, de onde você é e o que ensina|Sag deinen Namen, woher du kommst und was du unterrichtest|Di’ il tuo nome, da dove vieni e cosa insegni|名前、出身、教えている言語を話してね|قل اسمك ومن أين أنت وماذا تدرّس",
+  "Pick your country|Choisis ton pays|Elige tu país|Escolha seu país|Wähle dein Land|Scegli il tuo paese|国を選んでね|اختر بلدك",
+  "Record your intro to continue|Enregistre ta présentation pour continuer|Graba tu presentación para continuar|Grave sua apresentação para continuar|Nimm deine Vorstellung auf, um weiterzumachen|Registra la presentazione per continuare|続けるには自己紹介を録画してね|سجّل تعريفك للمتابعة",
+  "Pick what you teach, the levels and the lesson types|Choisis ce que tu enseignes, les niveaux et les types de cours|Elige qué enseñas, los niveles y los tipos de clase|Escolha o que ensina, os níveis e os tipos de aula|Wähle, was du unterrichtest, die Niveaus und die Kursarten|Scegli cosa insegni, i livelli e i tipi di lezione|教える言語・レベル・レッスンの種類を選んでね|اختر ما تدرّسه والمستويات وأنواع الدروس",
+  "Add your years of teaching and a qualification|Indique tes années d’enseignement et un diplôme|Indica tus años de enseñanza y una titulación|Informe seus anos de ensino e uma qualificação|Gib deine Unterrichtsjahre und eine Qualifikation an|Indica gli anni di insegnamento e una qualifica|指導年数と資格を入力してね|أضف سنوات التدريس ومؤهلًا",
+  "Confirm your identity to continue|Confirme ton identité pour continuer|Confirma tu identidad para continuar|Confirme sua identidade para continuar|Bestätige deine Identität, um weiterzumachen|Conferma la tua identità per continuare|続けるには本人確認をしてね|أكّد هويتك للمتابعة",
+  "Add your payout account to continue|Ajoute ton compte de versement pour continuer|Añade tu cuenta de cobro para continuar|Adicione sua conta de recebimento para continuar|Füge dein Auszahlungskonto hinzu, um weiterzumachen|Aggiungi il conto per i pagamenti per continuare|続けるには受取口座を追加してね|أضف حساب الاستلام للمتابعة",
+  "Tick every promise to send your application|Coche chaque engagement pour envoyer ta candidature|Marca cada compromiso para enviar tu solicitud|Marque cada compromisso para enviar sua candidatura|Hake jedes Versprechen ab, um deine Bewerbung zu senden|Spunta ogni impegno per inviare la candidatura|申請するにはすべての約束にチェックしてね|حدّد كل التعهدات لإرسال طلبك",
+  "Add a short bio|Ajoute une courte bio|Añade una breve biografía|Adicione uma bio curta|Füge eine kurze Bio hinzu|Aggiungi una breve bio|短い自己紹介を追加|أضف نبذة قصيرة",
+  "No gifts yet this month|Pas encore de cadeaux ce mois-ci|Aún no hay regalos este mes|Ainda sem presentes este mês|Diesen Monat noch keine Geschenke|Ancora nessun regalo questo mese|今月のギフトはまだありません|لا هدايا بعد هذا الشهر",
+  "This Flick isn’t available.|Ce Flick n’est pas disponible.|Este Flick no está disponible.|Este Flick não está disponível.|Dieser Flick ist nicht verfügbar.|Questo Flick non è disponibile.|このFlickは表示できません。|هذا الـFlick غير متاح.",
+  "Use “Clear cache” below to free up space|Utilise « Vider le cache » plus bas pour libérer de l’espace|Usa «Borrar caché» abajo para liberar espacio|Use “Limpar cache” abaixo para liberar espaço|Nutze unten „Cache leeren“, um Platz zu schaffen|Usa “Svuota cache” qui sotto per liberare spazio|下の「キャッシュを消去」で空き容量を増やせます|استخدم «مسح ذاكرة التخزين» أدناه لتحرير المساحة",
+  ].join("\n") + "\n");
+
+// ── Round 4 audit fixes, batch B (27 Nov): Chats ──
+// chat list shows the real time of the last message (it always said "now" or "today")
+change("r4c: chat list time helper", "function vDiscover(){",
+  "function lastWhen(msgs,unread){ const x=[...(msgs||[])].reverse().find(m=>m&&m.at); if(!x) return unread?'now':'today'; const d=new Date(x.at), n=new Date(), p=v=>String(v).padStart(2,'0'); if(n-d<60000) return 'now'; const day=v=>new Date(v.getFullYear(),v.getMonth(),v.getDate()).getTime(), dd=Math.round((day(n)-day(d))/864e5); if(dd<=0) return p(d.getHours())+':'+p(d.getMinutes()); if(dd===1) return 'Yesterday'; if(dd<7) return dayFmt(d,{weekday:'short'}); return dayFmt(d,{day:'numeric',month:'short'}); }\nfunction vDiscover(){");
+change("r4c: 1-to-1 row time", "<small>${c.unread?'now':'today'}</small>", "<small>${lastWhen(c.msgs,c.unread)}</small>");
+change("r4c: group row time", "<small>${g.unread?'now':'today'}</small>", "<small>${lastWhen(g.msgs,g.unread)}</small>");
+// calls ring first: "Calling…" until the other person answers; no answer after 15 s if they're offline
+change("r4c: outgoing call rings first", "UI.call={id,type,sec:0,spk:type==='video',muted:false}; clearInterval(UI.callT); UI.callT=setInterval(()=>{ if(!UI.call) return; UI.call.sec++;",
+  "UI.call={id,type,sec:0,spk:type==='video',muted:false,ring:true,rt:0}; clearInterval(UI.callT); UI.callT=setInterval(()=>{ if(!UI.call) return; if(UI.call.ring){ const C=UI.call; C.rt++; const t0=document.getElementById('calltm'); if(C.rt>=(P[C.id].online?3:15)){ if(P[C.id].online){ C.ring=false; C.sec=0; render(); } else act0('endcall','noans'); } else if(t0) t0.textContent=TX('Calling…'); return; } UI.call.sec++;");
+change("r4c: call screen says Calling…", "<span id=\"calltm\">${Math.floor(sec/60)}:${String(sec%60).padStart(2,'0')}",
+  "<span id=\"calltm\">${UI.call.ring?'Calling…':Math.floor(sec/60)+':'+String(sec%60).padStart(2,'0')}");
+change("r4c: no answer / cancelled call", "case 'endcall': { clearInterval(UI.callT); if(!UI.call) break;",
+  "case 'endcall': { clearInterval(UI.callT); if(!UI.call) break; if(v==='noans'||UI.call.ring){ const who=UI.call.id, na=v==='noans'; UI.call=null; const c=S.chats[who]||(S.chats[who]={msgs:[],unread:0}); c.msgs.push({f:'tip',t:na?'📞 No answer':'📞 Call cancelled',at:Date.now()}); if(!callResumeRoom()) render(); toast(na?'No answer · Try again later':'Call cancelled'); break; }");
+// delete for everyone also clears its quote in replies and the correction made on it
+change("r4c: delete for everyone clears quotes and corrections", "if(how==='all'){ m.del=true; m.t=''; }",
+  "if(how==='all'){ const old=m.t; m.del=true; m.t=''; S.chats[cid].msgs.forEach(x=>{ if(x&&x.re&&+x.re.i===+ii){ x.re.sn=['This message is no longer here','']; x.re.t=''; } }); S.chats[cid].msgs=S.chats[cid].msgs.filter(x=>!(x&&x.f==='fix'&&old&&x.wrong===old)); }");
+// demo replies only "correct" something that is really wrong (it added " !" with an unrelated tip)
+change("r4c: demo correction only when it fixes something", "if(n%2===1&&mine&&mine.t&&mine.t.length>8&&S.corr) c.msgs.push({f:'fix',wrong:mine.t,right:mine.t.replace(/^./,x=>x.toUpperCase()).replace(/[.!?]*$/,'')+' !',note:TIPS[n%TIPS.length],by:id});",
+  "if(n%2===1&&mine&&mine.t&&mine.t.length>8&&S.corr&&/^[a-zà-ÿ]/.test(mine.t)) c.msgs.push({f:'fix',wrong:mine.t,right:mine.t.replace(/^./,x=>x.toUpperCase()),note:'Start a sentence with a capital letter.',by:id});");
+// French: "Sourdine" reads better than "Muet" on the swipe button
+change("r4c fr: mute", "\nMute|Muet|", "\nMute|Sourdine|");
+// Arabic: Latin names, previews and titles keep their own direction (cut at the right end, punctuation in place)
+change("r4c: CSS", "</style>", `.n .nn,.b .m>span,.m .nt,.srch b,.srres b,.nb .t,.rquote .nt,#corr-t,#corr-n,.reqq{unicode-bidi:plaintext}
+</style>`);
+change("r4c: translations", "Add a short bio|", [
+  "Online partners|Partenaires en ligne|Compañeros en línea|Parceiros online|Partner online|Partner online|オンラインのパートナー|شركاء متصلون",
+  "Create a group|Créer un groupe|Crear un grupo|Criar um grupo|Gruppe erstellen|Crea un gruppo|グループを作成|أنشئ مجموعة",
+  "Say hi 👋|Dis bonjour 👋|Saluda 👋|Diga oi 👋|Sag hallo 👋|Saluta 👋|あいさつしよう 👋|قل مرحبًا 👋",
+  "Leave call|Quitter l’appel|Salir de la llamada|Sair da chamada|Anruf verlassen|Esci dalla chiamata|通話を退出|مغادرة المكالمة",
+  "Flip camera|Retourner la caméra|Girar cámara|Virar câmera|Kamera wechseln|Gira fotocamera|カメラを切り替え|قلب الكاميرا",
+  "e.g. Spanish Sunday club|ex. Club espagnol du dimanche|p. ej. Club de español del domingo|ex.: Clube de espanhol de domingo|z. B. Spanisch-Sonntagsclub|es. Club di spagnolo della domenica|例：日曜スペイン語クラブ|مثال: نادي الإسبانية يوم الأحد",
+  "Calling…|Appel en cours…|Llamando…|Chamando…|Anruf läuft…|Chiamata in corso…|発信中…|جارٍ الاتصال…",
+  "📞 No answer|📞 Pas de réponse|📞 Sin respuesta|📞 Sem resposta|📞 Keine Antwort|📞 Nessuna risposta|📞 応答なし|📞 لا رد",
+  "📞 Call cancelled|📞 Appel annulé|📞 Llamada cancelada|📞 Chamada cancelada|📞 Anruf abgebrochen|📞 Chiamata annullata|📞 通話をキャンセル|📞 أُلغيت المكالمة",
+  "No answer|Pas de réponse|Sin respuesta|Sem resposta|Keine Antwort|Nessuna risposta|応答なし|لا رد",
+  "Try again later|Réessaie plus tard|Inténtalo más tarde|Tente mais tarde|Versuch es später noch mal|Riprova più tardi|あとでもう一度かけてね|حاول لاحقًا",
+  "Call cancelled|Appel annulé|Llamada cancelada|Chamada cancelada|Anruf abgebrochen|Chiamata annullata|通話をキャンセルしました|أُلغيت المكالمة",
+  "Start a sentence with a capital letter.|Commence une phrase par une majuscule.|Empieza la frase con mayúscula.|Comece a frase com letra maiúscula.|Beginne einen Satz mit einem Großbuchstaben.|Inizia la frase con la maiuscola.|文の最初は大文字にしよう。|ابدأ الجملة بحرف كبير.",
+  "This message is no longer here|Ce message n’est plus là|Este mensaje ya no está|Esta mensagem não está mais aqui|Diese Nachricht ist nicht mehr da|Questo messaggio non c’è più|このメッセージは削除されました|لم تعد هذه الرسالة موجودة",
+  "Yesterday|Hier|Ayer|Ontem|Gestern|Ieri|昨日|أمس",
+  ].join("\n") + "\nAdd a short bio|");
+
 const FIT_JS = `<script>
 /* [app] make header rows fit the screen (.top = page headers, .sheethead = pop-up titles) */
 (function(){
